@@ -1,0 +1,111 @@
+<app-header></app-header>
+
+<main id="contenido" class="pagina">
+  <!-- Referencia: src/assets/6-DatosParaGenerarFactura.png -->
+  <h1 class="titulo">Servicio de facturación en línea</h1>
+
+  <section class="panel" aria-labelledby="titulo-panel">
+    <h2 class="panel-titulo" id="titulo-panel">Capture la información solicitada</h2>
+
+    <form #formDatos class="formulario" action="#" method="get" onsubmit="return false" (submit)="enviar()">
+      <div class="campo span-6">
+        <label for="rfc"><span class="req" aria-hidden="true">*</span>RFC:</label>
+        <input id="rfc" name="rfc" type="text" placeholder="Ejem:GOOD990102UH3" required autocomplete="off" [(ngModel)]="rfc" />
+      </div>
+
+      <div class="campo span-6">
+        <label for="razon"><span class="req" aria-hidden="true">*</span>Razón Social:</label>
+        <input id="razon" name="razon" type="text" autocomplete="organization" [(ngModel)]="razonSocial" />
+      </div>
+
+      <div class="campo span-6">
+        <label for="calle">Calle:</label>
+        <input id="calle" name="calle" type="text" autocomplete="street-address" [(ngModel)]="calle" />
+      </div>
+
+      <div class="campo span-3">
+        <label for="num-ext">Número exterior:</label>
+        <input id="num-ext" name="num-ext" type="text" autocomplete="off" [(ngModel)]="numExterior" />
+      </div>
+
+      <div class="campo span-3">
+        <label for="num-int">Número interior:</label>
+        <input id="num-int" name="num-int" type="text" autocomplete="off" [(ngModel)]="numInterior" />
+      </div>
+
+      <div class="campo span-4">
+        <label for="estado">Estado:</label>
+        <input id="estado" name="estado" type="text" autocomplete="address-level1" [(ngModel)]="estado" />
+      </div>
+
+      <div class="campo span-4">
+        <label for="municipio">Municipio/Delegación:</label>
+        <input id="municipio" name="municipio" type="text" autocomplete="address-level2" [(ngModel)]="municipio" />
+      </div>
+
+      <div class="campo span-4">
+        <label for="referencia">Referencia:</label>
+        <input id="referencia" name="referencia" type="text" autocomplete="off" [(ngModel)]="referencia" />
+      </div>
+
+      <div class="campo span-4">
+        <label for="cp"><span class="req" aria-hidden="true">*</span>Código Postal:</label>
+        <input id="cp" name="cp" type="text" inputmode="numeric" autocomplete="postal-code" [(ngModel)]="codigoPostal" />
+      </div>
+
+      <div class="campo span-8">
+        <label for="colonia">Colonia:</label>
+        <input id="colonia" name="colonia" type="text" autocomplete="off" [(ngModel)]="colonia" />
+      </div>
+
+      <div class="campo span-6">
+        <label for="regimen"><span class="req" aria-hidden="true">*</span>Régimen Fiscal:</label>
+        <select id="regimen" name="regimen" required [(ngModel)]="regimen">
+          <option value="">Seleccione</option>
+          <option *ngFor="let o of regimenOpciones" [value]="o.value">{{ o.label }}</option>
+        </select>
+      </div>
+
+      <div class="campo span-6">
+        <label for="uso"><span class="req" aria-hidden="true">*</span>Uso Factura:</label>
+        <select id="uso" name="uso" required [(ngModel)]="uso">
+          <option value="">Seleccione</option>
+          <option *ngFor="let o of usoOpciones" [value]="o.value">{{ o.label }}</option>
+        </select>
+      </div>
+
+      <div class="campo span-12">
+        <label for="correo"><span class="req" aria-hidden="true">*</span>Correo Electrónico:</label>
+        <input id="correo" name="correo" type="email" required autocomplete="email" [(ngModel)]="correo" />
+      </div>
+
+      <div class="fila-info">
+        <span class="etiqueta">Subtotal:</span>
+        <span class="valor">{{ formatoMoneda(subtotal) }}</span>
+      </div>
+
+      <div class="fila-info">
+        <span class="etiqueta">Impuestos:</span>
+        <span class="valor">{{ formatoImpuestos(impuestos) }}</span>
+      </div>
+
+      <div class="fila-info">
+        <span class="etiqueta">Total:</span>
+        <span class="valor total">{{ formatoMoneda(total) }}</span>
+      </div>
+    </form>
+
+    <p class="nota"><span>Los campos marcados con: * son obligatorios,</span> **Aplica sólo para vinos y licores.</p>
+
+    <div class="acciones">
+      <button type="button" class="btn btn-cancelar" (click)="cancelar()" [disabled]="cargando">Cancelar</button>
+      <button type="button" class="btn btn-aceptar" (click)="aceptar()" [disabled]="cargando">{{ cargando ? 'Facturando…' : 'Aceptar' }}</button>
+    </div>
+  </section>
+</main>
+
+<app-loading-overlay *ngIf="cargando" texto="Generando factura…"></app-loading-overlay>
+
+<app-error-dialog *ngIf="errorAbierto" [mensaje]="errorMensaje" (cerrar)="cerrarError()"></app-error-dialog>
+
+<app-footer></app-footer>

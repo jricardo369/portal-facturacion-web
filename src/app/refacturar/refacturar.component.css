@@ -1,0 +1,42 @@
+:host { display: flex; flex-direction: column; min-height: 100vh; }
+.pagina { max-width: 1230px; margin: 0 auto; width: 100%; flex: 1 0 auto; background: #f6f6f6; padding: 18px 28px 56px; }
+.titulo { margin: 6px 0 14px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 30px; font-weight: 700; color: #E8412A; }
+.aviso { border: 1px solid #a8c8c4; border-radius: 4px; background: #f0f0f0; padding: 10px 18px 14px; }
+.aviso h2 { margin: 0; text-align: center; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 22px; color: #235451; }
+.aviso p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.55; color: #B52A15; text-align: center; }
+.pasos { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0; margin: 14px 0; }
+.pasos li { display: flex; align-items: center; gap: 10px; border: 1px solid #e4e4ea; background: #fff; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #9a9a9a; }
+.pasos li span { width: 26px; height: 26px; border-radius: 50%; background: #7a7a7a; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; }
+.pasos li.activo { border-color: #E8412A; color: #221C1E; }
+.pasos li.activo span { background: #E8412A; }
+.pasos li.ok span { background: #235451; }
+.panel { border: 1px solid #a8c8c4; border-radius: 4px; background: #f0f0f0; padding: 18px 22px 40px; }
+.panel-titulo { margin: 0; text-align: center; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 28px; color: #235451; }
+.panel-sub { margin: 6px 0 0; text-align: center; font-size: 14px; color: #B52A15; }
+.formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 64px; max-width: 900px; margin: 22px auto 0; }
+.formulario.una-columna { grid-template-columns: minmax(280px, 420px); justify-content: center; }
+.campo { position: relative; }
+.campo input, .campo select { width: 100%; font: inherit; font-size: 13px; padding: 9px 12px; border: 1px solid #cfcfcf; border-radius: 5px; background: #fff; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.campo input:focus-visible, .campo select:focus-visible { outline: 3px solid #E8412A; outline-offset: 1px; }
+.campo.requerido::before { content: "*"; position: absolute; left: -12px; top: 8px; color: #B52A15; font-weight: 700; }
+.original { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; background: #fff; border: 1px solid #e4e4ea; border-radius: 8px; padding: 14px 16px; margin-top: 18px; }
+.original div { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+.original strong { color: #235451; font-size: 12px; text-transform: uppercase; }
+.uuid { word-break: break-all; font-size: 12px; }
+.error { max-width: 420px; margin: 14px auto 0; font-size: 13px; color: #b3261e; background: #fdecea; border: 1px solid #f5c6c2; border-radius: 4px; padding: 8px 12px; text-align: center; }
+.nota { margin: 12px 0 0; font-size: 13px; color: #B52A15; text-align: center; }
+.acciones { display: flex; gap: 22px; justify-content: center; margin-top: 18px; }
+.btn { border: 0; cursor: pointer; font: inherit; font-size: 14px; padding: 8px 22px; border-radius: 4px; color: #fff; }
+.btn-cancelar { background: #6e6e6e; }
+.btn-cancelar:hover { background: #5a5a5a; }
+.btn-continuar { background: #E8412A; }
+.btn-continuar:hover { background: #B52A15; }
+.ligado { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 12px; align-items: center; margin-top: 18px; }
+.ligado article { background: #fff; border: 1px solid #e4e4ea; border-radius: 8px; padding: 16px; text-align: center; }
+.ligado h3 { margin: 0 0 8px; font-size: 14px; color: #235451; }
+.ligado .folio { margin: 0; font-weight: 700; font-size: 18px; color: #221C1E; }
+.ligado .uuid { color: #6e6e6e; }
+.link { text-align: center; font-size: 28px; color: #E8412A; }
+.badge { display: inline-block; margin-top: 8px; padding: 3px 12px; border-radius: 999px; background: #235451; color: #fff; font-size: 12px; }
+.badge.cancelada { background: #6e6e6e; }
+@media (max-width: 760px) { .pagina { padding: 14px 16px 44px; } .titulo { font-size: 23px; } .formulario { grid-template-columns: 1fr; } .pasos { grid-template-columns: 1fr; } .original, .ligado { grid-template-columns: 1fr; } .link { transform: rotate(90deg); } }

@@ -1,0 +1,20 @@
+<div class="aviso-backdrop" (click)="cerrar.emit()">
+  <div class="aviso-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-aviso" (click)="$event.stopPropagation()">
+    <div class="aviso-head">
+      <h2 id="titulo-aviso">Aviso de privacidad</h2>
+      <button type="button" class="aviso-cerrar" (click)="cerrar.emit()" aria-label="Cerrar aviso">✕</button>
+    </div>
+    <div class="aviso-cuerpo">
+      <p><strong>Oso Despierto</strong>, con domicilio para oír y recibir notificaciones en el portal de facturación, es responsable del tratamiento de sus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.</p>
+      <p><strong>Datos que recabamos:</strong> nombre o razón social, RFC, domicilio fiscal, régimen fiscal, uso de CFDI, correo electrónico, datos de tickets de compra y CFDI generados.</p>
+      <p><strong>Finalidades:</strong> emitir, reenviar y refacturar comprobantes fiscales digitales, atender aclaraciones, cumplir obligaciones fiscales y legales ante el SAT.</p>
+      <p><strong>Transferencias:</strong> sus datos solo se comparten con autoridades fiscales cuando la ley lo exige y con proveedores de facturación electrónica para cumplir la finalidad descrita. No realizamos transferencias adicionales sin su consentimiento.</p>
+      <p><strong>Derechos ARCO:</strong> usted puede acceder, rectificar, cancelar u oponerse al tratamiento de sus datos, así como revocar el consentimiento, escribiendo a privacidad&#64;osodespierto.mx. Responderemos en un máximo de 20 días hábiles.</p>
+      <p>Al usar este portal de facturación usted acepta este aviso. La versión integral está disponible en la página de Aviso de privacidad.</p>
+    </div>
+    <div class="aviso-pie">
+      <a routerLink="/aviso-privacidad" (click)="cerrar.emit()" class="btn-texto">Ver aviso completo</a>
+      <button type="button" class="btn-entendido" (click)="cerrar.emit()">Entendido</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<footer class="pie">
+  <div class="pie-inner">
+    <span>© OSO DESPIERTO 2026</span>
+    <button type="button" class="aviso-link" (click)="avisoAbierto = true">Aviso de privacidad</button>
+  </div>
+</footer>
+
+<app-aviso-dialog *ngIf="avisoAbierto" (cerrar)="avisoAbierto = false"></app-aviso-dialog>

@@ -1,0 +1,14 @@
+:host { display: flex; flex-direction: column; min-height: 100vh; }
+.pagina { max-width: 1230px; margin: 0 auto; width: 100%; flex: 1 0 auto; background: #f6f6f6; padding: 18px 28px 56px; }
+.encabezado { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.titulo { margin: 6px 0 14px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 30px; font-weight: 700; color: #E8412A; }
+.cerrar { border: 0; background: transparent; cursor: pointer; font-size: 22px; line-height: 1; color: #6e6e6e; padding: 8px 12px; border-radius: 6px; }
+.cerrar:hover { background: #e4e4e4; color: #221C1E; }
+.cerrar:focus-visible { outline: 3px solid #221C1E; outline-offset: 2px; }
+.panel { border: 1px solid #a8c8c4; border-radius: 4px; background: #fff; padding: 22px 26px 32px; max-width: 860px; margin: 0 auto; font-size: 14px; line-height: 1.7; color: #3c3c3c; }
+.panel h2 { font-family: "Comfortaa", "Nunito", sans-serif; color: #235451; font-size: 22px; margin: 8px 0 12px; }
+.panel h3 { font-family: "Comfortaa", "Nunito", sans-serif; color: #235451; font-size: 16px; margin: 20px 0 8px; }
+.panel p { margin: 0 0 12px; }
+.panel ul { margin: 0 0 12px 20px; padding: 0; }
+.actualizado { font-size: 13px; color: #6e6e6e; }
+@media (max-width: 760px) { .pagina { padding: 14px 16px 44px; } .titulo { font-size: 23px; } .panel { padding: 18px; } }

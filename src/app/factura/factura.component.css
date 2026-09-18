@@ -1,0 +1,48 @@
+:host { display: flex; flex-direction: column; min-height: 100vh; }
+.pagina {
+  max-width: 1230px; margin: 0 auto; width: 100%; flex: 1 0 auto;
+  background: #EFEFEF; padding: 18px 28px 56px;
+}
+.titulo { margin: 6px 0 14px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 28px; font-weight: 700; color: #E8412A; }
+
+.panel {
+  border: 1px solid #a8c8c4; border-radius: 4px; background: #fff;
+  padding: 56px 22px 64px; text-align: center;
+}
+.linea { margin: 10px 0; font-size: 14px; color: #3c3c3c; }
+.exito {
+  max-width: 560px; margin: 0 auto 14px; padding: 10px 16px;
+  font-size: 14px; font-weight: 700; color: #235451;
+  background: #e6f4f1; border: 1px solid #a8c8c4; border-radius: 4px;
+}
+
+.formulario { margin-top: 18px; }
+.campo-correo { display: flex; gap: 12px; justify-content: center; align-items: center; max-width: 560px; margin: 14px auto 0; flex-wrap: wrap; }
+.campo-correo input {
+  flex: 1 1 280px; font: inherit; font-size: 14px;
+  padding: 8px 12px; border: 1px solid #cfcfcf; border-radius: 5px;
+  background: #fff; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+.campo-correo input:focus-visible { outline: 3px solid #E8412A; outline-offset: 1px; }
+.aviso { margin: 10px 0 0; font-size: 13px; color: #235451; font-weight: 700; }
+.aviso-error { color: red; }
+
+.acciones-descarga { display: flex; gap: 22px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
+.acciones-nueva { display: flex; justify-content: center; margin-top: 22px; }
+.btn {
+  border: 0; cursor: pointer; font: inherit; font-size: 14px;
+  padding: 8px 26px; border-radius: 4px; color: #fff; white-space: nowrap;
+}
+.btn-facturar { background: #E8412A; }
+.btn-facturar:hover { background: #B52A15; }
+.btn-reenviar { background: #235451; }
+.btn-reenviar:hover { background: #183c39; }
+.btn:focus-visible { outline: 3px solid #221C1E; outline-offset: 2px; }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+
+@media (max-width: 760px) {
+  .pagina { padding: 14px 16px 44px; }
+  .titulo { font-size: 23px; }
+  .panel { padding: 40px 16px 48px; }
+  .campo-correo { flex-direction: column; align-items: stretch; }
+}

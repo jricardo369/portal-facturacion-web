@@ -1,0 +1,34 @@
+<app-header></app-header>
+
+<main id="contenido" class="pagina">
+  <!-- Referencia: src/assets/9-PantallaDeEnvioODescargaFactura.png -->
+  <h1 class="titulo">Factura</h1>
+
+  <section class="panel" aria-labelledby="titulo-opciones">
+    <h2 class="sr-only" id="titulo-opciones">Opciones de entrega de factura</h2>
+
+    <p class="exito" role="status" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+
+    <p class="linea">{{ textoCorreo }}</p>
+
+    <form class="formulario" action="#" method="get" onsubmit="return false">
+      <div class="campo-correo">
+        <label class="sr-only" for="correo-envio">Correo electrónico</label>
+        <input id="correo-envio" name="correo-envio" type="email" autocomplete="email" [(ngModel)]="correo" />
+        <button type="button" class="btn btn-reenviar" (click)="enviarNuevamente()">{{ textoBotonEnviar }}</button>
+      </div>
+      <p class="aviso" [class.aviso-error]="errorInfo" role="status" *ngIf="mensajeInfo">{{ mensajeInfo }}</p>
+    </form>
+
+    <div class="acciones-descarga">
+      <button type="button" class="btn btn-facturar" (click)="descargarXml()">Descargar XML</button>
+      <button type="button" class="btn btn-facturar" (click)="descargarPdf()">Descargar PDF</button>
+    </div>
+
+    <div class="acciones-nueva">
+      <button type="button" class="btn btn-facturar" (click)="nuevaFactura()">Generar nueva factura</button>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

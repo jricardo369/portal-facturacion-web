@@ -1,0 +1,25 @@
+:host { display: block; height: 100vh; height: 100dvh; margin: 0; padding: 0; overflow: hidden; position: relative; }
+.login-full { height: 100vh; height: 100dvh; display: flex; background: #f0f0f0; margin: 0; padding: 0; position: relative; }
+.marca-flotante { position: absolute; top: 20px; left: 20px; z-index: 10; width: 56px; height: 56px; object-fit: contain; }
+.login-card { flex: 1; display: flex; align-items: stretch; background: #f0f0f0; margin: 0; padding: 0; min-height: 0; }
+.login-media { flex: 0 0 40%; max-width: 40%; height: 100vh; height: 100dvh; margin: 0; padding: 0; overflow: hidden; line-height: 0; }
+.login-media img { width: 100%; height: 100vh; height: 100dvh; object-fit: cover; display: block; margin: 0; padding: 0; border: 0; vertical-align: top; }
+.login-body { flex: 1 1 60%; max-width: 60%; padding: 28px; display: flex; flex-direction: column; justify-content: center; background: #f0f0f0; }
+.panel-titulo { margin: 0 auto; text-align: center; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 28px; color: #235451; width: 100%; max-width: 300px; }
+.panel-sub { margin: 6px auto 0; text-align: center; font-size: 14px; color: #B52A15; width: 100%; max-width: 300px; }
+.formulario { display: grid; grid-template-columns: minmax(240px, 300px); justify-content: center; gap: 18px; max-width: 900px; margin: 22px auto 0; width: 100%; }
+.campo { position: relative; }
+.campo input { width: 100%; font: inherit; font-size: 13px; padding: 9px 12px; border: 1px solid #cfcfcf; border-radius: 5px; background: #fff; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.campo input:focus-visible { outline: 3px solid #E8412A; outline-offset: 1px; }
+.campo.requerido::before { content: "*"; position: absolute; left: -12px; top: 8px; color: #B52A15; font-weight: 700; }
+.campo-password input { padding-right: 40px; }
+.ojo-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; cursor: pointer; color: #6e6e6e; padding: 6px; border-radius: 4px; display: grid; place-items: center; }
+.ojo-btn:hover { color: #E8412A; }
+.ojo-btn:focus-visible { outline: 3px solid #E8412A; outline-offset: 1px; }
+.ojo-btn svg { width: 20px; height: 20px; display: block; }
+.error { margin: 0; font-size: 13px; color: #b3261e; background: #fdecea; border: 1px solid #f5c6c2; border-radius: 4px; padding: 8px 12px; }
+.acciones { display: flex; gap: 22px; justify-content: center; margin-top: 4px; }
+.btn { border: 0; cursor: pointer; font: inherit; font-size: 14px; padding: 8px 28px; border-radius: 4px; color: #fff; }
+.btn-continuar { background: #E8412A; }
+.btn-continuar:hover { background: #B52A15; }
+@media (max-width: 760px) { .login-card { flex-direction: column; } .login-media { flex: none; max-width: 100%; min-height: 220px; max-height: 240px; overflow: hidden; } .login-media img { min-height: 0; height: 100%; } .login-body { flex: none; max-width: 100%; padding: 24px 18px 32px; } }

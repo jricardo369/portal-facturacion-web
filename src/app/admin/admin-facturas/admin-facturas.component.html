@@ -1,0 +1,65 @@
+<app-header></app-header>
+
+<main id="contenido" class="pagina">
+  <app-loading-overlay texto="Cargando facturas…" *ngIf="cargando"></app-loading-overlay>
+  <app-error-dialog titulo="No se pudieron cargar las facturas" [mensaje]="error" (cerrar)="error = ''" *ngIf="error"></app-error-dialog>
+
+  <div class="encabezado">
+    <h1 class="titulo">Facturas emitidas</h1>
+    <button type="button" class="btn btn-cancelar" (click)="salir()">Cerrar sesión</button>
+  </div>
+
+  <section class="resumen" aria-label="Resumen">
+    <div class="stat"><span class="stat-num">{{ totalElementos }}</span><span class="stat-label">Facturas</span></div>
+    <div class="stat"><span class="stat-num">{{ total | currency:'MXN':'symbol-narrow':'1.2-2' }}</span><span class="stat-label">Total vigente</span></div>
+  </section>
+
+  <section class="filtros" aria-label="Filtros">
+    <div class="campo">
+      <label for="f-ticket">No. ticket</label>
+      <input id="f-ticket" [(ngModel)]="ticket" placeholder="Ej. T-88231" autocomplete="off" />
+    </div>
+    <div class="campo">
+      <label for="f-desde">Desde</label>
+      <input id="f-desde" type="date" [(ngModel)]="desde" />
+    </div>
+    <div class="campo">
+      <label for="f-hasta">Hasta</label>
+      <input id="f-hasta" type="date" [(ngModel)]="hasta" />
+    </div>
+    <button type="button" class="btn btn-buscar" (click)="buscar()">Buscar</button>
+    <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
+  </section>
+
+  <section class="panel" aria-label="Listado de facturas">
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>RFC</th><th>Ticket</th><th>Total</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of facturas">
+            <td class="folio">{{ f.folio }}</td>
+            <td>{{ formatearFecha(f.fecha) }}</td>
+            <td>{{ cliente(f) }}</td>
+            <td>{{ f.rfc }}</td>
+            <td>{{ f.noTicket }}</td>
+            <td class="num">{{ f.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+            <td><span class="badge" [class.cancelada]="esCancelada(f)">{{ estado(f) }}</span></td>
+          </tr>
+          <tr *ngIf="totalElementos === 0"><td colspan="7" class="vacio">Sin resultados con los filtros aplicados.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <nav class="paginacion" aria-label="Paginación" *ngIf="totalElementos > 0">
+      <span class="rango">{{ rango }}</span>
+      <div class="pag-btns">
+        <button type="button" class="pag" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Anterior">‹</button>
+        <button type="button" class="pag" *ngFor="let p of paginas" [class.activa]="p === pagina" (click)="irAPagina(p)">{{ p }}</button>
+        <button type="button" class="pag" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Siguiente">›</button>
+      </div>
+    </nav>
+  </section>
+</main>
+
+<app-footer></app-footer>

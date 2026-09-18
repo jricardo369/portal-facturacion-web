@@ -1,0 +1,31 @@
+.topbar { background: #221C1E; color: #fff; }
+.topbar-inner {
+  display: flex; align-items: center; gap: 28px;
+  padding: 12px 28px 12px 15px; min-height: 64px;
+  max-width: 1230px; margin: 0 auto; width: 100%;
+}
+.marca { margin: 0; line-height: 1.1; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; flex: 0 0 auto; }
+.marca-logo { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex: 0 0 48px; }
+.marca-nombre { display: block; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 1.5px; }
+.menu { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
+.menu a {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: "Comfortaa", "Nunito", sans-serif; font-size: 14px; font-weight: 700;
+  color: rgba(255,255,255,.82); text-decoration: none;
+  padding: 9px 18px; border-radius: 999px;
+  border: 1px solid transparent;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.menu a svg { width: 20px; height: 20px; flex: 0 0 20px; }
+.menu a:hover { color: #fff; background: rgba(255,255,255,.1); }
+.menu a.activa { background: #E8412A; color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.menu a.activa:hover { background: #B52A15; color: #fff; }
+.menu a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.faq { color: rgba(255,255,255,.85); font-family: "Comfortaa", "Nunito", sans-serif; font-size: 14px; text-decoration: none; }
+.faq:hover { text-decoration: underline; }
+@media (max-width: 640px) {
+  .topbar-inner { padding: 10px 16px; gap: 14px; flex-wrap: wrap; }
+  .marca-nombre { font-size: 17px; }
+  .menu { margin-left: 0; width: 100%; }
+  .menu a { flex: 1; justify-content: center; padding: 8px 10px; }
+}

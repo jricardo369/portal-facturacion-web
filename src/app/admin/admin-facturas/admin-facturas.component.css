@@ -1,0 +1,38 @@
+:host { display: flex; flex-direction: column; min-height: 100vh; }
+.pagina { max-width: 1230px; margin: 0 auto; width: 100%; flex: 1 0 auto; background: #f6f6f6; padding: 18px 28px 56px; }
+.encabezado { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.titulo { margin: 6px 0 14px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 30px; font-weight: 700; color: #E8412A; }
+.btn { border: 0; cursor: pointer; font: inherit; font-size: 14px; padding: 8px 22px; border-radius: 4px; color: #fff; }
+.btn-cancelar { background: #6e6e6e; }
+.btn-cancelar:hover { background: #5a5a5a; }
+.resumen { display: grid; grid-template-columns: 160px 220px; gap: 16px; margin-bottom: 14px; align-items: stretch; }
+.stat { border: 1px solid #a8c8c4; border-radius: 4px; background: #f0f0f0; padding: 10px 16px; display: flex; flex-direction: column; }
+.stat-num { font-family: "Comfortaa", "Nunito", sans-serif; font-size: 20px; font-weight: 700; color: #235451; }
+.stat-label { font-size: 13px; color: #B52A15; }
+.filtros { display: grid; grid-template-columns: 1fr 1fr 1fr auto auto; gap: 16px; align-items: end; border: 1px solid #a8c8c4; border-radius: 4px; background: #f0f0f0; padding: 14px 22px; margin-bottom: 14px; }
+.campo label { display: block; font-size: 13px; font-weight: 700; color: #235451; margin-bottom: 6px; }
+.campo input { width: 100%; font: inherit; font-size: 13px; padding: 10px 12px; border: 1px solid #cfcfcf; border-radius: 5px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.campo input:focus-visible { outline: 3px solid #E8412A; outline-offset: 1px; }
+.btn-limpiar { background: #E8412A; white-space: nowrap; }
+.btn-limpiar:hover { background: #B52A15; }
+.btn-buscar { background: #235451; white-space: nowrap; }
+.btn-buscar:hover { background: #1a3f3d; }
+.panel { border: 1px solid #a8c8c4; border-radius: 4px; background: #f0f0f0; padding: 18px 22px; }
+.tabla-wrap { overflow-x: auto; background: #fff; border: 1px solid #e4e4ea; border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 860px; }
+th { background: #221C1E; color: #fff; text-align: left; padding: 10px 12px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 13px; }
+td { padding: 10px 12px; border-top: 1px solid #eee; color: #3c3c3c; }
+tbody tr:hover { background: #FDECEA; }
+.folio { font-weight: 700; color: #235451; white-space: nowrap; }
+.num { text-align: right; white-space: nowrap; }
+.badge { display: inline-block; padding: 3px 12px; border-radius: 999px; background: #235451; color: #fff; font-size: 12px; }
+.badge.cancelada { background: #6e6e6e; }
+.vacio { text-align: center; color: #9a9a9a; padding: 22px; }
+.paginacion { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
+.rango { font-size: 13px; color: #6e6e6e; }
+.pag-btns { display: flex; gap: 8px; }
+.pag { min-width: 34px; height: 34px; padding: 0 10px; border-radius: 4px; border: 1px solid #cfcfcf; background: #fff; color: #221C1E; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
+.pag:hover:not(:disabled) { border-color: #E8412A; color: #B52A15; }
+.pag.activa { background: #E8412A; border-color: #E8412A; color: #fff; }
+.pag:disabled { opacity: .45; cursor: not-allowed; }
+@media (max-width: 760px) { .pagina { padding: 14px 16px 44px; } .titulo { font-size: 23px; } .resumen { grid-template-columns: 1fr; } .filtros { grid-template-columns: 1fr; } }

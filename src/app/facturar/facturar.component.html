@@ -1,0 +1,92 @@
+<app-header></app-header>
+
+<main id="contenido" class="pagina">
+  <!-- Referencias: src/assets/4-DatosBusquedaTicketAFacturar.png y src/assets/5-SeccionDeBusquedaTicketparaReenviarFacutra.png -->
+  <h1 class="titulo">Servicio de facturación en línea</h1>
+
+  <section class="aviso" aria-labelledby="titulo-importante">
+    <h2 id="titulo-importante">Importante</h2>
+    <p>
+      Estimado Cliente/Socio: Le informamos que conforme a las disposiciones
+      fiscales mexicanas respecto a la emisión de Comprobantes Fiscales
+      (Facturas), no es posible emitir Comprobantes Fiscales (Facturas) por
+      la compra de Tarjetas de Regalo; sino que dicho comprobante se generará
+      y se podrá solicitar al momento de hacer efectiva la Tarjeta de Regalo
+      (Cuando se realice la compra de la mercancía con dicha tarjeta).
+    </p>
+  </section>
+
+  <p class="instruccion">Seleccione una opción y capture los datos solicitados</p>
+
+  <div class="pestanas" role="tablist" aria-label="Opciones de facturación">
+    <button
+      type="button" role="tab" id="tab-facturar" aria-controls="panel-facturar"
+      [attr.aria-selected]="pestana === 'facturar'"
+      [class.activa]="pestana === 'facturar'"
+      (click)="mostrar('facturar')">Facturar</button>
+    <button
+      type="button" role="tab" id="tab-consulta" aria-controls="panel-consulta"
+      [attr.aria-selected]="pestana === 'consulta'"
+      [class.activa]="pestana === 'consulta'"
+      (click)="mostrar('consulta')">Consulta o reenvía tu factura</button>
+  </div>
+
+  <section
+    class="panel" id="panel-facturar" role="tabpanel" aria-labelledby="tab-facturar"
+    [hidden]="pestana !== 'facturar'">
+    <h2 class="panel-titulo">Facturar</h2>
+    <form #formFacturar class="formulario" action="#" method="get" onsubmit="return false" (submit)="enviar()">
+      <div class="campo requerido">
+        <label class="sr-only" for="rfc">RFC</label>
+        <input id="rfc" name="rfc" type="text" placeholder="RFC" required autocomplete="off" [(ngModel)]="rfc" [disabled]="cargando" />
+      </div>
+      <div class="campo requerido con-ayuda">
+        <label class="sr-only" for="ticket">Numero de Ticket</label>
+        <input id="ticket" name="ticket" type="text" placeholder="Numero de Ticket" required autocomplete="off" [(ngModel)]="numeroTicket" [disabled]="cargando" />
+        <button type="button" class="ayuda" title="Capture el número de ticket de su compra" aria-label="Ayuda: número de ticket" (click)="mostrarAyudaTicket()">?</button>
+      </div>
+      <p class="nota">Los campos marcados con: * son obligatorios.</p>
+    </form>
+    <div class="acciones">
+      <button type="button" class="btn btn-cancelar" (click)="cancelar()" [disabled]="cargando">Cancelar</button>
+      <button type="button" class="btn btn-continuar" (click)="continuar()" [disabled]="cargando">{{ cargando && pestana === 'facturar' ? 'Buscando…' : 'Continuar' }}</button>
+    </div>
+  </section>
+
+  <section
+    class="panel" id="panel-consulta" role="tabpanel" aria-labelledby="tab-consulta"
+    [hidden]="pestana !== 'consulta'">
+    <h2 class="panel-titulo">Consultar por Número de Ticket</h2>
+    <p class="panel-sub">Para reenviar tu factura es necesario ingresar el número de ticket y el correo electrónico</p>
+    <form #formConsulta class="formulario" action="#" method="get" onsubmit="return false" (submit)="continuarConsulta()">
+      <div class="campo requerido con-ayuda">
+        <label class="sr-only" for="ticket-consulta">Número de Ticket</label>
+        <input id="ticket-consulta" name="ticket-consulta" type="text" placeholder="Número de Ticket" required autocomplete="off" [(ngModel)]="numeroTicketConsulta" [disabled]="cargando" />
+        <button type="button" class="ayuda" title="Capture el número de ticket de su compra" aria-label="Ayuda: número de ticket" (click)="mostrarAyudaTicket()">?</button>
+      </div>
+      <div class="campo requerido">
+        <label class="sr-only" for="correo-consulta">Correo Electrónico</label>
+        <input id="correo-consulta" name="correo-consulta" type="email" placeholder="Correo Electrónico" required autocomplete="email" [(ngModel)]="correoConsulta" [disabled]="cargando" />
+      </div>
+      <p class="nota">Los campos marcados con: * son obligatorios.</p>
+    </form>
+    <p *ngIf="exitoMensaje" class="exito" role="status">{{ exitoMensaje }}</p>
+    <div class="acciones">
+      <button type="button" class="btn btn-cancelar" (click)="cancelarConsulta()" [disabled]="cargando">Cancelar</button>
+      <button type="button" class="btn btn-continuar" (click)="continuarConsulta()" [disabled]="cargando">{{ cargando && pestana === 'consulta' ? 'Buscando…' : 'Continuar' }}</button>
+    </div>
+  </section>
+</main>
+
+<app-loading-overlay *ngIf="cargando" texto="Buscando información…"></app-loading-overlay>
+
+<div *ngIf="ayudaTicketVisible" class="ayuda-backdrop" (click)="cerrarAyudaTicket()">
+  <div class="ayuda-dialogo" role="dialog" aria-modal="true" aria-label="Ayuda: número de ticket" (click)="$event.stopPropagation()">
+    <button type="button" class="ayuda-cerrar" (click)="cerrarAyudaTicket()" aria-label="Cerrar ayuda">✕</button>
+    <img src="assets/ticketOsoDespierto.png" alt="Ejemplo de número de ticket" class="ayuda-imagen" />
+  </div>
+</div>
+
+<app-error-dialog *ngIf="errorAbierto" [mensaje]="errorMensaje" (cerrar)="cerrarError()"></app-error-dialog>
+
+<app-footer></app-footer>

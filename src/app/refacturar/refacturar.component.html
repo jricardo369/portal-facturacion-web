@@ -1,0 +1,111 @@
+<app-header></app-header>
+
+<main id="contenido" class="pagina">
+  <h1 class="titulo">Refacturación</h1>
+
+  <section class="aviso" aria-labelledby="titulo-como">
+    <h2 id="titulo-como">¿Cómo funciona?</h2>
+    <p>Se genera una <strong>nueva factura</strong> con relación <strong>04 Sustitución de CFDI previos</strong> y después se cancela la anterior con motivo <strong>01</strong>, quedando ambas ligadas por UUID.</p>
+  </section>
+
+  <ol class="pasos" aria-label="Progreso">
+    <li [class.activo]="paso === 1" [class.ok]="paso > 1"><span>1</span> Localizar factura</li>
+    <li [class.activo]="paso === 2" [class.ok]="paso > 2"><span>2</span> Datos nueva factura</li>
+    <li [class.activo]="paso === 3"><span>3</span> Ligado y cancelación</li>
+  </ol>
+
+  <section class="panel" *ngIf="paso === 1" aria-labelledby="t-paso1">
+    <h2 class="panel-titulo" id="t-paso1">Localizar factura a refacturar</h2>
+    <p class="panel-sub">Ingrese folio, No. ticket o UUID. Solo facturas vigentes.</p>
+    <form class="formulario una-columna" (ngSubmit)="buscar()">
+      <div class="campo requerido">
+        <label class="sr-only" for="q">Folio, ticket o UUID</label>
+        <input id="q" name="q" [(ngModel)]="busqueda" placeholder="Ej. OD-2026-0101, T-88231 o UUID" autocomplete="off" />
+      </div>
+      <p class="error" *ngIf="error" role="alert">{{ error }}</p>
+      <div class="acciones">
+        <button type="button" class="btn btn-cancelar" (click)="salir()">Cancelar</button>
+        <button type="submit" class="btn btn-continuar">Buscar</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel" *ngIf="paso === 2 && encontrada" aria-labelledby="t-paso2">
+    <h2 class="panel-titulo" id="t-paso2">Generar factura que sustituye</h2>
+    <p class="panel-sub">Anterior: {{ encontrada.folio }} · {{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</p>
+    <div class="original">
+      <div><strong>Folio</strong><span>{{ encontrada.folio }}</span></div>
+      <div><strong>UUID</strong><span class="uuid">{{ encontrada.uuid }}</span></div>
+      <div><strong>Cliente</strong><span>{{ encontrada.cliente }} · {{ encontrada.rfc }}</span></div>
+      <div><strong>Ticket</strong><span>{{ encontrada.ticket }} · {{ encontrada.fecha }}</span></div>
+    </div>
+    <form class="formulario" (ngSubmit)="generar()">
+      <div class="campo requerido">
+        <label class="sr-only" for="cliente">Cliente</label>
+        <input id="cliente" name="cliente" [(ngModel)]="datos.cliente" placeholder="Razón social / Nombre" />
+      </div>
+      <div class="campo requerido">
+        <label class="sr-only" for="rfc">RFC</label>
+        <input id="rfc" name="rfc" [(ngModel)]="datos.rfc" placeholder="RFC" />
+      </div>
+      <div class="campo requerido">
+        <label class="sr-only" for="correo">Correo</label>
+        <input id="correo" name="correo" type="email" [(ngModel)]="datos.correo" placeholder="Correo electrónico" />
+      </div>
+      <div class="campo requerido">
+        <label class="sr-only" for="motivo">Motivo</label>
+        <input id="motivo" name="motivo" [(ngModel)]="datos.motivo" placeholder="Motivo de sustitución" />
+      </div>
+      <div class="campo requerido">
+        <label class="sr-only" for="regimen">Régimen</label>
+        <select id="regimen" name="regimen" [(ngModel)]="datos.regimen">
+          <option value="">Régimen fiscal…</option>
+          <option value="601">601 General de Ley</option>
+          <option value="612">612 Actividad empresarial</option>
+          <option value="605">605 Sueldos y salarios</option>
+        </select>
+      </div>
+      <div class="campo requerido">
+        <label class="sr-only" for="uso">Uso CFDI</label>
+        <select id="uso" name="uso" [(ngModel)]="datos.uso">
+          <option value="">Uso CFDI…</option>
+          <option value="G03">G03 Gastos en general</option>
+          <option value="G01">G01 Adquisición de mercancías</option>
+          <option value="S01">S01 Sin efectos fiscales</option>
+        </select>
+      </div>
+    </form>
+    <p class="error" *ngIf="error" role="alert">{{ error }}</p>
+    <p class="nota">Los campos marcados con: * son obligatorios.</p>
+    <div class="acciones">
+      <button type="button" class="btn btn-cancelar" (click)="paso = 1">Atrás</button>
+      <button type="button" class="btn btn-continuar" (click)="generar()">Generar y cancelar anterior</button>
+    </div>
+  </section>
+
+  <section class="panel exito" *ngIf="paso === 3 && nueva && encontrada" aria-labelledby="t-paso3">
+    <h2 class="panel-titulo" id="t-paso3">Refacturación completada</h2>
+    <p class="panel-sub">Nueva factura ligada a la anterior.</p>
+    <div class="ligado">
+      <article>
+        <h3>Anterior · Cancelada motivo 01</h3>
+        <p class="folio">{{ encontrada.folio }}</p>
+        <p class="uuid">{{ encontrada.uuid }}</p>
+        <span class="badge cancelada">Cancelada</span>
+      </article>
+      <div class="link" aria-hidden="true">⇄</div>
+      <article>
+        <h3>Nueva · Relación 04</h3>
+        <p class="folio">{{ nueva.folio }}</p>
+        <p class="uuid">{{ nueva.uuid }}</p>
+        <span class="badge">Vigente</span>
+      </article>
+    </div>
+    <div class="acciones">
+      <button type="button" class="btn btn-cancelar" (click)="reiniciar()">Refacturar otra</button>
+      <button type="button" class="btn btn-continuar" (click)="salir()">Salir</button>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

@@ -1,0 +1,68 @@
+<app-header></app-header>
+
+<main id="contenido" class="pagina">
+  <!-- Recurso base: img1/img2/img3.jpg de la cafetería. -->
+  <section class="heroe" aria-labelledby="titulo-bienvenida">
+    <div class="heroe-copia">
+      <h1 id="titulo-bienvenida">Bienvenido al Servicio de Facturación Electrónica</h1>
+      <p class="subtitulo">
+        En el cual podrás consultar las facturas de las compras que hayas
+        hecho en cualquiera de nuestras tiendas.
+      </p>
+      <div class="cta">
+        <p class="cta-etiqueta">Tengo un ticket</p>
+        <a class="btn-factura" routerLink="/facturar">Obtener factura</a>
+      </div>
+    </div>
+    <div class="heroe-media" role="group" aria-label="Cafetería Oso Despierto">
+      <figure>
+        <img src="assets/img1.jpg" width="1448" height="2048" alt="Figura de oso con lentes frente a letrero de neón coffee" fetchpriority="high" />
+      </figure>
+      <figure>
+        <img src="assets/img2.jpg" width="1080" height="1350" alt="Vaso de café Oso Despierto junto a una bolsa de galletas" loading="lazy" />
+      </figure>
+      <figure>
+        <img src="assets/img3.jpg" width="1416" height="1350" alt="Dos manos brindando con vasos de café Oso Despierto" loading="lazy" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="info" aria-label="Información del servicio">
+    <article class="tarjeta">
+      <div class="tarjeta-head">
+        <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false">
+          <rect x="10" y="8" width="34" height="52" rx="3" fill="none" stroke="#fff" stroke-width="2"/>
+          <rect x="18" y="8" width="26" height="10" fill="none" stroke="#fff" stroke-width="2"/>
+          <line x1="17" y1="30" x2="37" y2="30" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17" y1="37" x2="37" y2="37" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17" y1="44" x2="30" y2="44" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="44" cy="50" r="12" fill="none" stroke="#fff" stroke-width="2"/>
+          <polyline points="38.5,50 42.5,54 50,45.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2>Disposiciones Fiscales</h2>
+      </div>
+      <p class="tarjeta-cuerpo">La fecha de emisión de la factura será la fecha que sea solicitada por el cliente. No es posible cancelar facturas de años anteriores. Si requiere modificar algún dato de su factura, debe ingresar nuevamente su número de ticket y seleccionar la opción de refacturar.</p>
+    </article>
+
+    <article class="tarjeta">
+      <div class="tarjeta-head">
+        <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false">
+          <rect x="10" y="14" width="52" height="48" rx="8" fill="none" stroke="#fff" stroke-width="2"/>
+          <line x1="10" y1="26" x2="62" y2="26" stroke="#fff" stroke-width="2"/>
+          <line x1="22" y1="8" x2="22" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <line x1="50" y1="8" x2="50" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <g fill="#fff">
+            <circle cx="22" cy="36" r="2.4"/><circle cx="31" cy="36" r="2.4"/><circle cx="40" cy="36" r="2.4"/><circle cx="49" cy="36" r="2.4"/>
+            <circle cx="22" cy="44" r="2.4"/><circle cx="31" cy="44" r="2.4"/><circle cx="40" cy="44" r="2.4"/><circle cx="49" cy="44" r="2.4"/>
+            <circle cx="22" cy="52" r="2.4"/><circle cx="31" cy="52" r="2.4"/><circle cx="40" cy="52" r="2.4"/>
+          </g>
+        </svg>
+        <h2>Resguardo</h2>
+      </div>
+      <p class="tarjeta-cuerpo">Es importante que siempre conserve su ticket de compra, de lo contrario, no se podrá realizar ningún movimiento o consulta.</p>
+    </article>
+
+  </section>
+</main>
+
+<app-footer></app-footer>
