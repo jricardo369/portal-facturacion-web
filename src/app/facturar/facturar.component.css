@@ -10,7 +10,7 @@
   background: #f0f0f0; padding: 10px 18px 14px;
 }
 .aviso h2 { margin: 0; text-align: center; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 28px; color: #235451; }
-.aviso p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.55; color: #B52A15; }
+.aviso p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.55; color: #221C1E; }
 
 .instruccion { margin: 14px 0 10px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 15px; font-weight: 400; color: #9a9a9a; }
 
@@ -26,7 +26,7 @@
 .panel { border: 1px solid #a8c8c4; border-radius: 4px; background: #f0f0f0; padding: 18px 22px 40px; }
 .panel[hidden] { display: none; }
 .panel-titulo { margin: 0; text-align: center; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 28px; color: #235451; }
-.panel-sub { margin: 6px 0 0; text-align: center; font-size: 14px; color: #B52A15; }
+.panel-sub { margin: 6px 0 0; text-align: center; font-size: 14px; color: #221C1E; }
 
 .formulario {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -76,7 +76,7 @@
 .acciones { display: flex; gap: 22px; justify-content: center; margin-top: 14px; }
 .btn {
   border: 0; cursor: pointer; font: inherit; font-size: 14px;
-  padding: 8px 22px; border-radius: 4px; color: #fff;
+  padding: 8px 22px; border-radius: 20px; color: #fff;
 }
 .btn-cancelar { background: #6e6e6e; }
 .btn-cancelar:hover { background: #5a5a5a; }

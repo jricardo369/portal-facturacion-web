@@ -21,7 +21,7 @@ export interface ClienteDatos {
 }
 
 export interface TicketItem {
-  id?: number | null;
+  id?: string | number | null;
   descripcion?: string | null;
   cantidad?: number | null;
   precioUnitario?: number | null;
@@ -29,7 +29,7 @@ export interface TicketItem {
 }
 
 export interface TicketPago {
-  id?: number | null;
+  id?: string | number | null;
   metodo?: string | null;
   monto?: number | null;
 }
@@ -50,6 +50,8 @@ export interface DatosFacturaResponse {
   cliente?: ClienteDatos | null;
 }
 
+export type DatosFacturaPayload = DatosFacturaResponse;
+
 @Injectable({ providedIn: 'root' })
 export class FacturacionService {
   private readonly BASE = 'http://localhost:8080/api/v1/facturacion';
@@ -65,6 +67,15 @@ export class FacturacionService {
   consultarFacturaPorTicket(numeroTicket: string): Observable<DatosFacturaResponse> {
     const params = new HttpParams().set('numeroTicket', numeroTicket.trim());
     return this.http.get<DatosFacturaResponse>(`${this.BASE}/factura`, { params, headers: this.headers() });
+  }
+
+  buscarFactura(filtro: string): Observable<DatosFacturaResponse> {
+    const params = new HttpParams().set('filtro', filtro.trim());
+    return this.http.get<DatosFacturaResponse>(`${this.BASE}/factura/buscar`, { params, headers: this.headers() });
+  }
+
+  refacturar(datos: DatosFacturaPayload): Observable<DatosFacturaResponse> {
+    return this.http.post<DatosFacturaResponse>(`${this.BASE}/refacturar`, datos, { headers: this.headers() });
   }
 
   facturar(datos: DatosFacturaResponse): Observable<DatosFacturaResponse> {
@@ -86,12 +97,29 @@ export class FacturacionService {
     try {
       const raw = localStorage.getItem('auth_session') ?? localStorage.getItem('admin_session');
       if (raw) {
-        const session = JSON.parse(raw) as { token?: string; tokenType?: string };
-        if (session?.token) headers = headers.set('Authorization', `Bearer ${session.token}`);
+        const session = JSON.parse(raw) as Record<string, unknown>;
+        const token = this.extraerToken(session);
+        if (token) headers = headers.set('Authorization', `Bearer ${token}`);
       }
     } catch {
       return headers;
     }
     return headers;
+  }
+
+  private extraerToken(session: Record<string, unknown>): string | null {
+    const directa: unknown[] = [];
+    const agregar = (v: unknown): void => {
+      if (v && !directa.includes(v)) directa.push(v);
+    };
+    for (const key of ['token', 'accessToken', 'access_token', 'jwt', 'idToken']) agregar(session[key]);
+    for (const key of Object.keys(session)) {
+      const v = session[key];
+      if (v && typeof v === 'object') agregar((v as Record<string, unknown>)['token']);
+    }
+    for (const v of directa) {
+      if (typeof v === 'string' && v.trim()) return v.trim();
+    }
+    return null;
   }
 }

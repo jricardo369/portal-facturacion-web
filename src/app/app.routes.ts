@@ -6,6 +6,7 @@ import { DatosFacturaComponent } from './datos-factura/datos-factura.component';
 import { FacturaComponent } from './factura/factura.component';
 import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
 import { AdminFacturasComponent } from './admin/admin-facturas/admin-facturas.component';
+import { AdminClientesComponent } from './admin/admin-clientes/admin-clientes.component';
 import { adminGuard } from './admin/auth.guard';
 import { AvisoPrivacidadComponent } from './aviso-privacidad/aviso-privacidad.component';
 
@@ -13,11 +14,12 @@ export const routes: Routes = [
   { path: '', component: BienvenidaComponent, title: 'Bienvenido al Servicio de Facturación Electrónica' },
   { path: 'bienvenida', component: BienvenidaComponent, title: 'Bienvenido al Servicio de Facturación Electrónica' },
   { path: 'facturar', component: FacturarComponent, data: { tab: 'facturar' }, title: 'Servicio de facturación en línea' },
-  { path: 'refacturar', component: RefacturarComponent, title: 'Refacturación de factura' },
+  { path: 'refacturar', component: RefacturarComponent, canActivate: [adminGuard], title: 'Refacturación de factura' },
   { path: 'datos-factura', component: DatosFacturaComponent, title: 'Capture la información solicitada' },
   { path: 'factura', component: FacturaComponent, title: 'Factura' },
   { path: 'admin', component: AdminLoginComponent, title: 'Administración' },
   { path: 'admin/facturas', component: AdminFacturasComponent, canActivate: [adminGuard], title: 'Facturas emitidas' },
+  { path: 'admin/clientes', component: AdminClientesComponent, canActivate: [adminGuard], title: 'Clientes' },
   { path: 'aviso-privacidad', component: AvisoPrivacidadComponent, title: 'Aviso de privacidad' },
   { path: '**', redirectTo: '' },
 ];

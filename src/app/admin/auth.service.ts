@@ -20,8 +20,21 @@ export class AdminAuthService {
   login(usuario: string, password: string): Observable<LoginResponse> {
     const body: LoginRequest = { usuario: usuario.trim(), password };
     return this.http.post<LoginResponse>(this.URL, body).pipe(
-      tap((res) => localStorage.setItem(this.KEY, JSON.stringify(res ?? {})))
+      tap((res) => {
+        const sesion = { ...(res ?? {}), usuario: usuario.trim() };
+        localStorage.setItem(this.KEY, JSON.stringify(sesion));
+      })
     );
+  }
+
+  getUsuarioLogueado(): string | null {
+    const session = this.getSession<Record<string, unknown>>();
+    if (!session) return null;
+    for (const key of ['usuario', 'username', 'user', 'login', 'email']) {
+      const v = session[key];
+      if (typeof v === 'string' && v.trim()) return v.trim();
+    }
+    return null;
   }
 
   logout(): void {

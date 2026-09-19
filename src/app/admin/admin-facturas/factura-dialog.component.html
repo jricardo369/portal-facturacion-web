@@ -1,0 +1,41 @@
+<div class="factura-backdrop" (click)="cerrar.emit()">
+  <div class="factura-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-factura" (click)="$event.stopPropagation()">
+    <div class="factura-head">
+      <h2 id="titulo-factura">Factura {{ factura?.folio || factura?.idFactura }}</h2>
+      <button type="button" class="factura-cerrar" (click)="cerrar.emit()" aria-label="Cerrar detalle">✕</button>
+    </div>
+    <div class="factura-cuerpo">
+      <h3 class="factura-seccion">Datos de la factura</h3>
+      <dl class="factura-datos">
+        <div><dt>Folio</dt><dd>{{ factura?.folio || '—' }}</dd></div>
+        <div><dt>Serie</dt><dd>{{ factura?.serie || '—' }}</dd></div>
+        <div><dt>UUID</dt><dd class="uuid">{{ factura?.uuid || '—' }}</dd></div>
+        <div><dt>Fecha</dt><dd>{{ formatearFecha(factura?.fecha) }}</dd></div>
+        <div><dt>Estatus</dt><dd><span class="badge" [class.cancelada]="esCancelada(factura)" [class.cargada]="esCargada(factura)">{{ estado(factura) }}</span></dd></div>
+      </dl>
+
+      <h3 class="factura-seccion">Cliente</h3>
+      <dl class="factura-datos">
+        <div><dt>Cliente</dt><dd>{{ cliente(factura) }}</dd></div>
+        <div><dt>RFC</dt><dd>{{ factura?.rfc || '—' }}</dd></div>
+        <div><dt>No. ticket</dt><dd>{{ factura?.noTicket || '—' }}</dd></div>
+      </dl>
+
+      <h3 class="factura-seccion">Importes</h3>
+      <dl class="factura-datos">
+        <div><dt>Subtotal</dt><dd>{{ importe(factura?.subtotal) }}</dd></div>
+        <div><dt>Impuesto</dt><dd>{{ importe(factura?.impuesto) }}</dd></div>
+        <div><dt>Total</dt><dd class="factura-total">{{ importe(factura?.total) }}</dd></div>
+      </dl>
+
+      <h3 class="factura-seccion">Registro</h3>
+      <dl class="factura-datos">
+        <div><dt>Creado</dt><dd>{{ formatearFecha(factura?.createdAt) }}</dd></div>
+        <div><dt>Actualizado</dt><dd>{{ formatearFecha(factura?.updatedAt) }}</dd></div>
+      </dl>
+    </div>
+    <div class="factura-pie">
+      <button type="button" class="btn-cerrar" (click)="cerrar.emit()">Cerrar</button>
+    </div>
+  </div>
+</div>

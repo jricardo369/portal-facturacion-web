@@ -1,0 +1,22 @@
+.factura-backdrop { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.5); display: grid; place-items: center; padding: 20px; }
+.factura-dialogo { width: min(620px, 100%); max-height: 85vh; display: flex; flex-direction: column; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+.factura-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eee; }
+.factura-head h2 { margin: 0; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 20px; color: #235451; }
+.factura-cerrar { border: 0; background: transparent; cursor: pointer; font-size: 18px; color: #6e6e6e; padding: 6px 10px; border-radius: 6px; }
+.factura-cerrar:hover { background: #f0f0f0; color: #333; }
+.factura-cuerpo { padding: 6px 20px 16px; overflow-y: auto; font-size: 14px; line-height: 1.5; color: #3c3c3c; }
+.factura-seccion { margin: 16px 0 6px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: #B52A15; }
+.factura-seccion:first-child { margin-top: 12px; }
+.factura-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin: 0; }
+.factura-datos > div { display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px dashed #eee; align-items: baseline; }
+.factura-datos dt { font-weight: 700; color: #235451; }
+.factura-datos dd { margin: 0; word-break: break-word; }
+.factura-datos .uuid { font-family: "Courier New", monospace; font-size: 12.5px; }
+.factura-datos .factura-total { font-weight: 700; color: #235451; }
+.badge { display: inline-block; padding: 3px 12px; border-radius: 999px; background: #235451; color: #fff; font-size: 12px; }
+.badge.cancelada { background: #f7dedf; color: #E8412A; }
+.badge.cargada { background: #b8dfcf; color: #359d73; }
+.factura-pie { display: flex; justify-content: flex-end; padding: 14px 20px; border-top: 1px solid #eee; }
+.btn-cerrar { border: 0; cursor: pointer; font: inherit; font-size: 14px; padding: 8px 28px; border-radius: 20px; color: #fff; background: #E8412A; }
+.btn-cerrar:hover { background: #B52A15; }
+@media (max-width: 640px) { .factura-datos { grid-template-columns: 1fr; } .factura-datos > div { grid-template-columns: 1fr; gap: 2px; } }

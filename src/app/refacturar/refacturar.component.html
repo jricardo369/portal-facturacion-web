@@ -16,70 +16,57 @@
 
   <section class="panel" *ngIf="paso === 1" aria-labelledby="t-paso1">
     <h2 class="panel-titulo" id="t-paso1">Localizar factura a refacturar</h2>
-    <p class="panel-sub">Ingrese folio, No. ticket o UUID. Solo facturas vigentes.</p>
+    <p class="panel-sub">Ingrese No. ticket o UUID. Solo facturas vigentes.</p>
     <form class="formulario una-columna" (ngSubmit)="buscar()">
       <div class="campo requerido">
         <label class="sr-only" for="q">Folio, ticket o UUID</label>
-        <input id="q" name="q" [(ngModel)]="busqueda" placeholder="Ej. OD-2026-0101, T-88231 o UUID" autocomplete="off" />
+        <input id="q" name="q" [(ngModel)]="busqueda" placeholder="Ej. 00000 o UUID" autocomplete="off" [disabled]="cargando" />
       </div>
       <p class="error" *ngIf="error" role="alert">{{ error }}</p>
       <div class="acciones">
-        <button type="button" class="btn btn-cancelar" (click)="salir()">Cancelar</button>
-        <button type="submit" class="btn btn-continuar">Buscar</button>
+        <button type="button" class="btn btn-cancelar" (click)="salir()" [disabled]="cargando">Cancelar</button>
+        <button type="submit" class="btn btn-continuar" [disabled]="cargando">{{ cargando ? 'Buscando…' : 'Buscar' }}</button>
       </div>
     </form>
   </section>
 
   <section class="panel" *ngIf="paso === 2 && encontrada" aria-labelledby="t-paso2">
     <h2 class="panel-titulo" id="t-paso2">Generar factura que sustituye</h2>
-    <p class="panel-sub">Anterior: {{ encontrada.folio }} · {{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</p>
+    <p class="panel-sub">Anterior: {{ encontrada.numeroTicket }} · {{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</p>
     <div class="original">
-      <div><strong>Folio</strong><span>{{ encontrada.folio }}</span></div>
-      <div><strong>UUID</strong><span class="uuid">{{ encontrada.uuid }}</span></div>
-      <div><strong>Cliente</strong><span>{{ encontrada.cliente }} · {{ encontrada.rfc }}</span></div>
-      <div><strong>Ticket</strong><span>{{ encontrada.ticket }} · {{ encontrada.fecha }}</span></div>
+      <div><strong>Ticket</strong><span>{{ encontrada.numeroTicket }}</span></div>
+      <div><strong>Fecha</strong><span>{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</span></div>
+      <div><strong>Subtotal</strong><span>{{ encontrada.subtotal | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
+      <div><strong>Impuestos</strong><span>{{ encontrada.impuestos | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
+      <div><strong>Total</strong><span>{{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
     </div>
     <form class="formulario" (ngSubmit)="generar()">
       <div class="campo requerido">
-        <label class="sr-only" for="cliente">Cliente</label>
-        <input id="cliente" name="cliente" [(ngModel)]="datos.cliente" placeholder="Razón social / Nombre" />
+        <label class="sr-only" for="rfc">RFC</label>
+        <input id="rfc" name="rfc" [(ngModel)]="datos.rfc" (ngModelChange)="actualizarRegimen()" placeholder="RFC" />
       </div>
       <div class="campo requerido">
-        <label class="sr-only" for="rfc">RFC</label>
-        <input id="rfc" name="rfc" [(ngModel)]="datos.rfc" placeholder="RFC" />
+        <label class="sr-only" for="cliente">Razón social</label>
+        <input id="cliente" name="cliente" [(ngModel)]="datos.cliente" placeholder="Razón social / Nombre" />
       </div>
       <div class="campo requerido">
         <label class="sr-only" for="correo">Correo</label>
         <input id="correo" name="correo" type="email" [(ngModel)]="datos.correo" placeholder="Correo electrónico" />
       </div>
       <div class="campo requerido">
-        <label class="sr-only" for="motivo">Motivo</label>
-        <input id="motivo" name="motivo" [(ngModel)]="datos.motivo" placeholder="Motivo de sustitución" />
-      </div>
-      <div class="campo requerido">
-        <label class="sr-only" for="regimen">Régimen</label>
-        <select id="regimen" name="regimen" [(ngModel)]="datos.regimen">
-          <option value="">Régimen fiscal…</option>
-          <option value="601">601 General de Ley</option>
-          <option value="612">612 Actividad empresarial</option>
-          <option value="605">605 Sueldos y salarios</option>
-        </select>
-      </div>
-      <div class="campo requerido">
         <label class="sr-only" for="uso">Uso CFDI</label>
         <select id="uso" name="uso" [(ngModel)]="datos.uso">
           <option value="">Uso CFDI…</option>
-          <option value="G03">G03 Gastos en general</option>
-          <option value="G01">G01 Adquisición de mercancías</option>
-          <option value="S01">S01 Sin efectos fiscales</option>
+          <option value="gastos">G03 Gastos en general</option>
+          <option value="mercancias">G01 Adquisición de mercancías</option>
         </select>
       </div>
     </form>
     <p class="error" *ngIf="error" role="alert">{{ error }}</p>
     <p class="nota">Los campos marcados con: * son obligatorios.</p>
     <div class="acciones">
-      <button type="button" class="btn btn-cancelar" (click)="paso = 1">Atrás</button>
-      <button type="button" class="btn btn-continuar" (click)="generar()">Generar y cancelar anterior</button>
+      <button type="button" class="btn btn-cancelar" (click)="paso = 1" [disabled]="cargando">Atrás</button>
+      <button type="button" class="btn btn-continuar" (click)="generar()" [disabled]="cargando">{{ cargando ? 'Generando…' : 'Generar y cancelar anterior' }}</button>
     </div>
   </section>
 
@@ -89,15 +76,15 @@
     <div class="ligado">
       <article>
         <h3>Anterior · Cancelada motivo 01</h3>
-        <p class="folio">{{ encontrada.folio }}</p>
-        <p class="uuid">{{ encontrada.uuid }}</p>
+        <p class="folio">{{ encontrada.numeroTicket }}</p>
+        <p class="uuid">{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
         <span class="badge cancelada">Cancelada</span>
       </article>
       <div class="link" aria-hidden="true">⇄</div>
       <article>
         <h3>Nueva · Relación 04</h3>
-        <p class="folio">{{ nueva.folio }}</p>
-        <p class="uuid">{{ nueva.uuid }}</p>
+        <p class="folio">{{ nueva.numeroTicket }}</p>
+        <p class="uuid">{{ nueva.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
         <span class="badge">Vigente</span>
       </article>
     </div>
@@ -107,5 +94,28 @@
     </div>
   </section>
 </main>
+
+<app-loading-overlay *ngIf="cargando" texto="Procesando solicitud…"></app-loading-overlay>
+
+<div *ngIf="confirmacionAbierta" class="confirmar-backdrop">
+  <div class="confirmar-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
+    <div class="confirmar-head">
+      <h2 id="titulo-confirmar">Confirmación de datos</h2>
+    </div>
+    <div class="confirmar-cuerpo">
+      <p class="confirmar-mensaje">Revisa los datos ingresados, al generar la factura se cancelará la anterior.</p>
+      <dl class="confirmar-lista">
+        <div class="confirmar-item" *ngFor="let d of resumenDatos">
+          <dt>{{ d.label }}</dt>
+          <dd>{{ d.valor }}</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="confirmar-pie">
+      <button type="button" class="btn-confirmar-cancelar" (click)="cancelarConfirmacion()">Cancelar</button>
+      <button type="button" class="btn-confirmar-aceptar" (click)="generarFinal()">Aceptar</button>
+    </div>
+  </div>
+</div>
 
 <app-footer></app-footer>

@@ -1,0 +1,26 @@
+.sesion-backdrop { position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,.55); backdrop-filter: blur(3px); }
+.sesion-overlay { position: fixed; inset: 0; z-index: 100001; display: grid; place-items: center; padding: 20px; overflow: auto; }
+.sesion-card { width: min(440px, 100%); background: #f0f0f0; border-radius: 14px; padding: 28px; text-align: center; box-shadow: 0 24px 70px rgba(0,0,0,.4); }
+.sesion-logo { width: 72px; height: 72px; object-fit: contain; margin: 0 auto 14px; display: block; }
+.sesion-titulo { margin: 0 0 8px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 22px; color: #235451; }
+.sesion-msg { margin: 0 auto; font-size: 14px; color: #5c3a2e; line-height: 1.5; max-width: 320px; }
+.sesion-usuario { margin-top: 8px; }
+.sesion-usuario strong { color: #B52A15; }
+.formulario { display: grid; grid-template-columns: minmax(240px, 300px); justify-content: center; gap: 14px; margin: 18px auto 0; width: 100%; }
+.campo { position: relative; text-align: left; }
+.campo input { width: 100%; font: inherit; font-size: 13px; padding: 9px 12px; border: 1px solid #cfcfcf; border-radius: 5px; background: #fff; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.campo input:focus-visible { outline: 3px solid #E8412A; outline-offset: 1px; }
+.campo.requerido::before { content: "*"; position: absolute; left: -12px; top: 8px; color: #B52A15; font-weight: 700; }
+.campo-password input { padding-right: 40px; }
+.ojo-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: transparent; cursor: pointer; color: #6e6e6e; padding: 6px; border-radius: 4px; display: grid; place-items: center; }
+.ojo-btn:hover { color: #E8412A; }
+.ojo-btn:focus-visible { outline: 3px solid #E8412A; outline-offset: 1px; }
+.ojo-btn svg { width: 20px; height: 20px; display: block; }
+.error { margin: 0; font-size: 13px; color: #b3261e; background: #fdecea; border: 1px solid #f5c6c2; border-radius: 4px; padding: 8px 12px; }
+.acciones { display: flex; gap: 12px; justify-content: center; margin-top: 4px; }
+.btn { border: 0; cursor: pointer; font: inherit; font-size: 14px; padding: 8px 22px; border-radius: 20px; color: #fff; }
+.btn:disabled { opacity: .6; cursor: default; }
+.btn-continuar { background: #E8412A; }
+.btn-continuar:hover:not(:disabled) { background: #B52A15; }
+.btn-salir { background: #235451; }
+.btn-salir:hover:not(:disabled) { background: #183c3a; }

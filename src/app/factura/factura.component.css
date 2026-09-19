@@ -31,7 +31,7 @@
 .acciones-nueva { display: flex; justify-content: center; margin-top: 22px; }
 .btn {
   border: 0; cursor: pointer; font: inherit; font-size: 14px;
-  padding: 8px 26px; border-radius: 4px; color: #fff; white-space: nowrap;
+  padding: 8px 26px; border-radius: 20px; color: #fff; white-space: nowrap;
 }
 .btn-facturar { background: #E8412A; }
 .btn-facturar:hover { background: #B52A15; }

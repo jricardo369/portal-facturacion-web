@@ -39,12 +39,9 @@ export class DatosFacturaComponent implements OnInit {
   cargando = false;
   errorAbierto = false;
   errorMensaje = '';
+  confirmacionAbierta = false;
+  resumenDatos: { label: string; valor: string }[] = [];
   private datosBase: DatosFacturaResponse | null = null;
-
-  regimenOpciones = [
-    { value: 'fisica', label: 'Persona Física' },
-    { value: 'moral', label: 'Persona Moral' },
-  ];
 
   usoOpciones = [
     { value: 'gastos', label: 'Gastos en general' },
@@ -72,7 +69,7 @@ export class DatosFacturaComponent implements OnInit {
       this.store.guardar(datos, rfcCapturado);
       this.subtotal = datos.subtotal ?? null;
       this.impuestos = datos.impuestos ?? null;
-      this.total = datos.total ?? null;
+      this.total = this.calcularTotal(this.subtotal, this.impuestos);
     }
     const c = datos?.cliente;
     if (c && (c.rfc || c.razonSocial)) {
@@ -87,17 +84,54 @@ export class DatosFacturaComponent implements OnInit {
       this.colonia = c.colonia ?? '';
       this.codigoPostal = c.codigoPostal ?? '';
       this.correo = c.correoElectronico ?? '';
-      this.regimen = c.regimenFiscal ?? '';
+      this.regimen = '';
       this.uso = c.usoFactura ?? '';
-      if (this.regimen && !this.regimenOpciones.some((o) => o.value === this.regimen)) {
-        this.regimenOpciones = [...this.regimenOpciones, { value: this.regimen, label: this.regimen }];
-      }
       if (this.uso && !this.usoOpciones.some((o) => o.value === this.uso)) {
         this.usoOpciones = [...this.usoOpciones, { value: this.uso, label: this.uso }];
       }
     } else {
       this.rfc = rfcCapturado;
     }
+    this.actualizarRegimen();
+  }
+
+  actualizarRegimen(): void {
+    const rfc = (this.rfc || '').trim();
+    if (rfc.length === 12) this.regimen = 'moral';
+    else if (rfc.length === 13) this.regimen = 'fisica';
+    else this.regimen = '';
+  }
+
+  private calcularTotal(subtotal: number | null, impuestos: number | null): number | null {
+    if (subtotal === null || subtotal === undefined) return null;
+    const s = subtotal;
+    const i = impuestos ?? 0;
+    return Math.round((s + i) * 100) / 100;
+  }
+
+  private usoFacturaLabel(): string {
+    const o = this.usoOpciones.find((x) => x.value === this.uso);
+    return o ? o.label : this.uso || '';
+  }
+
+  private construirResumen(): void {
+    this.resumenDatos = [
+      { label: 'RFC', valor: this.rfc.trim() },
+      { label: 'Razón Social', valor: this.razonSocial.trim() },
+      { label: 'Calle', valor: this.calle.trim() },
+      { label: 'Número exterior', valor: this.numExterior.trim() },
+      { label: 'Número interior', valor: this.numInterior.trim() },
+      { label: 'Estado', valor: this.estado.trim() },
+      { label: 'Municipio/Delegación', valor: this.municipio.trim() },
+      { label: 'Referencia', valor: this.referencia.trim() },
+      { label: 'Colonia', valor: this.colonia.trim() },
+      { label: 'Código Postal', valor: this.codigoPostal.trim() },
+      { label: 'Uso Factura', valor: this.usoFacturaLabel() },
+      { label: 'Correo Electrónico', valor: this.correo.trim() },
+      { label: 'Subtotal', valor: this.formatoMoneda(this.subtotal) },
+      { label: 'Impuestos', valor: this.formatoImpuestos(this.impuestos) },
+      { label: 'Total', valor: this.formatoMoneda(this.total) },
+    ];
   }
 
   cancelar(): void {
@@ -110,6 +144,28 @@ export class DatosFacturaComponent implements OnInit {
     if (form && !form.reportValidity()) {
       return;
     }
+    const rfc = (this.rfc || '').trim();
+    if (rfc.length !== 12 && rfc.length !== 13) {
+      this.mostrarError('El RFC debe ser de 12 (persona moral) o 13 (persona física) caracteres.');
+      return;
+    }
+    this.actualizarRegimen();
+    const state = history.state as { datos?: DatosFacturaResponse } | undefined;
+    const base = this.datosBase ?? this.store.obtener() ?? state?.datos ?? null;
+    if (!base?.numeroTicket) {
+      this.mostrarError('No se encontró el ticket a facturar. Regrese y capture de nuevo.');
+      return;
+    }
+    this.construirResumen();
+    this.confirmacionAbierta = true;
+  }
+
+  cancelarConfirmacion(): void {
+    this.confirmacionAbierta = false;
+  }
+
+  generar(): void {
+    this.confirmacionAbierta = false;
     const state = history.state as { datos?: DatosFacturaResponse } | undefined;
     const base = this.datosBase ?? this.store.obtener() ?? state?.datos ?? null;
     if (!base?.numeroTicket) {
@@ -139,9 +195,9 @@ export class DatosFacturaComponent implements OnInit {
   private construirPayload(base: DatosFacturaResponse): DatosFacturaResponse {
     return {
       numeroTicket: base.numeroTicket,
-      total: base.total ?? this.total,
       subtotal: base.subtotal ?? this.subtotal,
       impuestos: base.impuestos ?? this.impuestos,
+      total: this.total ?? base.total,
       tipoVenta: base.tipoVenta,
       fechaEmision: base.fechaEmision,
       fechaCierre: base.fechaCierre,

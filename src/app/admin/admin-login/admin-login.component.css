@@ -19,7 +19,7 @@
 .ojo-btn svg { width: 20px; height: 20px; display: block; }
 .error { margin: 0; font-size: 13px; color: #b3261e; background: #fdecea; border: 1px solid #f5c6c2; border-radius: 4px; padding: 8px 12px; }
 .acciones { display: flex; gap: 22px; justify-content: center; margin-top: 4px; }
-.btn { border: 0; cursor: pointer; font: inherit; font-size: 14px; padding: 8px 28px; border-radius: 4px; color: #fff; }
+.btn { border: 0; cursor: pointer; font: inherit; font-size: 14px; padding: 8px 28px; border-radius: 20px; color: #fff; }
 .btn-continuar { background: #E8412A; }
 .btn-continuar:hover { background: #B52A15; }
 @media (max-width: 760px) { .login-card { flex-direction: column; } .login-media { flex: none; max-width: 100%; min-height: 220px; max-height: 240px; overflow: hidden; } .login-media img { min-height: 0; height: 100%; } .login-body { flex: none; max-width: 100%; padding: 24px 18px 32px; } }

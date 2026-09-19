@@ -6,45 +6,39 @@ import { HeaderComponent } from '../../layout/header/header.component';
 import { FooterComponent } from '../../layout/footer/footer.component';
 import { LoadingOverlayComponent } from '../../shared/loading-overlay.component';
 import { ErrorDialogComponent } from '../../shared/error-dialog.component';
-import { FacturasService, FacturaItem } from '../facturas.service';
-import { FacturaDialogComponent } from './factura-dialog.component';
+import { ClientesService, ClienteItem } from '../clientes.service';
+import { ClienteDialogComponent } from './cliente-dialog.component';
 import { AdminAuthService } from '../auth.service';
 
 @Component({
-  selector: 'app-admin-facturas',
+  selector: 'app-admin-clientes',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, FacturaDialogComponent],
-  templateUrl: './admin-facturas.component.html',
-  styleUrls: ['./admin-facturas.component.css'],
+  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, ClienteDialogComponent],
+  templateUrl: './admin-clientes.component.html',
+  styleUrls: ['./admin-clientes.component.css'],
 })
-export class AdminFacturasComponent implements OnInit {
-  facturas: FacturaItem[] = [];
-  ticket = '';
-  desde = '';
-  hasta = '';
+export class AdminClientesComponent implements OnInit {
+  clientes: ClienteItem[] = [];
+  rfc = '';
+  razonSocial = '';
+  codigoPostal = '';
   pagina = 1;
-  porPagina = 10;
+  porPagina = 20;
   totalElementos = 0;
   cargando = false;
   error = '';
-  facturaSeleccionada?: FacturaItem;
+  clienteSeleccionado?: ClienteItem;
   private totalPaginasApi = 1;
   private cargaId = 0;
 
   constructor(
-    private svc: FacturasService,
+    private svc: ClientesService,
     private auth: AdminAuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.cargar();
-  }
-
-  get total(): number {
-    return this.facturas
-      .filter((f) => !this.esCancelada(f))
-      .reduce((a, f) => a + (f.total ?? 0), 0);
   }
 
   get totalPaginas(): number {
@@ -60,6 +54,10 @@ export class AdminFacturasComponent implements OnInit {
     const inicio = (this.pagina - 1) * this.porPagina + 1;
     const fin = Math.min(this.pagina * this.porPagina, this.totalElementos);
     return `${inicio}–${fin} de ${this.totalElementos}`;
+  }
+
+  get activos(): number {
+    return this.clientes.filter((c) => c.estatus).length;
   }
 
   irAPagina(p: number): void {
@@ -79,14 +77,14 @@ export class AdminFacturasComponent implements OnInit {
     void this.router.navigate(['/admin']);
   }
 
-  verDetalle(f: FacturaItem): void {
-    this.facturaSeleccionada = f;
+  verDetalle(c: ClienteItem): void {
+    this.clienteSeleccionado = c;
   }
 
   limpiar(): void {
-    this.ticket = '';
-    this.desde = '';
-    this.hasta = '';
+    this.rfc = '';
+    this.razonSocial = '';
+    this.codigoPostal = '';
     this.pagina = 1;
     this.cargar();
   }
@@ -96,11 +94,11 @@ export class AdminFacturasComponent implements OnInit {
     this.cargando = true;
     this.error = '';
     this.svc
-      .obtenerFacturas(this.desde, this.hasta, this.ticket, this.pagina - 1, this.porPagina)
+      .obtenerClientes(this.rfc, this.razonSocial, this.codigoPostal, this.pagina - 1, this.porPagina)
       .subscribe({
         next: (res) => {
           if (id !== this.cargaId) return;
-          this.facturas = res.content ?? [];
+          this.clientes = res.content ?? [];
           this.totalElementos = res.totalElements ?? 0;
           this.totalPaginasApi = Math.max(1, res.totalPages ?? 1);
           if (this.pagina > this.totalPaginasApi) this.pagina = this.totalPaginasApi;
@@ -108,26 +106,12 @@ export class AdminFacturasComponent implements OnInit {
         },
         error: () => {
           if (id !== this.cargaId) return;
-          this.facturas = [];
+          this.clientes = [];
           this.totalElementos = 0;
           this.cargando = false;
-          this.error = 'No se pudieron cargar las facturas. Verifica la conexión e intenta de nuevo.';
+          this.error = 'No se pudieron cargar los clientes. Verifica la conexión e intenta de nuevo.';
         },
       });
-  }
-
-  estado(f: FacturaItem): string {
-    const e = (f.estatus ?? '').trim().toLowerCase();
-    if (!e) return '';
-    return e.charAt(0).toUpperCase() + e.slice(1);
-  }
-
-  esCancelada(f: FacturaItem): boolean {
-    return (f.estatus ?? '').toLowerCase() === 'cancelada';
-  }
-
-  esCargada(f: FacturaItem): boolean {
-    return (f.estatus ?? '').toLowerCase() === 'cargada';
   }
 
   formatearFecha(iso?: string | null): string {
@@ -136,9 +120,5 @@ export class AdminFacturasComponent implements OnInit {
     if (isNaN(d.getTime())) return iso;
     const p = (n: number) => String(n).padStart(2, '0');
     return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
-  }
-
-  cliente(f: FacturaItem): string {
-    return f.cliente ?? f.razonSocial ?? '';
   }
 }

@@ -17,7 +17,7 @@
   <section class="filtros" aria-label="Filtros">
     <div class="campo">
       <label for="f-ticket">No. ticket</label>
-      <input id="f-ticket" [(ngModel)]="ticket" placeholder="Ej. T-88231" autocomplete="off" />
+      <input id="f-ticket" [(ngModel)]="ticket" placeholder="Ej. 00000" autocomplete="off" />
     </div>
     <div class="campo">
       <label for="f-desde">Desde</label>
@@ -38,14 +38,14 @@
           <tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>RFC</th><th>Ticket</th><th>Total</th><th>Estado</th></tr>
         </thead>
         <tbody>
-          <tr *ngFor="let f of facturas">
+          <tr *ngFor="let f of facturas" class="clic" (click)="verDetalle(f)" title="Ver detalle de la factura">
             <td class="folio">{{ f.folio }}</td>
             <td>{{ formatearFecha(f.fecha) }}</td>
             <td>{{ cliente(f) }}</td>
             <td>{{ f.rfc }}</td>
             <td>{{ f.noTicket }}</td>
             <td class="num">{{ f.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
-            <td><span class="badge" [class.cancelada]="esCancelada(f)">{{ estado(f) }}</span></td>
+            <td><span class="badge" [class.cancelada]="esCancelada(f)" [class.cargada]="esCargada(f)">{{ estado(f) }}</span></td>
           </tr>
           <tr *ngIf="totalElementos === 0"><td colspan="7" class="vacio">Sin resultados con los filtros aplicados.</td></tr>
         </tbody>
@@ -61,5 +61,7 @@
     </nav>
   </section>
 </main>
+
+<app-factura-dialog [factura]="facturaSeleccionada" (cerrar)="facturaSeleccionada = undefined" *ngIf="facturaSeleccionada"></app-factura-dialog>
 
 <app-footer></app-footer>

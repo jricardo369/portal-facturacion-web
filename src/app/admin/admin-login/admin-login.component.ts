@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AdminAuthService } from '../auth.service';
 import { LoadingOverlayComponent } from '../../shared/loading-overlay.component';
 
@@ -19,8 +19,11 @@ export class AdminLoginComponent {
   mostrar = false;
   cargando = false;
 
-  constructor(private auth: AdminAuthService, private router: Router) {
+  constructor(private auth: AdminAuthService, private router: Router, private route: ActivatedRoute) {
     if (this.auth.isLoggedIn()) void this.router.navigate(['/admin/facturas']);
+    if (this.route.snapshot.queryParamMap.get('expirado')) {
+      this.error = 'Tu sesión expiró por inactividad. Inicia sesión nuevamente.';
+    }
   }
 
   entrar(): void {
