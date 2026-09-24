@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
     selector: 'app-loading-overlay',
-    imports: [CommonModule],
+    imports: [],
     template: `
     <div class="loading-overlay" role="status" aria-live="polite" [attr.aria-label]="texto">
       <div class="loader">

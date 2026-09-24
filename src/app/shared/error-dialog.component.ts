@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
     selector: 'app-error-dialog',
-    imports: [CommonModule],
+    imports: [],
     template: `
     <div class="error-backdrop" (click)="cerrar.emit()">
       <div class="error-dialogo" role="alertdialog" aria-modal="true" aria-labelledby="titulo-error" (click)="$event.stopPropagation()">

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../layout/header/header.component';
@@ -12,7 +12,7 @@ import { AdminAuthService } from '../auth.service';
 
 @Component({
     selector: 'app-admin-clientes',
-    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, ClienteDialogComponent],
+    imports: [FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, ClienteDialogComponent],
     templateUrl: './admin-clientes.component.html',
     styleUrls: ['./admin-clientes.component.css']
 })

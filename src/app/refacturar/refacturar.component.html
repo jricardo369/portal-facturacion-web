@@ -14,107 +14,125 @@
     <li [class.activo]="paso === 3"><span>3</span> Ligado y cancelación</li>
   </ol>
 
-  <section class="panel" *ngIf="paso === 1" aria-labelledby="t-paso1">
-    <h2 class="panel-titulo" id="t-paso1">Localizar factura a refacturar</h2>
-    <p class="panel-sub">Ingrese No. ticket o UUID. Solo facturas vigentes.</p>
-    <form class="formulario una-columna" (ngSubmit)="buscar()">
-      <div class="campo requerido">
-        <label class="sr-only" for="q">Folio, ticket o UUID</label>
-        <input id="q" name="q" [(ngModel)]="busqueda" placeholder="Ej. 00000 o UUID" autocomplete="off" [disabled]="cargando" />
+  @if (paso === 1) {
+    <section class="panel" aria-labelledby="t-paso1">
+      <h2 class="panel-titulo" id="t-paso1">Localizar factura a refacturar</h2>
+      <p class="panel-sub">Ingrese No. ticket o UUID. Solo facturas vigentes.</p>
+      <form class="formulario una-columna" (ngSubmit)="buscar()">
+        <div class="campo requerido">
+          <label class="sr-only" for="q">Folio, ticket o UUID</label>
+          <input id="q" name="q" [(ngModel)]="busqueda" placeholder="Ej. 00000 o UUID" autocomplete="off" [disabled]="cargando" />
+        </div>
+        @if (error) {
+          <p class="error" role="alert">{{ error }}</p>
+        }
+        <div class="acciones">
+          <button type="button" class="btn btn-cancelar" (click)="salir()" [disabled]="cargando">Cancelar</button>
+          <button type="submit" class="btn btn-continuar" [disabled]="cargando">{{ cargando ? 'Buscando…' : 'Buscar' }}</button>
+        </div>
+      </form>
+    </section>
+  }
+
+  @if (paso === 2 && encontrada) {
+    <section class="panel" aria-labelledby="t-paso2">
+      <h2 class="panel-titulo" id="t-paso2">Generar factura que sustituye</h2>
+      <p class="panel-sub">Anterior: {{ encontrada.numeroTicket }} · {{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</p>
+      <div class="original">
+        <div><strong>Ticket</strong><span>{{ encontrada.numeroTicket }}</span></div>
+        <div><strong>Fecha</strong><span>{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</span></div>
+        <div><strong>Subtotal</strong><span>{{ encontrada.subtotal | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
+        <div><strong>Impuestos</strong><span>{{ encontrada.impuestos | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
+        <div><strong>Total</strong><span>{{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
       </div>
-      <p class="error" *ngIf="error" role="alert">{{ error }}</p>
+      <form class="formulario" (ngSubmit)="generar()">
+        <div class="campo requerido">
+          <label class="sr-only" for="rfc">RFC</label>
+          <input id="rfc" name="rfc" [(ngModel)]="datos.rfc" (ngModelChange)="actualizarRegimen()" placeholder="RFC" />
+        </div>
+        <div class="campo requerido">
+          <label class="sr-only" for="cliente">Razón social</label>
+          <input id="cliente" name="cliente" [(ngModel)]="datos.cliente" placeholder="Razón social / Nombre" />
+        </div>
+        <div class="campo requerido">
+          <label class="sr-only" for="correo">Correo</label>
+          <input id="correo" name="correo" type="email" [(ngModel)]="datos.correo" placeholder="Correo electrónico" />
+        </div>
+        <div class="campo requerido">
+          <label class="sr-only" for="uso">Uso CFDI</label>
+          <select id="uso" name="uso" [(ngModel)]="datos.uso">
+            <option value="">Uso CFDI…</option>
+            @for (o of usoOpciones; track o) {
+              <option [value]="o.value">{{ o.label }}</option>
+            }
+          </select>
+        </div>
+      </form>
+      @if (error) {
+        <p class="error" role="alert">{{ error }}</p>
+      }
+      <p class="nota">Los campos marcados con: * son obligatorios.</p>
       <div class="acciones">
-        <button type="button" class="btn btn-cancelar" (click)="salir()" [disabled]="cargando">Cancelar</button>
-        <button type="submit" class="btn btn-continuar" [disabled]="cargando">{{ cargando ? 'Buscando…' : 'Buscar' }}</button>
+        <button type="button" class="btn btn-cancelar" (click)="paso = 1" [disabled]="cargando">Atrás</button>
+        <button type="button" class="btn btn-continuar" (click)="generar()" [disabled]="cargando">{{ cargando ? 'Generando…' : 'Generar y cancelar anterior' }}</button>
       </div>
-    </form>
-  </section>
+    </section>
+  }
 
-  <section class="panel" *ngIf="paso === 2 && encontrada" aria-labelledby="t-paso2">
-    <h2 class="panel-titulo" id="t-paso2">Generar factura que sustituye</h2>
-    <p class="panel-sub">Anterior: {{ encontrada.numeroTicket }} · {{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</p>
-    <div class="original">
-      <div><strong>Ticket</strong><span>{{ encontrada.numeroTicket }}</span></div>
-      <div><strong>Fecha</strong><span>{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</span></div>
-      <div><strong>Subtotal</strong><span>{{ encontrada.subtotal | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
-      <div><strong>Impuestos</strong><span>{{ encontrada.impuestos | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
-      <div><strong>Total</strong><span>{{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
-    </div>
-    <form class="formulario" (ngSubmit)="generar()">
-      <div class="campo requerido">
-        <label class="sr-only" for="rfc">RFC</label>
-        <input id="rfc" name="rfc" [(ngModel)]="datos.rfc" (ngModelChange)="actualizarRegimen()" placeholder="RFC" />
+  @if (paso === 3 && nueva && encontrada) {
+    <section class="panel exito" aria-labelledby="t-paso3">
+      <h2 class="panel-titulo" id="t-paso3">Refacturación completada</h2>
+      <p class="panel-sub">Nueva factura ligada a la anterior.</p>
+      <div class="ligado">
+        <article>
+          <h3>Anterior · Cancelada motivo 01</h3>
+          <p class="folio">{{ encontrada.numeroTicket }}</p>
+          <p class="uuid">{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
+          <span class="badge cancelada">Cancelada</span>
+        </article>
+        <div class="link" aria-hidden="true">⇄</div>
+        <article>
+          <h3>Nueva · Relación 04</h3>
+          <p class="folio">{{ nueva.numeroTicket }}</p>
+          <p class="uuid">{{ nueva.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
+          <span class="badge">Vigente</span>
+        </article>
       </div>
-      <div class="campo requerido">
-        <label class="sr-only" for="cliente">Razón social</label>
-        <input id="cliente" name="cliente" [(ngModel)]="datos.cliente" placeholder="Razón social / Nombre" />
+      <div class="acciones">
+        <button type="button" class="btn btn-cancelar" (click)="reiniciar()">Refacturar otra</button>
+        <button type="button" class="btn btn-continuar" (click)="salir()">Salir</button>
       </div>
-      <div class="campo requerido">
-        <label class="sr-only" for="correo">Correo</label>
-        <input id="correo" name="correo" type="email" [(ngModel)]="datos.correo" placeholder="Correo electrónico" />
-      </div>
-      <div class="campo requerido">
-        <label class="sr-only" for="uso">Uso CFDI</label>
-        <select id="uso" name="uso" [(ngModel)]="datos.uso">
-          <option value="">Uso CFDI…</option>
-          <option *ngFor="let o of usoOpciones" [value]="o.value">{{ o.label }}</option>
-        </select>
-      </div>
-    </form>
-    <p class="error" *ngIf="error" role="alert">{{ error }}</p>
-    <p class="nota">Los campos marcados con: * son obligatorios.</p>
-    <div class="acciones">
-      <button type="button" class="btn btn-cancelar" (click)="paso = 1" [disabled]="cargando">Atrás</button>
-      <button type="button" class="btn btn-continuar" (click)="generar()" [disabled]="cargando">{{ cargando ? 'Generando…' : 'Generar y cancelar anterior' }}</button>
-    </div>
-  </section>
-
-  <section class="panel exito" *ngIf="paso === 3 && nueva && encontrada" aria-labelledby="t-paso3">
-    <h2 class="panel-titulo" id="t-paso3">Refacturación completada</h2>
-    <p class="panel-sub">Nueva factura ligada a la anterior.</p>
-    <div class="ligado">
-      <article>
-        <h3>Anterior · Cancelada motivo 01</h3>
-        <p class="folio">{{ encontrada.numeroTicket }}</p>
-        <p class="uuid">{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
-        <span class="badge cancelada">Cancelada</span>
-      </article>
-      <div class="link" aria-hidden="true">⇄</div>
-      <article>
-        <h3>Nueva · Relación 04</h3>
-        <p class="folio">{{ nueva.numeroTicket }}</p>
-        <p class="uuid">{{ nueva.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
-        <span class="badge">Vigente</span>
-      </article>
-    </div>
-    <div class="acciones">
-      <button type="button" class="btn btn-cancelar" (click)="reiniciar()">Refacturar otra</button>
-      <button type="button" class="btn btn-continuar" (click)="salir()">Salir</button>
-    </div>
-  </section>
+    </section>
+  }
 </main>
 
-<app-loading-overlay *ngIf="cargando" texto="Procesando solicitud…"></app-loading-overlay>
+@if (cargando) {
+  <app-loading-overlay texto="Procesando solicitud…"></app-loading-overlay>
+}
 
-<div *ngIf="confirmacionAbierta" class="confirmar-backdrop">
-  <div class="confirmar-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
-    <div class="confirmar-head">
-      <h2 id="titulo-confirmar">Confirmación de datos</h2>
-    </div>
-    <div class="confirmar-cuerpo">
-      <p class="confirmar-mensaje">Revisa los datos ingresados, al generar la factura se cancelará la anterior.</p>
-      <dl class="confirmar-lista">
-        <div class="confirmar-item" *ngFor="let d of resumenDatos">
-          <dt>{{ d.label }}</dt>
-          <dd>{{ d.valor }}</dd>
-        </div>
-      </dl>
-    </div>
-    <div class="confirmar-pie">
-      <button type="button" class="btn-confirmar-cancelar" (click)="cancelarConfirmacion()">Cancelar</button>
-      <button type="button" class="btn-confirmar-aceptar" (click)="generarFinal()">Aceptar</button>
+@if (confirmacionAbierta) {
+  <div class="confirmar-backdrop">
+    <div class="confirmar-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
+      <div class="confirmar-head">
+        <h2 id="titulo-confirmar">Confirmación de datos</h2>
+      </div>
+      <div class="confirmar-cuerpo">
+        <p class="confirmar-mensaje">Revisa los datos ingresados, al generar la factura se cancelará la anterior.</p>
+        <dl class="confirmar-lista">
+          @for (d of resumenDatos; track d) {
+            <div class="confirmar-item">
+              <dt>{{ d.label }}</dt>
+              <dd>{{ d.valor }}</dd>
+            </div>
+          }
+        </dl>
+      </div>
+      <div class="confirmar-pie">
+        <button type="button" class="btn-confirmar-cancelar" (click)="cancelarConfirmacion()">Cancelar</button>
+        <button type="button" class="btn-confirmar-aceptar" (click)="generarFinal()">Aceptar</button>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <app-footer></app-footer>

@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
@@ -9,7 +9,7 @@ import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
 
 @Component({
     selector: 'app-sesion-expirada',
-    imports: [CommonModule, FormsModule, LoadingOverlayComponent],
+    imports: [FormsModule, LoadingOverlayComponent],
     templateUrl: './sesion-expirada.component.html',
     styleUrls: ['./sesion-expirada.component.css']
 })

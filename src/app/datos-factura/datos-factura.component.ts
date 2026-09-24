@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { USOS_CFDI, filtrarUsosCfdi, normalizarUsoCfdi, usoCfdiLabel } from '../
 
 @Component({
     selector: 'app-datos-factura',
-    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent],
+    imports: [FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent],
     templateUrl: './datos-factura.component.html',
     styleUrls: ['./datos-factura.component.css']
 })

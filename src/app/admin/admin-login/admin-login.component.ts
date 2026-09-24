@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminAuthService } from '../auth.service';
@@ -7,7 +7,7 @@ import { LoadingOverlayComponent } from '../../shared/loading-overlay.component'
 
 @Component({
     selector: 'app-admin-login',
-    imports: [CommonModule, FormsModule, LoadingOverlayComponent],
+    imports: [FormsModule, LoadingOverlayComponent],
     templateUrl: './admin-login.component.html',
     styleUrls: ['./admin-login.component.css']
 })

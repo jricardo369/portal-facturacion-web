@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -14,7 +14,7 @@ type Pestana = 'facturar' | 'consulta';
 
 @Component({
     selector: 'app-facturar',
-    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
+    imports: [FormsModule, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
     templateUrl: './facturar.component.html',
     styleUrls: ['./facturar.component.css']
 })

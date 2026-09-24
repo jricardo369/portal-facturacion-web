@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ClienteItem } from '../clientes.service';
 
 @Component({
     selector: 'app-cliente-dialog',
-    imports: [CommonModule],
+    imports: [],
     templateUrl: './cliente-dialog.component.html',
     styleUrls: ['./cliente-dialog.component.css']
 })

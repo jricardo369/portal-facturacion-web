@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-aviso-dialog',
-    imports: [CommonModule, RouterLink],
+    imports: [RouterLink],
     templateUrl: './aviso-dialog.component.html',
     styleUrls: ['./aviso-dialog.component.css']
 })

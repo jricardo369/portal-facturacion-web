@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FacturaItem } from '../facturas.service';
 
 @Component({
     selector: 'app-factura-dialog',
-    imports: [CommonModule],
+    imports: [],
     templateUrl: './factura-dialog.component.html',
     styleUrls: ['./factura-dialog.component.css']
 })

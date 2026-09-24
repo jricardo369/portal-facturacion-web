@@ -1,8 +1,12 @@
 <app-header></app-header>
 
 <main id="contenido" class="pagina">
-  <app-loading-overlay texto="Cargando facturas…" *ngIf="cargando"></app-loading-overlay>
-  <app-error-dialog titulo="No se pudieron cargar las facturas" [mensaje]="error" (cerrar)="error = ''" *ngIf="error"></app-error-dialog>
+  @if (cargando) {
+    <app-loading-overlay texto="Cargando facturas…"></app-loading-overlay>
+  }
+  @if (error) {
+    <app-error-dialog titulo="No se pudieron cargar las facturas" [mensaje]="error" (cerrar)="error = ''"></app-error-dialog>
+  }
 
   <div class="encabezado">
     <h1 class="titulo">Facturas emitidas</h1>
@@ -38,30 +42,40 @@
           <tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>RFC</th><th>Ticket</th><th>Total</th><th>Estado</th></tr>
         </thead>
         <tbody>
-          <tr *ngFor="let f of facturas" class="clic" (click)="verDetalle(f)" title="Ver detalle de la factura">
-            <td class="folio">{{ f.folio }}</td>
-            <td>{{ formatearFecha(f.fecha) }}</td>
-            <td>{{ cliente(f) }}</td>
-            <td>{{ f.rfc }}</td>
-            <td>{{ f.noTicket }}</td>
-            <td class="num">{{ f.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
-            <td><span class="badge" [class.cancelada]="esCancelada(f)" [class.cargada]="esCargada(f)">{{ estado(f) }}</span></td>
-          </tr>
-          <tr *ngIf="totalElementos === 0"><td colspan="7" class="vacio">Sin resultados con los filtros aplicados.</td></tr>
+          @for (f of facturas; track f) {
+            <tr class="clic" (click)="verDetalle(f)" title="Ver detalle de la factura">
+              <td class="folio">{{ f.folio }}</td>
+              <td>{{ formatearFecha(f.fecha) }}</td>
+              <td>{{ cliente(f) }}</td>
+              <td>{{ f.rfc }}</td>
+              <td>{{ f.noTicket }}</td>
+              <td class="num">{{ f.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+              <td><span class="badge" [class.cancelada]="esCancelada(f)" [class.cargada]="esCargada(f)">{{ estado(f) }}</span></td>
+            </tr>
+          }
+          @if (totalElementos === 0) {
+            <tr><td colspan="7" class="vacio">Sin resultados con los filtros aplicados.</td></tr>
+          }
         </tbody>
       </table>
     </div>
-    <nav class="paginacion" aria-label="Paginación" *ngIf="totalElementos > 0">
-      <span class="rango">{{ rango }}</span>
-      <div class="pag-btns">
-        <button type="button" class="pag" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Anterior">‹</button>
-        <button type="button" class="pag" *ngFor="let p of paginas" [class.activa]="p === pagina" (click)="irAPagina(p)">{{ p }}</button>
-        <button type="button" class="pag" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Siguiente">›</button>
-      </div>
-    </nav>
+    @if (totalElementos > 0) {
+      <nav class="paginacion" aria-label="Paginación">
+        <span class="rango">{{ rango }}</span>
+        <div class="pag-btns">
+          <button type="button" class="pag" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Anterior">‹</button>
+          @for (p of paginas; track p) {
+            <button type="button" class="pag" [class.activa]="p === pagina" (click)="irAPagina(p)">{{ p }}</button>
+          }
+          <button type="button" class="pag" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Siguiente">›</button>
+        </div>
+      </nav>
+    }
   </section>
 </main>
 
-<app-factura-dialog [factura]="facturaSeleccionada" (cerrar)="facturaSeleccionada = undefined" *ngIf="facturaSeleccionada"></app-factura-dialog>
+@if (facturaSeleccionada) {
+  <app-factura-dialog [factura]="facturaSeleccionada" (cerrar)="facturaSeleccionada = undefined"></app-factura-dialog>
+}
 
 <app-footer></app-footer>

@@ -23,12 +23,12 @@
       type="button" role="tab" id="tab-facturar" aria-controls="panel-facturar"
       [attr.aria-selected]="pestana === 'facturar'"
       [class.activa]="pestana === 'facturar'"
-      (click)="mostrar('facturar')">Facturar</button>
+    (click)="mostrar('facturar')">Facturar</button>
     <button
       type="button" role="tab" id="tab-consulta" aria-controls="panel-consulta"
       [attr.aria-selected]="pestana === 'consulta'"
       [class.activa]="pestana === 'consulta'"
-      (click)="mostrar('consulta')">Consulta o reenvía tu factura</button>
+    (click)="mostrar('consulta')">Consulta o reenvía tu factura</button>
   </div>
 
   <section
@@ -70,7 +70,9 @@
       </div>
       <p class="nota">Los campos marcados con: * son obligatorios.</p>
     </form>
-    <p *ngIf="exitoMensaje" class="exito" role="status">{{ exitoMensaje }}</p>
+    @if (exitoMensaje) {
+      <p class="exito" role="status">{{ exitoMensaje }}</p>
+    }
     <div class="acciones">
       <button type="button" class="btn btn-cancelar" (click)="cancelarConsulta()" [disabled]="cargando">Cancelar</button>
       <button type="button" class="btn btn-continuar" (click)="continuarConsulta()" [disabled]="cargando">{{ cargando && pestana === 'consulta' ? 'Buscando…' : 'Continuar' }}</button>
@@ -78,15 +80,21 @@
   </section>
 </main>
 
-<app-loading-overlay *ngIf="cargando" texto="Buscando información…"></app-loading-overlay>
+@if (cargando) {
+  <app-loading-overlay texto="Buscando información…"></app-loading-overlay>
+}
 
-<div *ngIf="ayudaTicketVisible" class="ayuda-backdrop" (click)="cerrarAyudaTicket()">
-  <div class="ayuda-dialogo" role="dialog" aria-modal="true" aria-label="Ayuda: número de ticket" (click)="$event.stopPropagation()">
-    <button type="button" class="ayuda-cerrar" (click)="cerrarAyudaTicket()" aria-label="Cerrar ayuda">✕</button>
-    <img src="assets/ticketOsoDespierto.png" alt="Ejemplo de número de ticket" class="ayuda-imagen" />
+@if (ayudaTicketVisible) {
+  <div class="ayuda-backdrop" (click)="cerrarAyudaTicket()">
+    <div class="ayuda-dialogo" role="dialog" aria-modal="true" aria-label="Ayuda: número de ticket" (click)="$event.stopPropagation()">
+      <button type="button" class="ayuda-cerrar" (click)="cerrarAyudaTicket()" aria-label="Cerrar ayuda">✕</button>
+      <img src="assets/ticketOsoDespierto.png" alt="Ejemplo de número de ticket" class="ayuda-imagen" />
+    </div>
   </div>
-</div>
+}
 
-<app-error-dialog *ngIf="errorAbierto" [mensaje]="errorMensaje" (cerrar)="cerrarError()"></app-error-dialog>
+@if (errorAbierto) {
+  <app-error-dialog [mensaje]="errorMensaje" (cerrar)="cerrarError()"></app-error-dialog>
+}
 
 <app-footer></app-footer>

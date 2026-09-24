@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Location, CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 import { HeaderComponent } from '../layout/header/header.component';
 import { FooterComponent } from '../layout/footer/footer.component';
 
 @Component({
     selector: 'app-aviso-privacidad',
-    imports: [CommonModule, HeaderComponent, FooterComponent],
+    imports: [HeaderComponent, FooterComponent],
     templateUrl: './aviso-privacidad.component.html',
     styleUrls: ['./aviso-privacidad.component.css']
 })

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../layout/header/header.component';
@@ -9,7 +9,7 @@ import { DatosFacturaResponse, FacturacionService } from '../facturacion/factura
 
 @Component({
     selector: 'app-factura',
-    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
+    imports: [FormsModule, HeaderComponent, FooterComponent],
     templateUrl: './factura.component.html',
     styleUrls: ['./factura.component.css']
 })

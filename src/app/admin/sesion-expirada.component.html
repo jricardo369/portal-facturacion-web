@@ -1,35 +1,48 @@
-<div role="presentation" class="sesion-backdrop" aria-hidden="true" *ngIf="visible"></div>
-<div class="sesion-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-sesion" *ngIf="visible">
-  <div class="sesion-card">
-    <img class="sesion-logo" src="assets/logo.png" alt="Oso Despierto" />
-    <h2 id="titulo-sesion" class="sesion-titulo">Su sesión ha terminado</h2>
-    <p class="sesion-msg">
-      El tiempo de sesión ha expirado. Para continuar, ingrese su usuario y contraseña.
-    </p>
-    <p class="sesion-msg sesion-usuario" *ngIf="usuarioLogueado">
-      Usuario conectado: <strong>{{ usuarioLogueado }}</strong>
-    </p>
-
-    <form class="formulario una-columna" (ngSubmit)="continuar()" #f="ngForm">
-      <div class="campo requerido">
-        <label class="sr-only" for="sesion-usuario">Usuario</label>
-        <input id="sesion-usuario" name="usuario" [(ngModel)]="usuario" placeholder="Usuario" autocomplete="username" />
-      </div>
-      <div class="campo requerido campo-password">
-        <label class="sr-only" for="sesion-password">Contraseña</label>
-        <input id="sesion-password" name="password" [(ngModel)]="password" [type]="mostrar ? 'text' : 'password'" placeholder="Contraseña" autocomplete="current-password" />
-        <button type="button" class="ojo-btn" (click)="mostrar = !mostrar" [attr.aria-label]="mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña'" [attr.aria-pressed]="mostrar">
-          <svg *ngIf="!mostrar" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-          <svg *ngIf="mostrar" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7c1.9 0 3.6.4 5.1 1M22 12s-3.5 7-10 7c-1.9 0-3.6-.4-5.1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-      <p class="error" *ngIf="error" role="alert">{{ error }}</p>
-      <div class="acciones">
-        <button type="submit" class="btn btn-continuar" [disabled]="cargando">{{ cargando ? 'Verificando…' : 'Continuar' }}</button>
-        <button type="button" class="btn btn-salir" [disabled]="cargando" (click)="cerrarSesion()">Cerrar sesión</button>
-      </div>
-    </form>
+@if (visible) {
+  <div role="presentation" class="sesion-backdrop" aria-hidden="true"></div>
+}
+@if (visible) {
+  <div class="sesion-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-sesion">
+    <div class="sesion-card">
+      <img class="sesion-logo" src="assets/logo.png" alt="Oso Despierto" />
+      <h2 id="titulo-sesion" class="sesion-titulo">Su sesión ha terminado</h2>
+      <p class="sesion-msg">
+        El tiempo de sesión ha expirado. Para continuar, ingrese su usuario y contraseña.
+      </p>
+      @if (usuarioLogueado) {
+        <p class="sesion-msg sesion-usuario">
+          Usuario conectado: <strong>{{ usuarioLogueado }}</strong>
+        </p>
+      }
+      <form class="formulario una-columna" (ngSubmit)="continuar()" #f="ngForm">
+        <div class="campo requerido">
+          <label class="sr-only" for="sesion-usuario">Usuario</label>
+          <input id="sesion-usuario" name="usuario" [(ngModel)]="usuario" placeholder="Usuario" autocomplete="username" />
+        </div>
+        <div class="campo requerido campo-password">
+          <label class="sr-only" for="sesion-password">Contraseña</label>
+          <input id="sesion-password" name="password" [(ngModel)]="password" [type]="mostrar ? 'text' : 'password'" placeholder="Contraseña" autocomplete="current-password" />
+          <button type="button" class="ojo-btn" (click)="mostrar = !mostrar" [attr.aria-label]="mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña'" [attr.aria-pressed]="mostrar">
+            @if (!mostrar) {
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            }
+            @if (mostrar) {
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7c1.9 0 3.6.4 5.1 1M22 12s-3.5 7-10 7c-1.9 0-3.6-.4-5.1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            }
+          </button>
+        </div>
+        @if (error) {
+          <p class="error" role="alert">{{ error }}</p>
+        }
+        <div class="acciones">
+          <button type="submit" class="btn btn-continuar" [disabled]="cargando">{{ cargando ? 'Verificando…' : 'Continuar' }}</button>
+          <button type="button" class="btn btn-salir" [disabled]="cargando" (click)="cerrarSesion()">Cerrar sesión</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+}
 
-<app-loading-overlay *ngIf="cargando" texto="Verificando…"></app-loading-overlay>
+@if (cargando) {
+  <app-loading-overlay texto="Verificando…"></app-loading-overlay>
+}

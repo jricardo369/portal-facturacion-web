@@ -62,7 +62,9 @@
         <label for="uso"><span class="req" aria-hidden="true">*</span>Uso Factura:</label>
         <select id="uso" name="uso" required [(ngModel)]="uso">
           <option value="">Seleccione</option>
-          <option *ngFor="let o of usoOpciones" [value]="o.value">{{ o.label }}</option>
+          @for (o of usoOpciones; track o) {
+            <option [value]="o.value">{{ o.label }}</option>
+          }
         </select>
       </div>
 
@@ -88,29 +90,37 @@
   </section>
 </main>
 
-<app-loading-overlay *ngIf="cargando" texto="Generando factura…"></app-loading-overlay>
+@if (cargando) {
+  <app-loading-overlay texto="Generando factura…"></app-loading-overlay>
+}
 
-<app-error-dialog *ngIf="errorAbierto" [mensaje]="errorMensaje" (cerrar)="cerrarError()"></app-error-dialog>
+@if (errorAbierto) {
+  <app-error-dialog [mensaje]="errorMensaje" (cerrar)="cerrarError()"></app-error-dialog>
+}
 
-<div *ngIf="confirmacionAbierta" class="confirmar-backdrop">
-  <div class="confirmar-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
-    <div class="confirmar-head">
-      <h2 id="titulo-confirmar">Confirmación de datos</h2>
-    </div>
-    <div class="confirmar-cuerpo">
-      <p class="confirmar-mensaje">Revisa la información ingresada, posterior se generará la factura.</p>
-      <dl class="confirmar-lista">
-        <div class="confirmar-item" *ngFor="let d of resumenDatos">
-          <dt>{{ d.label }}</dt>
-          <dd>{{ d.valor }}</dd>
-        </div>
-      </dl>
-    </div>
-    <div class="confirmar-pie">
-      <button type="button" class="btn-confirmar-cancelar" (click)="cancelarConfirmacion()">Cancelar</button>
-      <button type="button" class="btn-confirmar-aceptar" (click)="generar()">Aceptar</button>
+@if (confirmacionAbierta) {
+  <div class="confirmar-backdrop">
+    <div class="confirmar-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
+      <div class="confirmar-head">
+        <h2 id="titulo-confirmar">Confirmación de datos</h2>
+      </div>
+      <div class="confirmar-cuerpo">
+        <p class="confirmar-mensaje">Revisa la información ingresada, posterior se generará la factura.</p>
+        <dl class="confirmar-lista">
+          @for (d of resumenDatos; track d) {
+            <div class="confirmar-item">
+              <dt>{{ d.label }}</dt>
+              <dd>{{ d.valor }}</dd>
+            </div>
+          }
+        </dl>
+      </div>
+      <div class="confirmar-pie">
+        <button type="button" class="btn-confirmar-cancelar" (click)="cancelarConfirmacion()">Cancelar</button>
+        <button type="button" class="btn-confirmar-aceptar" (click)="generar()">Aceptar</button>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <app-footer></app-footer>

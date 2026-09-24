@@ -7,7 +7,9 @@
   <section class="panel" aria-labelledby="titulo-opciones">
     <h2 class="sr-only" id="titulo-opciones">Opciones de entrega de factura</h2>
 
-    <p class="exito" role="status" *ngIf="mensajeExito">{{ mensajeExito }}</p>
+    @if (mensajeExito) {
+      <p class="exito" role="status">{{ mensajeExito }}</p>
+    }
 
     <p class="linea">{{ textoCorreo }}</p>
 
@@ -17,7 +19,9 @@
         <input id="correo-envio" name="correo-envio" type="email" autocomplete="email" [(ngModel)]="correo" />
         <button type="button" class="btn btn-reenviar" (click)="enviarNuevamente()">{{ textoBotonEnviar }}</button>
       </div>
-      <p class="aviso" [class.aviso-error]="errorInfo" role="status" *ngIf="mensajeInfo">{{ mensajeInfo }}</p>
+      @if (mensajeInfo) {
+        <p class="aviso" [class.aviso-error]="errorInfo" role="status">{{ mensajeInfo }}</p>
+      }
     </form>
 
     <div class="acciones-descarga">
