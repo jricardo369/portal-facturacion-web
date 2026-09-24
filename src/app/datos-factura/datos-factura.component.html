@@ -72,6 +72,7 @@
       </div>
 
       <div class="resumen">
+        <div><strong>Tipo de pago</strong><span>{{ tipoPago?.trim() ? tipoPago : 'N/A' }}</span></div>
         <div><strong>Subtotal</strong><span>{{ formatoMoneda(subtotal) }}</span></div>
         <div><strong>Impuestos</strong><span>{{ formatoImpuestos(impuestos) }}</span></div>
         <div class="total"><strong>Total</strong><span>{{ formatoMoneda(total) }}</span></div>

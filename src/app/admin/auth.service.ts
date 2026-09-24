@@ -13,7 +13,7 @@ export type LoginResponse = Record<string, unknown>;
 export class AdminAuthService {
   private readonly KEY = 'auth_session';
   private readonly LEGACY_KEY = 'admin_session';
-  private readonly URL = 'http://localhost:8080/api/v1/auth/login';
+  private readonly URL = 'http://localhost:18080/api/v1/auth/login';
 
   constructor(private http: HttpClient) {}
 

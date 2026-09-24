@@ -57,8 +57,7 @@
         <label class="sr-only" for="uso">Uso CFDI</label>
         <select id="uso" name="uso" [(ngModel)]="datos.uso">
           <option value="">Uso CFDI…</option>
-          <option value="gastos">G03 Gastos en general</option>
-          <option value="mercancias">G01 Adquisición de mercancías</option>
+          <option *ngFor="let o of usoOpciones" [value]="o.value">{{ o.label }}</option>
         </select>
       </div>
     </form>

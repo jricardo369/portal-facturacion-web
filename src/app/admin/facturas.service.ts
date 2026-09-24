@@ -31,7 +31,7 @@ export interface PaginaFactura {
 
 @Injectable({ providedIn: 'root' })
 export class FacturasService {
-  private readonly BASE = 'http://localhost:8080/api/v1/facturas';
+  private readonly BASE = 'http://localhost:18080/api/v1/facturas';
 
   constructor(private http: HttpClient, private auth: AdminAuthService) {}
 

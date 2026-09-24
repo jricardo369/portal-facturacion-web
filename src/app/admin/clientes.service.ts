@@ -33,7 +33,7 @@ export interface PaginaCliente {
 
 @Injectable({ providedIn: 'root' })
 export class ClientesService {
-  private readonly BASE = 'http://localhost:8080/api/v1/clientes';
+  private readonly BASE = 'http://localhost:18080/api/v1/clientes';
 
   constructor(private http: HttpClient, private auth: AdminAuthService) {}
 
