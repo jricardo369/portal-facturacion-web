@@ -6,11 +6,10 @@ import { AdminAuthService } from '../auth.service';
 import { LoadingOverlayComponent } from '../../shared/loading-overlay.component';
 
 @Component({
-  selector: 'app-admin-login',
-  standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverlayComponent],
-  templateUrl: './admin-login.component.html',
-  styleUrls: ['./admin-login.component.css'],
+    selector: 'app-admin-login',
+    imports: [CommonModule, FormsModule, LoadingOverlayComponent],
+    templateUrl: './admin-login.component.html',
+    styleUrls: ['./admin-login.component.css']
 })
 export class AdminLoginComponent {
   usuario = '';

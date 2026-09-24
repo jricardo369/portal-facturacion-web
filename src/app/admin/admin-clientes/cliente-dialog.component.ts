@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ClienteItem } from '../clientes.service';
 
 @Component({
-  selector: 'app-cliente-dialog',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './cliente-dialog.component.html',
-  styleUrls: ['./cliente-dialog.component.css'],
+    selector: 'app-cliente-dialog',
+    imports: [CommonModule],
+    templateUrl: './cliente-dialog.component.html',
+    styleUrls: ['./cliente-dialog.component.css']
 })
 export class ClienteDialogComponent {
   @Input() cliente?: ClienteItem;

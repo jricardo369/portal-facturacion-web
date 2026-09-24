@@ -4,10 +4,9 @@ import { HeaderComponent } from '../layout/header/header.component';
 import { FooterComponent } from '../layout/footer/footer.component';
 
 @Component({
-  selector: 'app-bienvenida',
-  standalone: true,
-  imports: [RouterLink, HeaderComponent, FooterComponent],
-  templateUrl: './bienvenida.component.html',
-  styleUrls: ['./bienvenida.component.css'],
+    selector: 'app-bienvenida',
+    imports: [RouterLink, HeaderComponent, FooterComponent],
+    templateUrl: './bienvenida.component.html',
+    styleUrls: ['./bienvenida.component.css']
 })
 export class BienvenidaComponent {}

@@ -8,11 +8,10 @@ import { DatosFacturaStore } from '../facturacion/datos-factura.store';
 import { DatosFacturaResponse, FacturacionService } from '../facturacion/facturacion.service';
 
 @Component({
-  selector: 'app-factura',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
-  templateUrl: './factura.component.html',
-  styleUrls: ['./factura.component.css'],
+    selector: 'app-factura',
+    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
+    templateUrl: './factura.component.html',
+    styleUrls: ['./factura.component.css']
 })
 export class FacturaComponent implements OnInit {
   correo = '';

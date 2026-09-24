@@ -8,11 +8,10 @@ import { SesionInactivaService } from './sesion-inactiva.service';
 import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
 
 @Component({
-  selector: 'app-sesion-expirada',
-  standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverlayComponent],
-  templateUrl: './sesion-expirada.component.html',
-  styleUrls: ['./sesion-expirada.component.css'],
+    selector: 'app-sesion-expirada',
+    imports: [CommonModule, FormsModule, LoadingOverlayComponent],
+    templateUrl: './sesion-expirada.component.html',
+    styleUrls: ['./sesion-expirada.component.css']
 })
 export class SesionExpiradaComponent implements OnDestroy {
   visible = false;

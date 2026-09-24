@@ -11,11 +11,10 @@ import { FacturaDialogComponent } from './factura-dialog.component';
 import { AdminAuthService } from '../auth.service';
 
 @Component({
-  selector: 'app-admin-facturas',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, FacturaDialogComponent],
-  templateUrl: './admin-facturas.component.html',
-  styleUrls: ['./admin-facturas.component.css'],
+    selector: 'app-admin-facturas',
+    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, FacturaDialogComponent],
+    templateUrl: './admin-facturas.component.html',
+    styleUrls: ['./admin-facturas.component.css']
 })
 export class AdminFacturasComponent implements OnInit {
   facturas: FacturaItem[] = [];

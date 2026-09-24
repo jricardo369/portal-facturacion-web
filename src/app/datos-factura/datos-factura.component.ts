@@ -12,11 +12,10 @@ import { DatosFacturaResponse, FacturacionService } from '../facturacion/factura
 import { USOS_CFDI, filtrarUsosCfdi, normalizarUsoCfdi, usoCfdiLabel } from '../facturacion/uso-cfdi.catalog';
 
 @Component({
-  selector: 'app-datos-factura',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent],
-  templateUrl: './datos-factura.component.html',
-  styleUrls: ['./datos-factura.component.css'],
+    selector: 'app-datos-factura',
+    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent],
+    templateUrl: './datos-factura.component.html',
+    styleUrls: ['./datos-factura.component.css']
 })
 export class DatosFacturaComponent implements OnInit {
   @ViewChild('formDatos') formDatos?: ElementRef<HTMLFormElement>;

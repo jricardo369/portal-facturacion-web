@@ -13,11 +13,10 @@ import { DatosFacturaStore } from '../facturacion/datos-factura.store';
 type Pestana = 'facturar' | 'consulta';
 
 @Component({
-  selector: 'app-facturar',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
-  templateUrl: './facturar.component.html',
-  styleUrls: ['./facturar.component.css'],
+    selector: 'app-facturar',
+    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
+    templateUrl: './facturar.component.html',
+    styleUrls: ['./facturar.component.css']
 })
 export class FacturarComponent implements OnInit {
   pestana: Pestana = 'facturar';

@@ -11,11 +11,10 @@ import { ClienteDialogComponent } from './cliente-dialog.component';
 import { AdminAuthService } from '../auth.service';
 
 @Component({
-  selector: 'app-admin-clientes',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, ClienteDialogComponent],
-  templateUrl: './admin-clientes.component.html',
-  styleUrls: ['./admin-clientes.component.css'],
+    selector: 'app-admin-clientes',
+    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, ClienteDialogComponent],
+    templateUrl: './admin-clientes.component.html',
+    styleUrls: ['./admin-clientes.component.css']
 })
 export class AdminClientesComponent implements OnInit {
   clientes: ClienteItem[] = [];

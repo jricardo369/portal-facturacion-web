@@ -5,11 +5,10 @@ import { SesionInactivaService } from './admin/sesion-inactiva.service';
 import { SesionExpiradaComponent } from './admin/sesion-expirada.component';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet, SesionExpiradaComponent],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    imports: [CommonModule, RouterOutlet, SesionExpiradaComponent],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   title = 'portal-facturacion-web';

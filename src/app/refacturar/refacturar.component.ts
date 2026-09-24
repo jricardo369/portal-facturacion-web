@@ -18,11 +18,10 @@ interface DatosNuevaFactura {
 }
 
 @Component({
-  selector: 'app-refacturar',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent],
-  templateUrl: './refacturar.component.html',
-  styleUrls: ['./refacturar.component.css'],
+    selector: 'app-refacturar',
+    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent],
+    templateUrl: './refacturar.component.html',
+    styleUrls: ['./refacturar.component.css']
 })
 export class RefacturarComponent {
   paso = 1;
