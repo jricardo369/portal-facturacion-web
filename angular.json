@@ -98,10 +98,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "portal-facturacion-web:build:production"
+              "buildTarget": "portal-facturacion-web:build:production"
             },
             "development": {
-              "browserTarget": "portal-facturacion-web:build:development"
+              "buildTarget": "portal-facturacion-web:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -109,7 +109,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "portal-facturacion-web:build"
+            "buildTarget": "portal-facturacion-web:build"
           }
         },
         "test": {
