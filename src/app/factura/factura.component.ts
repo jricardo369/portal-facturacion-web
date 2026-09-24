@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { DatosFacturaResponse, FacturacionService } from '../facturacion/factura
     selector: 'app-factura',
     imports: [FormsModule, HeaderComponent, FooterComponent],
     templateUrl: './factura.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./factura.component.css']
 })
 export class FacturaComponent implements OnInit {

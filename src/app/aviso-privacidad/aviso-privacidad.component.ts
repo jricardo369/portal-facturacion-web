@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
 import { HeaderComponent } from '../layout/header/header.component';
 import { FooterComponent } from '../layout/footer/footer.component';
@@ -7,6 +7,7 @@ import { FooterComponent } from '../layout/footer/footer.component';
     selector: 'app-aviso-privacidad',
     imports: [HeaderComponent, FooterComponent],
     templateUrl: './aviso-privacidad.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./aviso-privacidad.component.css']
 })
 export class AvisoPrivacidadComponent {

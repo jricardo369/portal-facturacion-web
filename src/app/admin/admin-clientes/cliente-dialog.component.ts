@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { ClienteItem } from '../clientes.service';
 
@@ -6,6 +6,7 @@ import { ClienteItem } from '../clientes.service';
     selector: 'app-cliente-dialog',
     imports: [],
     templateUrl: './cliente-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./cliente-dialog.component.css']
 })
 export class ClienteDialogComponent {

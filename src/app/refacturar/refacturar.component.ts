@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,6 +21,7 @@ interface DatosNuevaFactura {
     selector: 'app-refacturar',
     imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent],
     templateUrl: './refacturar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./refacturar.component.css']
 })
 export class RefacturarComponent {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { USOS_CFDI, filtrarUsosCfdi, normalizarUsoCfdi, usoCfdiLabel } from '../
     selector: 'app-datos-factura',
     imports: [FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent],
     templateUrl: './datos-factura.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./datos-factura.component.css']
 })
 export class DatosFacturaComponent implements OnInit {

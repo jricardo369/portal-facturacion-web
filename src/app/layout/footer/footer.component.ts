@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { AvisoDialogComponent } from '../../aviso-privacidad/aviso-dialog.component';
 
@@ -6,6 +6,7 @@ import { AvisoDialogComponent } from '../../aviso-privacidad/aviso-dialog.compon
     selector: 'app-footer',
     imports: [AvisoDialogComponent],
     templateUrl: './footer.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./footer.component.css']
 })
 export class FooterComponent {

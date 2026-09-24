@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { FacturaItem } from '../facturas.service';
 
@@ -6,6 +6,7 @@ import { FacturaItem } from '../facturas.service';
     selector: 'app-factura-dialog',
     imports: [],
     templateUrl: './factura-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./factura-dialog.component.css']
 })
 export class FacturaDialogComponent {

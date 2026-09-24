@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 
 
 @Component({
@@ -20,6 +20,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       </div>
     </div>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [`
     .error-backdrop { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.5); display: grid; place-items: center; padding: 20px; }
     .error-dialogo { width: min(480px, 100%); background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.3); }

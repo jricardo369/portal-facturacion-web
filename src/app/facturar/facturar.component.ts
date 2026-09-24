@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,6 +16,7 @@ type Pestana = 'facturar' | 'consulta';
     selector: 'app-facturar',
     imports: [FormsModule, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
     templateUrl: './facturar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./facturar.component.css']
 })
 export class FacturarComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -6,6 +6,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
     selector: 'app-header',
     imports: [RouterLink, RouterLinkActive],
     templateUrl: './header.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {

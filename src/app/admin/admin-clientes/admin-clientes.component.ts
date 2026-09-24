@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { AdminAuthService } from '../auth.service';
     selector: 'app-admin-clientes',
     imports: [FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, ClienteDialogComponent],
     templateUrl: './admin-clientes.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./admin-clientes.component.css']
 })
 export class AdminClientesComponent implements OnInit {

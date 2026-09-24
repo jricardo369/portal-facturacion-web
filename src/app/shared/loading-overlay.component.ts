@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 
 @Component({
@@ -12,6 +12,7 @@ import { Component, Input } from '@angular/core';
       <p class="loading-texto">{{ texto }}</p>
     </div>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [`
     .loading-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; gap: 18px; align-items: center; justify-content: center; background: rgba(255,255,255,.92); backdrop-filter: blur(2px); }
     .loader { position: relative; width: 140px; height: 140px; display: grid; place-items: center; }

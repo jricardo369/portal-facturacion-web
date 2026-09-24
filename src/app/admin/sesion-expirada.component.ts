@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
     selector: 'app-sesion-expirada',
     imports: [FormsModule, LoadingOverlayComponent],
     templateUrl: './sesion-expirada.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./sesion-expirada.component.css']
 })
 export class SesionExpiradaComponent implements OnDestroy {
