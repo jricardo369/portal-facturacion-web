@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { API_BASE } from '../shared/api-base';
 
 export interface LoginRequest {
   usuario: string;
@@ -13,7 +14,7 @@ export type LoginResponse = Record<string, unknown>;
 export class AdminAuthService {
   private readonly KEY = 'auth_session';
   private readonly LEGACY_KEY = 'admin_session';
-  private readonly URL = 'http://localhost:8080/api/v1/auth/login';
+  private readonly URL = `${API_BASE}/auth/login`;
 
   constructor(private http: HttpClient) {}
 

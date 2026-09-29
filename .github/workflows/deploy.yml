@@ -1,0 +1,127 @@
+name: build-push-deploy-web
+
+# Secrets requeridos (Settings > Secrets > Actions):
+#   EC2_HOST, EC2_USER, EC2_SSH_KEY, EC2_PORT(22), GHCR_USER, GHCR_PAT(read:packages)
+# En el EC2 el orquestador vive en /opt/portal-facturacion-api (repo del API)
+# y la infra en /opt/portal-facturacion-configs/.env.prod (IMAGE_OWNER, APP_DOMAIN, WEB_*).
+# Este workflow solo construye la imagen web y luego hace pull/up en ese compose.
+
+on:
+  push:
+    branches: [master]
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag manual para rollback (ej: sha-abc1234). Vacío = latest"
+        required: false
+        default: ""
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+concurrency:
+  group: web-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-test-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+      image: ${{ steps.meta.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Build (verifica que Angular compila)
+        run: |
+          npm ci
+          npm run build -- --configuration production
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag (lowercase + version o sha)
+        id: meta
+        run: |
+          IMAGE=$(echo "${{ env.IMAGE_NAME }}" | tr '[:upper:]' '[:lower:]')
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            TAG="${GITHUB_REF#refs/tags/v}"
+          elif [[ -n "${{ github.event.inputs.tag }}" ]]; then
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            TAG="sha-${GITHUB_SHA::7}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/$IMAGE" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
+            ${{ steps.meta.outputs.image }}:latest
+
+  deploy:
+    needs: build-test-push
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          script: |
+            set -e
+            cd /opt/portal-facturacion-api
+            git config --global --add safe.directory /opt/portal-facturacion-api || true
+            git fetch origin --tags --force
+            git checkout --force origin/master
+            if [ -n "${{ secrets.GHCR_PAT }}" ]; then
+              echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
+            else
+              echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+            fi
+            # La web es su propia imagen; el API se queda en latest salvo que lo despliegues desde su repo.
+            export WEB_TAG=${{ needs.build-test-push.outputs.tag }}
+            export WEB_IMAGE_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+            ENV_FILE=/opt/portal-facturacion-configs/.env.prod
+            if [ ! -f "$ENV_FILE" ]; then
+              echo "Falta $ENV_FILE"
+              exit 1
+            fi
+            COMPOSE="docker compose --env-file $ENV_FILE -f docker-compose.prod.yml"
+            $COMPOSE pull web
+            $COMPOSE up -d --force-recreate web caddy
+            $COMPOSE ps
+            for i in $(seq 1 12); do
+              if docker exec portal-facturacion-web wget -qO- http://localhost:80/ 2>/dev/null | grep -qi "<html"; then
+                echo "WEB healthy"
+                break
+              fi
+              echo "esperando web... intento $i/12"
+              sleep 10
+              if [ "$i" = "12" ]; then
+                $COMPOSE logs --tail=100 web caddy
+                exit 1
+              fi
+            done
+            docker image prune -af || true
