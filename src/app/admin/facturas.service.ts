@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AdminAuthService } from './auth.service';
+import { API_BASE } from '../shared/api-base';
 
 export interface FacturaItem {
   idFactura?: number | null;
@@ -31,7 +32,7 @@ export interface PaginaFactura {
 
 @Injectable({ providedIn: 'root' })
 export class FacturasService {
-  private readonly BASE = 'http://localhost:18080/api/v1/facturas';
+  private readonly BASE = `${API_BASE}/facturas`;
 
   constructor(private http: HttpClient, private auth: AdminAuthService) {}
 

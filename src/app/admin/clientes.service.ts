@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AdminAuthService } from './auth.service';
+import { API_BASE } from '../shared/api-base';
 
 export interface ClienteItem {
   idCliente?: number | null;
@@ -33,7 +34,7 @@ export interface PaginaCliente {
 
 @Injectable({ providedIn: 'root' })
 export class ClientesService {
-  private readonly BASE = 'http://localhost:18080/api/v1/clientes';
+  private readonly BASE = `${API_BASE}/clientes`;
 
   constructor(private http: HttpClient, private auth: AdminAuthService) {}
 
