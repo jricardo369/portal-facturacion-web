@@ -54,7 +54,7 @@ export type DatosFacturaPayload = DatosFacturaResponse;
 
 @Injectable({ providedIn: 'root' })
 export class FacturacionService {
-  private readonly BASE = 'http://localhost:8080/api/v1/facturacion';
+  private readonly BASE = '/api/v1/facturacion';
 
   constructor(private http: HttpClient) {}
 

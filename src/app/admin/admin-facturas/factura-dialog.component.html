@@ -10,7 +10,7 @@
         <div><dt>Folio</dt><dd>{{ factura?.folio || '—' }}</dd></div>
         <div><dt>Serie</dt><dd>{{ factura?.serie || '—' }}</dd></div>
         <div><dt>UUID</dt><dd class="uuid">{{ factura?.uuid || '—' }}</dd></div>
-        <div><dt>Fecha</dt><dd>{{ formatearFecha(factura?.fecha) }}</dd></div>
+        <div><dt>Fecha</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.fecha)) }}</dd></div>
         <div><dt>Estatus</dt><dd><span class="badge" [class.cancelada]="esCancelada(factura)" [class.cargada]="esCargada(factura)">{{ estado(factura) }}</span></dd></div>
       </dl>
 
@@ -23,15 +23,15 @@
 
       <h3 class="factura-seccion">Importes</h3>
       <dl class="factura-datos">
-        <div><dt>Subtotal</dt><dd>{{ importe(factura?.subtotal) }}</dd></div>
-        <div><dt>Impuesto</dt><dd>{{ importe(factura?.impuesto) }}</dd></div>
-        <div><dt>Total</dt><dd class="factura-total">{{ importe(factura?.total) }}</dd></div>
+        <div><dt>Subtotal</dt><dd>{{ importe($safeNavigationMigration(factura?.subtotal)) }}</dd></div>
+        <div><dt>Impuesto</dt><dd>{{ importe($safeNavigationMigration(factura?.impuesto)) }}</dd></div>
+        <div><dt>Total</dt><dd class="factura-total">{{ importe($safeNavigationMigration(factura?.total)) }}</dd></div>
       </dl>
 
       <h3 class="factura-seccion">Registro</h3>
       <dl class="factura-datos">
-        <div><dt>Creado</dt><dd>{{ formatearFecha(factura?.createdAt) }}</dd></div>
-        <div><dt>Actualizado</dt><dd>{{ formatearFecha(factura?.updatedAt) }}</dd></div>
+        <div><dt>Creado</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.createdAt)) }}</dd></div>
+        <div><dt>Actualizado</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.updatedAt)) }}</dd></div>
       </dl>
     </div>
     <div class="factura-pie">

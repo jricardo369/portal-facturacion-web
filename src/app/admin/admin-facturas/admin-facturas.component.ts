@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,11 +11,11 @@ import { FacturaDialogComponent } from './factura-dialog.component';
 import { AdminAuthService } from '../auth.service';
 
 @Component({
-  selector: 'app-admin-facturas',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, FacturaDialogComponent],
-  templateUrl: './admin-facturas.component.html',
-  styleUrls: ['./admin-facturas.component.css'],
+    selector: 'app-admin-facturas',
+    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, FacturaDialogComponent],
+    templateUrl: './admin-facturas.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./admin-facturas.component.css']
 })
 export class AdminFacturasComponent implements OnInit {
   facturas: FacturaItem[] = [];

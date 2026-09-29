@@ -1,8 +1,12 @@
 <app-header></app-header>
 
 <main id="contenido" class="pagina">
-  <app-loading-overlay texto="Cargando clientes…" *ngIf="cargando"></app-loading-overlay>
-  <app-error-dialog titulo="No se pudieron cargar los clientes" [mensaje]="error" (cerrar)="error = ''" *ngIf="error"></app-error-dialog>
+  @if (cargando) {
+    <app-loading-overlay texto="Cargando clientes…"></app-loading-overlay>
+  }
+  @if (error) {
+    <app-error-dialog titulo="No se pudieron cargar los clientes" [mensaje]="error" (cerrar)="error = ''"></app-error-dialog>
+  }
 
   <div class="encabezado">
     <h1 class="titulo">Clientes</h1>
@@ -38,32 +42,42 @@
           <tr><th>ID</th><th>Alta</th><th>RFC</th><th>Razón social</th><th>Correo</th><th>Municipio</th><th>Estado</th><th>C.P.</th><th>Estatus</th></tr>
         </thead>
         <tbody>
-          <tr *ngFor="let c of clientes" class="clic" (click)="verDetalle(c)" title="Ver detalle del cliente">
-            <td class="folio">{{ c.idCliente }}</td>
-            <td>{{ formatearFecha(c.createdAt) }}</td>
-            <td>{{ c.rfc }}</td>
-            <td>{{ c.razonSocial }}</td>
-            <td>{{ c.correoElectronico }}</td>
-            <td>{{ c.municipio }}</td>
-            <td>{{ c.estado }}</td>
-            <td>{{ c.codigoPostal }}</td>
-            <td><span class="badge" [class.inactivo]="!c.estatus">{{ c.estatus ? 'Activo' : 'Inactivo' }}</span></td>
-          </tr>
-          <tr *ngIf="totalElementos === 0"><td colspan="9" class="vacio">Sin resultados con los filtros aplicados.</td></tr>
+          @for (c of clientes; track c) {
+            <tr class="clic" (click)="verDetalle(c)" title="Ver detalle del cliente">
+              <td class="folio">{{ c.idCliente }}</td>
+              <td>{{ formatearFecha(c.createdAt) }}</td>
+              <td>{{ c.rfc }}</td>
+              <td>{{ c.razonSocial }}</td>
+              <td>{{ c.correoElectronico }}</td>
+              <td>{{ c.municipio }}</td>
+              <td>{{ c.estado }}</td>
+              <td>{{ c.codigoPostal }}</td>
+              <td><span class="badge" [class.inactivo]="!c.estatus">{{ c.estatus ? 'Activo' : 'Inactivo' }}</span></td>
+            </tr>
+          }
+          @if (totalElementos === 0) {
+            <tr><td colspan="9" class="vacio">Sin resultados con los filtros aplicados.</td></tr>
+          }
         </tbody>
       </table>
     </div>
-    <nav class="paginacion" aria-label="Paginación" *ngIf="totalElementos > 0">
-      <span class="rango">{{ rango }}</span>
-      <div class="pag-btns">
-        <button type="button" class="pag" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Anterior">‹</button>
-        <button type="button" class="pag" *ngFor="let p of paginas" [class.activa]="p === pagina" (click)="irAPagina(p)">{{ p }}</button>
-        <button type="button" class="pag" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Siguiente">›</button>
-      </div>
-    </nav>
+    @if (totalElementos > 0) {
+      <nav class="paginacion" aria-label="Paginación">
+        <span class="rango">{{ rango }}</span>
+        <div class="pag-btns">
+          <button type="button" class="pag" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Anterior">‹</button>
+          @for (p of paginas; track p) {
+            <button type="button" class="pag" [class.activa]="p === pagina" (click)="irAPagina(p)">{{ p }}</button>
+          }
+          <button type="button" class="pag" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Siguiente">›</button>
+        </div>
+      </nav>
+    }
   </section>
 </main>
 
-<app-cliente-dialog [cliente]="clienteSeleccionado" (cerrar)="clienteSeleccionado = undefined" *ngIf="clienteSeleccionado"></app-cliente-dialog>
+@if (clienteSeleccionado) {
+  <app-cliente-dialog [cliente]="clienteSeleccionado" (cerrar)="clienteSeleccionado = undefined"></app-cliente-dialog>
+}
 
 <app-footer></app-footer>

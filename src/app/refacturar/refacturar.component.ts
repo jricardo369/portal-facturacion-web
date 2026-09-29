@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { HeaderComponent } from '../layout/header/header.component';
 import { FooterComponent } from '../layout/footer/footer.component';
 import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
 import { DatosFacturaPayload, DatosFacturaResponse, FacturacionService } from '../facturacion/facturacion.service';
+import { filtrarUsosCfdi, normalizarUsoCfdi, usoCfdiLabel } from '../facturacion/uso-cfdi.catalog';
 
 interface DatosNuevaFactura {
   cliente: string;
@@ -17,11 +18,11 @@ interface DatosNuevaFactura {
 }
 
 @Component({
-  selector: 'app-refacturar',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent],
-  templateUrl: './refacturar.component.html',
-  styleUrls: ['./refacturar.component.css'],
+    selector: 'app-refacturar',
+    imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent],
+    templateUrl: './refacturar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./refacturar.component.css']
 })
 export class RefacturarComponent {
   paso = 1;
@@ -33,6 +34,10 @@ export class RefacturarComponent {
   datos: DatosNuevaFactura = { cliente: '', rfc: '', correo: '', regimen: '', uso: '' };
   confirmacionAbierta = false;
   resumenDatos: { label: string; valor: string }[] = [];
+
+  get usoOpciones(): { value: string; label: string }[] {
+    return filtrarUsosCfdi(this.datos.regimen);
+  }
 
   constructor(private facturacion: FacturacionService, private router: Router) {}
 
@@ -54,7 +59,7 @@ export class RefacturarComponent {
           rfc: f.cliente?.rfc ?? '',
           correo: f.cliente?.correoElectronico ?? '',
           regimen: '',
-          uso: f.cliente?.usoFactura ?? '',
+          uso: normalizarUsoCfdi(f.cliente?.usoFactura ?? ''),
         };
         this.actualizarRegimen();
         this.paso = 2;
@@ -121,14 +126,17 @@ export class RefacturarComponent {
     if (rfc.length === 12) this.datos.regimen = 'moral';
     else if (rfc.length === 13) this.datos.regimen = 'fisica';
     else this.datos.regimen = '';
+    if (this.datos.uso) {
+      const normalizado = normalizarUsoCfdi(this.datos.uso);
+      if (normalizado !== this.datos.uso) this.datos.uso = normalizado;
+      if (this.datos.regimen && !filtrarUsosCfdi(this.datos.regimen).some((o) => o.value === this.datos.uso)) {
+        this.datos.uso = '';
+      }
+    }
   }
 
   private usoFacturaLabel(): string {
-    const opciones: Record<string, string> = {
-      gastos: 'G03 Gastos en general',
-      mercancias: 'G01 Adquisición de mercancías',
-    };
-    return opciones[this.datos.uso] ?? (this.datos.uso || '');
+    return usoCfdiLabel(this.datos.uso);
   }
 
   private construirResumen(): void {

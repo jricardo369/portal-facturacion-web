@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
@@ -8,11 +8,11 @@ import { SesionInactivaService } from './sesion-inactiva.service';
 import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
 
 @Component({
-  selector: 'app-sesion-expirada',
-  standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverlayComponent],
-  templateUrl: './sesion-expirada.component.html',
-  styleUrls: ['./sesion-expirada.component.css'],
+    selector: 'app-sesion-expirada',
+    imports: [FormsModule, LoadingOverlayComponent],
+    templateUrl: './sesion-expirada.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./sesion-expirada.component.css']
 })
 export class SesionExpiradaComponent implements OnDestroy {
   visible = false;

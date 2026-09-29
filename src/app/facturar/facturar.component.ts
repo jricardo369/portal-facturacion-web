@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,11 +13,11 @@ import { DatosFacturaStore } from '../facturacion/datos-factura.store';
 type Pestana = 'facturar' | 'consulta';
 
 @Component({
-  selector: 'app-facturar',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
-  templateUrl: './facturar.component.html',
-  styleUrls: ['./facturar.component.css'],
+    selector: 'app-facturar',
+    imports: [FormsModule, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
+    templateUrl: './facturar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./facturar.component.css']
 })
 export class FacturarComponent implements OnInit {
   pestana: Pestana = 'facturar';

@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -9,13 +9,14 @@ import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
 import { ErrorDialogComponent } from '../shared/error-dialog.component';
 import { DatosFacturaStore } from '../facturacion/datos-factura.store';
 import { DatosFacturaResponse, FacturacionService } from '../facturacion/facturacion.service';
+import { USOS_CFDI, filtrarUsosCfdi, normalizarUsoCfdi, usoCfdiLabel } from '../facturacion/uso-cfdi.catalog';
 
 @Component({
-  selector: 'app-datos-factura',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent],
-  templateUrl: './datos-factura.component.html',
-  styleUrls: ['./datos-factura.component.css'],
+    selector: 'app-datos-factura',
+    imports: [FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent],
+    templateUrl: './datos-factura.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./datos-factura.component.css']
 })
 export class DatosFacturaComponent implements OnInit {
   @ViewChild('formDatos') formDatos?: ElementRef<HTMLFormElement>;
@@ -36,6 +37,7 @@ export class DatosFacturaComponent implements OnInit {
   subtotal: number | null = null;
   impuestos: number | null = null;
   total: number | null = null;
+  tipoPago: string | null = null;
   cargando = false;
   errorAbierto = false;
   errorMensaje = '';
@@ -43,10 +45,13 @@ export class DatosFacturaComponent implements OnInit {
   resumenDatos: { label: string; valor: string }[] = [];
   private datosBase: DatosFacturaResponse | null = null;
 
-  usoOpciones = [
-    { value: 'gastos', label: 'Gastos en general' },
-    { value: 'mercancias', label: 'Adquisición de mercancías' },
-  ];
+  private usosExtra: { value: string; label: string }[] = [];
+
+  get usoOpciones(): { value: string; label: string }[] {
+    const filtrados = filtrarUsosCfdi(this.regimen);
+    const extras = this.usosExtra.filter((e) => !filtrados.some((f) => f.value === e.value));
+    return [...filtrados, ...extras];
+  }
 
   constructor(private router: Router, private store: DatosFacturaStore, private facturacion: FacturacionService) {}
 
@@ -70,6 +75,7 @@ export class DatosFacturaComponent implements OnInit {
       this.subtotal = datos.subtotal ?? null;
       this.impuestos = datos.impuestos ?? null;
       this.total = this.calcularTotal(this.subtotal, this.impuestos);
+      this.tipoPago = datos.tipoPago ?? null;
     }
     const c = datos?.cliente;
     if (c && (c.rfc || c.razonSocial)) {
@@ -85,9 +91,9 @@ export class DatosFacturaComponent implements OnInit {
       this.codigoPostal = c.codigoPostal ?? '';
       this.correo = c.correoElectronico ?? '';
       this.regimen = '';
-      this.uso = c.usoFactura ?? '';
-      if (this.uso && !this.usoOpciones.some((o) => o.value === this.uso)) {
-        this.usoOpciones = [...this.usoOpciones, { value: this.uso, label: this.uso }];
+      this.uso = normalizarUsoCfdi(c.usoFactura ?? '');
+      if (this.uso && !USOS_CFDI.some((o) => o.value === this.uso)) {
+        this.usosExtra = [{ value: this.uso, label: this.uso }];
       }
     } else {
       this.rfc = rfcCapturado;
@@ -100,6 +106,13 @@ export class DatosFacturaComponent implements OnInit {
     if (rfc.length === 12) this.regimen = 'moral';
     else if (rfc.length === 13) this.regimen = 'fisica';
     else this.regimen = '';
+    // Si el uso seleccionado no aplica al régimen, limpiarlo para obligar a elegir uno válido.
+    if (this.uso) {
+      const permitidos = filtrarUsosCfdi(this.regimen);
+      const normalizado = normalizarUsoCfdi(this.uso);
+      if (normalizado !== this.uso) this.uso = normalizado;
+      if (this.regimen && !permitidos.some((o) => o.value === this.uso)) this.uso = '';
+    }
   }
 
   private calcularTotal(subtotal: number | null, impuestos: number | null): number | null {
@@ -110,8 +123,7 @@ export class DatosFacturaComponent implements OnInit {
   }
 
   private usoFacturaLabel(): string {
-    const o = this.usoOpciones.find((x) => x.value === this.uso);
-    return o ? o.label : this.uso || '';
+    return usoCfdiLabel(this.uso);
   }
 
   private construirResumen(): void {
@@ -128,6 +140,7 @@ export class DatosFacturaComponent implements OnInit {
       { label: 'Código Postal', valor: this.codigoPostal.trim() },
       { label: 'Uso Factura', valor: this.usoFacturaLabel() },
       { label: 'Correo Electrónico', valor: this.correo.trim() },
+      { label: 'Tipo de pago', valor: this.tipoPago?.trim() ? this.tipoPago.trim() : 'N/A' },
       { label: 'Subtotal', valor: this.formatoMoneda(this.subtotal) },
       { label: 'Impuestos', valor: this.formatoImpuestos(this.impuestos) },
       { label: 'Total', valor: this.formatoMoneda(this.total) },

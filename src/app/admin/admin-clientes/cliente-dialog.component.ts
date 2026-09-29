@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+
 import { ClienteItem } from '../clientes.service';
 
 @Component({
-  selector: 'app-cliente-dialog',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './cliente-dialog.component.html',
-  styleUrls: ['./cliente-dialog.component.css'],
+    selector: 'app-cliente-dialog',
+    imports: [],
+    templateUrl: './cliente-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./cliente-dialog.component.css']
 })
 export class ClienteDialogComponent {
   @Input() cliente?: ClienteItem;

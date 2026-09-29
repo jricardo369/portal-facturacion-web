@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+
 import { FacturaItem } from '../facturas.service';
 
 @Component({
-  selector: 'app-factura-dialog',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './factura-dialog.component.html',
-  styleUrls: ['./factura-dialog.component.css'],
+    selector: 'app-factura-dialog',
+    imports: [],
+    templateUrl: './factura-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./factura-dialog.component.css']
 })
 export class FacturaDialogComponent {
   @Input() factura?: FacturaItem;

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../layout/header/header.component';
@@ -8,11 +8,11 @@ import { DatosFacturaStore } from '../facturacion/datos-factura.store';
 import { DatosFacturaResponse, FacturacionService } from '../facturacion/facturacion.service';
 
 @Component({
-  selector: 'app-factura',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
-  templateUrl: './factura.component.html',
-  styleUrls: ['./factura.component.css'],
+    selector: 'app-factura',
+    imports: [FormsModule, HeaderComponent, FooterComponent],
+    templateUrl: './factura.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./factura.component.css']
 })
 export class FacturaComponent implements OnInit {
   correo = '';

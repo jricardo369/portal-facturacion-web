@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../layout/header/header.component';
@@ -11,11 +11,11 @@ import { ClienteDialogComponent } from './cliente-dialog.component';
 import { AdminAuthService } from '../auth.service';
 
 @Component({
-  selector: 'app-admin-clientes',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, ClienteDialogComponent],
-  templateUrl: './admin-clientes.component.html',
-  styleUrls: ['./admin-clientes.component.css'],
+    selector: 'app-admin-clientes',
+    imports: [FormsModule, HeaderComponent, FooterComponent, LoadingOverlayComponent, ErrorDialogComponent, ClienteDialogComponent],
+    templateUrl: './admin-clientes.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrls: ['./admin-clientes.component.css']
 })
 export class AdminClientesComponent implements OnInit {
   clientes: ClienteItem[] = [];
