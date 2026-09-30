@@ -114,7 +114,7 @@ jobs:
             $COMPOSE up -d --force-recreate web caddy
             $COMPOSE ps
             for i in $(seq 1 12); do
-              if docker exec portal-facturacion-web wget -qO- http://localhost:80/ 2>/dev/null | grep -qi "<html"; then
+              if docker exec portal-facturacion-web wget -qO- http://127.0.0.1:80/ 2>/dev/null | grep -qi "<html"; then
                 echo "WEB healthy"
                 break
               fi
