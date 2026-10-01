@@ -57,8 +57,21 @@
 }
 .campo.con-ayuda input { padding-right: 42px; }
 
-.nota { margin: 12px 0 0; font-size: 13px; color: #B52A15; }
-.exito { margin: 14px 0 0; text-align: center; font-size: 13px; font-weight: 700; color: #276246; }
+.nota { margin: 12px 0 0; font-size: 13px; color: var(--brand-primary-hover); }
+.confirmacion-exito {
+  display: flex; align-items: flex-start; gap: 14px;
+  max-width: 760px; margin: 22px 0 0; padding: 16px 18px;
+  border: 1px solid #A8C9B4; border-left: 4px solid #347451; border-radius: 4px;
+  background: #F0F7F2; color: #204B35; text-align: left;
+}
+.confirmacion-icono {
+  display: grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px;
+  border-radius: 50%; background: #347451; color: #fff;
+}
+.confirmacion-icono svg { width: 18px; height: 18px; }
+.confirmacion-exito h3 { margin: 0; color: #204B35; font-size: 16px; line-height: 1.4; }
+.confirmacion-exito p { margin: 4px 0 0; color: #365D46; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.confirmacion-exito strong { color: #173D2A; }
 
 .ayuda-backdrop { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.5); display: grid; place-items: center; padding: 20px; }
 .ayuda-dialogo { position: relative; width: min(480px, 100%); background: #fff; border-radius: 12px; padding: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
@@ -92,6 +105,7 @@
   .panel-titulo { font-size: 20px; }
   .formulario { grid-template-columns: 1fr; }
   .formulario .nota { grid-column: 1; grid-row: auto; padding: 0; }
+  .confirmacion-exito { margin-top: 18px; padding: 14px; }
   .ayuda { top: 34px; right: 10px; }
   .acciones { gap: 10px; }
   .acciones .btn { flex: 1; }

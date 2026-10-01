@@ -72,8 +72,18 @@
       </div>
       <p class="nota">Los campos marcados con: * son obligatorios.</p>
     </form>
-    @if (exitoMensaje) {
-      <p class="exito" role="status">{{ exitoMensaje }}</p>
+    @if (correoConsultaEnviado) {
+      <div class="confirmacion-exito" role="status" aria-live="polite">
+        <span class="confirmacion-icono" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <div>
+          <h3>¡Listo! Reenviamos tu factura</h3>
+          <p>La enviamos a <strong>{{ correoConsultaEnviado }}</strong>.</p>
+        </div>
+      </div>
     }
     <div class="acciones">
       <button type="button" class="btn btn-cancelar" (click)="cancelarConsulta()" [disabled]="cargando">Cancelar</button>

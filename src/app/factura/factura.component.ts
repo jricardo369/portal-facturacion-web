@@ -20,6 +20,7 @@ export class FacturaComponent implements OnInit {
   mensajeInfo = '';
   errorInfo = false;
   esConsulta = false;
+  correoEnviado = '';
 
   constructor(private router: Router, private store: DatosFacturaStore, private facturacion: FacturacionService) {}
 
@@ -45,19 +46,22 @@ export class FacturaComponent implements OnInit {
   enviarNuevamente(): void {
     if (!this.correo.trim()) {
       this.mensajeInfo = 'Capture un correo electrónico para reenviar la factura.';
-      this.errorInfo = false;
+      this.errorInfo = true;
+      this.correoEnviado = '';
       return;
     }
     const datos = this.store.obtener();
     const ticket = datos?.numeroTicket?.trim() || '';
     this.facturacion.enviarCorreo(this.correo.trim(), ticket).subscribe({
       next: () => {
-        this.mensajeInfo = `La factura fue enviada nuevamente a ${this.correo.trim()}`;
+        this.correoEnviado = this.correo.trim();
+        this.mensajeInfo = 'Factura reenviada';
         this.errorInfo = false;
       },
       error: () => {
         this.mensajeInfo = 'Error al enviar la factura. Intenta de nuevo.';
         this.errorInfo = true;
+        this.correoEnviado = '';
       }
     });
   }

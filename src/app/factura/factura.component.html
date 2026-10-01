@@ -8,7 +8,17 @@
     <h2 class="sr-only" id="titulo-opciones">Opciones de entrega de factura</h2>
 
     @if (mensajeExito) {
-      <p class="exito" role="status">{{ mensajeExito }}</p>
+      <div class="confirmacion-exito" role="status" aria-live="polite">
+        <span class="confirmacion-icono" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <div>
+          <h3>¡Tu factura está lista!</h3>
+          <p>{{ mensajeExito }}</p>
+        </div>
+      </div>
     }
 
     <p class="linea">{{ textoCorreo }}</p>
@@ -20,7 +30,21 @@
         <button type="button" class="btn btn-reenviar" (click)="enviarNuevamente()">{{ textoBotonEnviar }}</button>
       </div>
       @if (mensajeInfo) {
-        <p class="aviso" [class.aviso-error]="errorInfo" role="status">{{ mensajeInfo }}</p>
+        @if (errorInfo) {
+          <p class="aviso aviso-error" role="alert">{{ mensajeInfo }}</p>
+        } @else {
+          <div class="confirmacion-exito confirmacion-reenvio" role="status" aria-live="polite">
+            <span class="confirmacion-icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <div>
+              <h3>¡Listo! Reenviamos tu factura</h3>
+              <p>La enviamos a <strong>{{ correoEnviado }}</strong>.</p>
+            </div>
+          </div>
+        }
       }
     </form>
 

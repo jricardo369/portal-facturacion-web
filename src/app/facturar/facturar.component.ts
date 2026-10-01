@@ -28,7 +28,7 @@ export class FacturarComponent implements OnInit {
   cargando = false;
   errorAbierto = false;
   errorMensaje = '';
-exitoMensaje = '';
+  correoConsultaEnviado = '';
   ayudaTicketVisible = false;
 
   @ViewChild('formFacturar') formFacturar?: ElementRef<HTMLFormElement>;
@@ -61,7 +61,7 @@ exitoMensaje = '';
     this.formConsulta?.nativeElement.reset();
     this.numeroTicketConsulta = '';
     this.correoConsulta = '';
-    this.exitoMensaje = '';
+    this.correoConsultaEnviado = '';
     void this.router.navigate(['/']);
   }
 
@@ -104,7 +104,7 @@ exitoMensaje = '';
     this.facturacion.reenviarFactura(correo, ticket).subscribe({
       next: () => {
         this.cargando = false;
-        this.exitoMensaje = `La factura fue enviada nuevamente al correo ${correo}`;
+        this.correoConsultaEnviado = correo;
         this.formConsulta?.nativeElement.reset();
         this.numeroTicketConsulta = '';
         this.correoConsulta = '';

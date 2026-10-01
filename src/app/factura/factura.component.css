@@ -10,11 +10,21 @@
   padding: 40px 24px 48px; text-align: center;
 }
 .linea { margin: 10px 0; font-size: 15px; line-height: 1.5; color: var(--text-primary); }
-.exito {
-  max-width: 560px; margin: 0 auto 14px; padding: 10px 16px;
-  font-size: 14px; font-weight: 700; color: #276246;
-  background: #EEF5F0; border: 1px solid #9FC2AA; border-radius: 4px;
+.confirmacion-exito {
+  display: flex; align-items: flex-start; gap: 14px; text-align: left;
+  max-width: 680px; margin: 0 auto 22px; padding: 16px 18px;
+  color: #204B35; background: #F0F7F2; border: 1px solid #A8C9B4;
+  border-left: 4px solid #347451; border-radius: 4px;
 }
+.confirmacion-icono {
+  display: grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px;
+  border-radius: 50%; background: #347451; color: #fff;
+}
+.confirmacion-icono svg { width: 18px; height: 18px; }
+.confirmacion-exito h3 { margin: 0; color: #204B35; font-size: 16px; line-height: 1.4; }
+.confirmacion-exito p { margin: 4px 0 0; color: #365D46; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.confirmacion-exito strong { color: #173D2A; }
+.confirmacion-reenvio { max-width: 560px; margin: 14px auto 0; }
 
 .formulario { margin-top: 18px; }
 .campo-correo { display: flex; gap: 12px; justify-content: center; align-items: center; max-width: 560px; margin: 14px auto 0; flex-wrap: wrap; }
@@ -24,7 +34,7 @@
   background: #fff; color: var(--brand-ink); box-shadow: none;
 }
 .campo-correo input:focus-visible { outline: 3px solid var(--brand-primary); outline-offset: 2px; }
-.aviso { margin: 10px 0 0; font-size: 13px; color: #276246; font-weight: 700; }
+.aviso { margin: 10px 0 0; padding: 10px 12px; font-size: 13px; color: #A51F1F; font-weight: 700; background: #FFF0EF; border: 1px solid #E6B4B2; border-radius: 4px; }
 .aviso-error { color: #A51F1F; }
 
 .acciones-descarga { display: flex; gap: 22px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
@@ -47,6 +57,7 @@
   .titulo { font-size: 23px; }
   .panel { padding: 28px 16px 32px; }
   .campo-correo { flex-direction: column; align-items: stretch; }
+  .confirmacion-exito { padding: 14px; }
   .acciones-descarga { gap: 10px; }
   .acciones-descarga .btn { flex: 1; }
   .acciones-nueva .btn { width: 100%; }
