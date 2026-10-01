@@ -1,24 +1,27 @@
 :host { display: flex; flex-direction: column; min-height: 100vh; }
 .pagina {
   max-width: 1230px; margin: 0 auto; width: 100%; flex: 1 0 auto;
-  background: #f6f6f6; padding: 18px 28px 56px;
+  background: var(--brand-surface); padding: 28px 36px 64px;
 }
-.titulo { margin: 6px 0 14px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 30px; font-weight: 700; color: #E8412A; }
+.titulo { margin: 6px 0 18px; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 30px; font-weight: 700; color: var(--brand-ink); }
 
-.panel { border: 1px solid #a8c8c4; border-radius: 4px; background: #f0f0f0; padding: 18px 22px 32px; }
-.panel-titulo { margin: 0; text-align: center; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 28px; font-weight: 400; color: #9a9a9a; }
+.panel { border: 1px solid var(--border-subtle); border-radius: 4px; background: var(--surface-raised); padding: 26px 30px 32px; }
+.panel-titulo { margin: 0; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 22px; font-weight: 700; color: var(--brand-ink); }
 
-.formulario { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px 16px; max-width: 860px; margin: 24px auto 0; }
+.formulario { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px 18px; max-width: 920px; margin: 20px auto 0; }
 .campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.campo label { text-align: left; font-size: 13px; color: #6e6e6e; }
-.req { color: #B52A15; font-weight: 700; margin-right: 2px; }
+.campo label { text-align: left; font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.req { color: var(--brand-primary); font-weight: 700; margin-right: 3px; }
 .campo input[type="text"], .campo input[type="email"], .campo select {
-  width: 100%; font: inherit; font-size: 14px;
-  padding: 8px 12px; border: 1px solid #cfcfcf; border-radius: 5px;
-  background: #fff; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,.1);
+  width: 100%; min-height: 44px; font: inherit; font-size: 14px;
+  padding: 9px 12px; border: 1px solid #BDB7B8; border-radius: 4px;
+  background: #fff; color: var(--brand-ink); box-shadow: none;
 }
-.campo input::placeholder { color: #b5b5b5; }
-.campo input:focus-visible, .campo select:focus-visible { outline: 3px solid #E8412A; outline-offset: 1px; }
+.campo input::placeholder { color: #777071; }
+.campo input:focus-visible, .campo select:focus-visible { outline: 3px solid var(--brand-primary); outline-offset: 2px; border-color: var(--brand-primary); }
+.seccion-form { border-bottom: 1px solid var(--border-subtle); padding: 4px 0 8px; margin-top: 4px; }
+.seccion-form h3 { margin: 0; color: var(--brand-ink); font-size: 16px; }
+.seccion-form p { margin: 4px 0 0; color: var(--text-secondary); font-size: 13px; line-height: 1.45; }
 
 .span-3 { grid-column: span 3; }
 .span-4 { grid-column: span 4; }
@@ -26,25 +29,26 @@
 .span-8 { grid-column: span 8; }
 .span-12 { grid-column: span 12; }
 
-.resumen { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 12px; flex-wrap: nowrap; background: #fff; border: 1px solid #e4e4ea; border-radius: 8px; padding: 14px 16px; }
-.resumen div { display: flex; flex-direction: column; gap: 4px; flex: 1; font-size: 13px; }
-.resumen strong { color: #235451; font-size: 12px; text-transform: uppercase; }
-.resumen span { color: #333; font-size: 14px; }
-.resumen .total span { font-weight: 700; color: #221C1E; }
+.resumen { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; background: var(--brand-surface); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 16px; }
+.resumen h3 { grid-column: 1 / -1; margin: 0; color: var(--brand-ink); font-size: 15px; }
+.resumen div { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 13px; }
+.resumen strong { color: var(--text-secondary); font-size: 11px; text-transform: uppercase; }
+.resumen span { color: var(--brand-ink); font-size: 14px; overflow-wrap: anywhere; }
+.resumen .total span { font-weight: 800; color: var(--brand-primary); font-size: 18px; }
 
 .nota { margin: 22px 0 0; text-align: center; font-size: 13px; color: #6e6e6e; }
-.nota span { color: #B52A15; }
+.nota span { color: var(--brand-primary-hover); }
 
 .acciones { display: flex; gap: 22px; justify-content: center; margin-top: 26px; }
 .btn {
-  border: 0; cursor: pointer; font: inherit; font-size: 14px;
-  padding: 8px 26px; border-radius: 20px; color: #fff;
+  min-height: 44px; border: 0; cursor: pointer; font: inherit; font-size: 14px; font-weight: 700;
+  padding: 10px 26px; border-radius: 4px; color: #fff;
 }
-.btn-cancelar { background: #6e6e6e; }
-.btn-cancelar:hover { background: #5a5a5a; }
-.btn-aceptar { background: #E8412A; }
-.btn-aceptar:hover { background: #B52A15; }
-.btn:focus-visible { outline: 3px solid #221C1E; outline-offset: 2px; }
+.btn-cancelar { background: transparent; border: 1px solid #8F898A; color: var(--brand-ink); }
+.btn-cancelar:hover { background: var(--brand-surface); }
+.btn-aceptar { background: var(--brand-primary); }
+.btn-aceptar:hover { background: var(--brand-primary-hover); }
+.btn:focus-visible { outline: 3px solid var(--brand-ink); outline-offset: 2px; }
 .btn:disabled { opacity: .55; cursor: not-allowed; }
 
 .confirmar-backdrop { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.5); display: grid; place-items: center; padding: 20px; }
@@ -64,10 +68,14 @@
 .btn-confirmar-aceptar:hover { background: #B52A15; }
 
 @media (max-width: 860px) {
-  .span-3, .span-4, .span-6, .span-8, .span-12 { grid-column: span 12; }
+  .span-3, .span-4, .span-6, .span-8 { grid-column: span 12; }
 }
 @media (max-width: 760px) {
-  .pagina { padding: 14px 16px 44px; }
-  .titulo { font-size: 23px; }
-  .panel-titulo { font-size: 26px; }
+  .pagina { padding: 20px 16px 44px; }
+  .titulo { font-size: 24px; }
+  .panel { padding: 20px 16px 24px; }
+  .panel-titulo { font-size: 20px; }
+  .resumen { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 14px; }
+  .acciones { gap: 10px; }
+  .acciones .btn { flex: 1; }
 }

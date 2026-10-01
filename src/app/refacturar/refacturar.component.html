@@ -20,7 +20,7 @@
       <p class="panel-sub">Ingrese No. ticket o UUID. Solo facturas vigentes.</p>
       <form class="formulario una-columna" (ngSubmit)="buscar()">
         <div class="campo requerido">
-          <label class="sr-only" for="q">Folio, ticket o UUID</label>
+          <label for="q">Folio, número de ticket o UUID <span class="req" aria-hidden="true">*</span></label>
           <input id="q" name="q" [(ngModel)]="busqueda" placeholder="Ej. 00000 o UUID" autocomplete="off" [disabled]="cargando" />
         </div>
         @if (error) {
@@ -47,19 +47,19 @@
       </div>
       <form class="formulario" (ngSubmit)="generar()">
         <div class="campo requerido">
-          <label class="sr-only" for="rfc">RFC</label>
-          <input id="rfc" name="rfc" [(ngModel)]="datos.rfc" (ngModelChange)="actualizarRegimen()" placeholder="RFC" />
+          <label for="rfc">RFC <span class="req" aria-hidden="true">*</span></label>
+          <input id="rfc" name="rfc" [(ngModel)]="datos.rfc" (ngModelChange)="actualizarRegimen()" placeholder="Ej. GOOD990102UH3" />
         </div>
         <div class="campo requerido">
-          <label class="sr-only" for="cliente">Razón social</label>
-          <input id="cliente" name="cliente" [(ngModel)]="datos.cliente" placeholder="Razón social / Nombre" />
+          <label for="cliente">Razón social <span class="req" aria-hidden="true">*</span></label>
+          <input id="cliente" name="cliente" [(ngModel)]="datos.cliente" placeholder="Nombre registrado ante el SAT" />
         </div>
         <div class="campo requerido">
-          <label class="sr-only" for="correo">Correo</label>
-          <input id="correo" name="correo" type="email" [(ngModel)]="datos.correo" placeholder="Correo electrónico" />
+          <label for="correo">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+          <input id="correo" name="correo" type="email" [(ngModel)]="datos.correo" placeholder="nombre@ejemplo.com" />
         </div>
         <div class="campo requerido">
-          <label class="sr-only" for="uso">Uso CFDI</label>
+          <label for="uso">Uso CFDI <span class="req" aria-hidden="true">*</span></label>
           <select id="uso" name="uso" [(ngModel)]="datos.uso">
             <option value="">Uso CFDI…</option>
             @for (o of usoOpciones; track o) {

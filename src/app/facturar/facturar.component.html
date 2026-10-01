@@ -37,13 +37,14 @@
     <h2 class="panel-titulo">Facturar</h2>
     <form #formFacturar class="formulario" action="#" method="get" onsubmit="return false" (submit)="enviar()">
       <div class="campo requerido">
-        <label class="sr-only" for="rfc">RFC</label>
-        <input id="rfc" name="rfc" type="text" placeholder="RFC" required autocomplete="off" [(ngModel)]="rfc" [disabled]="cargando" />
+        <label for="rfc">RFC <span class="req" aria-hidden="true">*</span></label>
+        <input id="rfc" name="rfc" type="text" placeholder="Ej. GOOD990102UH3" required minlength="12" maxlength="13" autocomplete="off" [(ngModel)]="rfc" [disabled]="cargando" />
       </div>
       <div class="campo requerido con-ayuda">
-        <label class="sr-only" for="ticket">Numero de Ticket</label>
-        <input id="ticket" name="ticket" type="text" placeholder="Numero de Ticket" required autocomplete="off" [(ngModel)]="numeroTicket" [disabled]="cargando" />
+        <label for="ticket">Número de ticket <span class="req" aria-hidden="true">*</span></label>
+        <input id="ticket" name="ticket" type="text" placeholder="Ej. 00001234" required autocomplete="off" aria-describedby="ayuda-ticket-facturar" [(ngModel)]="numeroTicket" [disabled]="cargando" />
         <button type="button" class="ayuda" title="Capture el número de ticket de su compra" aria-label="Ayuda: número de ticket" (click)="mostrarAyudaTicket()">?</button>
+        <span id="ayuda-ticket-facturar" class="ayuda-texto">Lo encontrarás impreso en tu comprobante de compra.</span>
       </div>
       <p class="nota">Los campos marcados con: * son obligatorios.</p>
     </form>
@@ -60,13 +61,14 @@
     <p class="panel-sub">Para reenviar tu factura es necesario ingresar el número de ticket y el correo electrónico</p>
     <form #formConsulta class="formulario" action="#" method="get" onsubmit="return false" (submit)="continuarConsulta()">
       <div class="campo requerido con-ayuda">
-        <label class="sr-only" for="ticket-consulta">Número de Ticket</label>
-        <input id="ticket-consulta" name="ticket-consulta" type="text" placeholder="Número de Ticket" required autocomplete="off" [(ngModel)]="numeroTicketConsulta" [disabled]="cargando" />
+        <label for="ticket-consulta">Número de ticket <span class="req" aria-hidden="true">*</span></label>
+        <input id="ticket-consulta" name="ticket-consulta" type="text" placeholder="Ej. 00001234" required autocomplete="off" aria-describedby="ayuda-ticket-consulta" [(ngModel)]="numeroTicketConsulta" [disabled]="cargando" />
         <button type="button" class="ayuda" title="Capture el número de ticket de su compra" aria-label="Ayuda: número de ticket" (click)="mostrarAyudaTicket()">?</button>
+        <span id="ayuda-ticket-consulta" class="ayuda-texto">Lo encontrarás impreso en tu comprobante de compra.</span>
       </div>
       <div class="campo requerido">
-        <label class="sr-only" for="correo-consulta">Correo Electrónico</label>
-        <input id="correo-consulta" name="correo-consulta" type="email" placeholder="Correo Electrónico" required autocomplete="email" [(ngModel)]="correoConsulta" [disabled]="cargando" />
+        <label for="correo-consulta">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+        <input id="correo-consulta" name="correo-consulta" type="email" placeholder="nombre@ejemplo.com" required autocomplete="email" [(ngModel)]="correoConsulta" [disabled]="cargando" />
       </div>
       <p class="nota">Los campos marcados con: * son obligatorios.</p>
     </form>

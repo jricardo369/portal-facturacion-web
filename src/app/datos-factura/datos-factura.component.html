@@ -8,6 +8,10 @@
     <h2 class="panel-titulo" id="titulo-panel">Capture la información solicitada</h2>
 
     <form #formDatos class="formulario" action="#" method="get" onsubmit="return false" (submit)="enviar()">
+      <div class="seccion-form span-12">
+        <h3>Datos fiscales</h3>
+        <p>Captura la información tal como aparece en tu constancia de situación fiscal.</p>
+      </div>
       <div class="campo span-6">
         <label for="rfc"><span class="req" aria-hidden="true">*</span>RFC:</label>
         <input id="rfc" name="rfc" type="text" placeholder="Ejem:GOOD990102UH3" required minlength="12" maxlength="13" autocomplete="off" [(ngModel)]="rfc" (ngModelChange)="actualizarRegimen()" />
@@ -18,6 +22,10 @@
         <input id="razon" name="razon" type="text" autocomplete="organization" [(ngModel)]="razonSocial" />
       </div>
 
+      <div class="seccion-form span-12">
+        <h3>Domicilio fiscal</h3>
+        <p>Usa el domicilio registrado ante el SAT. Los campos sin asterisco son opcionales.</p>
+      </div>
       <div class="campo span-6">
         <label for="calle">Calle:</label>
         <input id="calle" name="calle" type="text" autocomplete="street-address" [(ngModel)]="calle" />
@@ -58,6 +66,10 @@
         <input id="colonia" name="colonia" type="text" autocomplete="off" [(ngModel)]="colonia" />
       </div>
 
+      <div class="seccion-form span-12">
+        <h3>Datos de facturación</h3>
+        <p>Selecciona el uso que corresponde al comprobante que necesitas.</p>
+      </div>
       <div class="campo span-4">
         <label for="uso"><span class="req" aria-hidden="true">*</span>Uso Factura:</label>
         <select id="uso" name="uso" required [(ngModel)]="uso">
@@ -68,12 +80,17 @@
         </select>
       </div>
 
+      <div class="seccion-form span-12">
+        <h3>Contacto</h3>
+        <p>Enviaremos tu factura a este correo electrónico.</p>
+      </div>
       <div class="campo span-6">
         <label for="correo"><span class="req" aria-hidden="true">*</span>Correo Electrónico:</label>
         <input id="correo" name="correo" type="email" required autocomplete="email" [(ngModel)]="correo" />
       </div>
 
-      <div class="resumen">
+      <div class="resumen" aria-label="Resumen de compra">
+        <h3>Resumen de compra</h3>
         <div><strong>Tipo de pago</strong><span>{{ tipoPago?.trim() ? tipoPago : 'N/A' }}</span></div>
         <div><strong>Subtotal</strong><span>{{ formatoMoneda(subtotal) }}</span></div>
         <div><strong>Impuestos</strong><span>{{ formatoImpuestos(impuestos) }}</span></div>

@@ -1,21 +1,30 @@
 * { box-sizing: border-box; }
 :root {
-  --azul: #E8412A;
-  --azul-oscuro: #221C1E;
-  --amarillo: #E8412A;
-  --amarillo-hover: #B52A15;
-  --texto: #3c3c3c;
+  --brand-ink: #221C1E;
+  --brand-surface: #EBEBEB;
+  --brand-primary: #E8412A;
+  --brand-accent: #F29799;
+  --brand-primary-hover: #C93220;
+  --text-primary: #302A2B;
+  --text-secondary: #625B5C;
+  --border-subtle: #D4D0D0;
+  --surface-raised: #fff;
+  --azul: var(--brand-primary);
+  --azul-oscuro: var(--brand-ink);
+  --amarillo: var(--brand-primary);
+  --amarillo-hover: var(--brand-primary-hover);
+  --texto: var(--text-primary);
 }
 html, body { margin: 0; padding: 0; }
 body {
   font-family: "Nunito", "Bogle", "Open Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: #fff;
-  color: var(--texto);
+  background: var(--brand-surface);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
 }
 img { display: block; max-width: 100%; }
 a:focus-visible, button:focus-visible {
-  outline: 3px solid #fff;
+  outline: 3px solid var(--brand-accent);
   outline-offset: 3px;
 }
 .sr-only {

@@ -1,8 +1,9 @@
-.pie { background: #221C1E; color: #fff; margin-top: auto; }
+.pie { background: var(--brand-ink); color: #fff; margin-top: auto; }
 .pie-inner {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 28px; min-height: 64px; font-size: 14px;
+  max-width: 1230px; margin: 0 auto; padding: 12px 28px; min-height: 64px; font-size: 14px;
   font-family: "Comfortaa", "Nunito", sans-serif;
 }
-.aviso-link { border: 0; background: transparent; cursor: pointer; color: inherit; font: inherit; padding: 4px 0; text-decoration: underline; text-underline-offset: 3px; }
-.aviso-link:hover { color: #E8412A; }
+.aviso-link { min-height: 44px; border: 0; background: transparent; cursor: pointer; color: inherit; font: inherit; padding: 4px 0; text-decoration: underline; text-underline-offset: 3px; }
+.aviso-link:hover { color: var(--brand-accent); }
+@media (max-width: 640px) { .pie-inner { padding: 10px 16px; gap: 12px; font-size: 12px; } }
