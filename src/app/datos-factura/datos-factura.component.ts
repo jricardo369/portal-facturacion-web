@@ -10,6 +10,7 @@ import { ErrorDialogComponent } from '../shared/error-dialog.component';
 import { DatosFacturaStore } from '../facturacion/datos-factura.store';
 import { DatosFacturaResponse, FacturacionService } from '../facturacion/facturacion.service';
 import { USOS_CFDI, filtrarUsosCfdi, normalizarUsoCfdi, usoCfdiLabel } from '../facturacion/uso-cfdi.catalog';
+import { filtrarRegimenesFiscales, normalizarRegimenFiscal, regimenFiscalLabel } from '../facturacion/regimen-fiscal.catalog';
 
 @Component({
     selector: 'app-datos-factura',
@@ -34,6 +35,7 @@ export class DatosFacturaComponent implements OnInit {
   correo = '';
   regimen = '';
   uso = '';
+  regimenFiscal = '';
   subtotal: number | null = null;
   impuestos: number | null = null;
   total: number | null = null;
@@ -51,6 +53,10 @@ export class DatosFacturaComponent implements OnInit {
     const filtrados = filtrarUsosCfdi(this.regimen);
     const extras = this.usosExtra.filter((e) => !filtrados.some((f) => f.value === e.value));
     return [...filtrados, ...extras];
+  }
+
+  get regimenFiscalOpciones(): { value: string; label: string }[] {
+    return filtrarRegimenesFiscales(this.regimen);
   }
 
   constructor(private router: Router, private store: DatosFacturaStore, private facturacion: FacturacionService) {}
@@ -92,6 +98,7 @@ export class DatosFacturaComponent implements OnInit {
       this.correo = c.correoElectronico ?? '';
       this.regimen = '';
       this.uso = normalizarUsoCfdi(c.usoFactura ?? '');
+      this.regimenFiscal = normalizarRegimenFiscal(c.regimenFiscal ?? '');
       if (this.uso && !USOS_CFDI.some((o) => o.value === this.uso)) {
         this.usosExtra = [{ value: this.uso, label: this.uso }];
       }
@@ -106,12 +113,20 @@ export class DatosFacturaComponent implements OnInit {
     if (rfc.length === 12) this.regimen = 'moral';
     else if (rfc.length === 13) this.regimen = 'fisica';
     else this.regimen = '';
-    // Si el uso seleccionado no aplica al régimen, limpiarlo para obligar a elegir uno válido.
+    // Si el uso o régimen seleccionado no aplica al tipo de persona, limpiarlos para obligar a elegir uno válido.
     if (this.uso) {
       const permitidos = filtrarUsosCfdi(this.regimen);
       const normalizado = normalizarUsoCfdi(this.uso);
       if (normalizado !== this.uso) this.uso = normalizado;
       if (this.regimen && !permitidos.some((o) => o.value === this.uso)) this.uso = '';
+    }
+    if (this.regimenFiscal) {
+      const normalizado = normalizarRegimenFiscal(this.regimenFiscal);
+      if (normalizado !== this.regimenFiscal) this.regimenFiscal = normalizado;
+      if (this.regimen && this.regimenFiscal
+        && !filtrarRegimenesFiscales(this.regimen).some((o) => o.value === this.regimenFiscal)) {
+        this.regimenFiscal = '';
+      }
     }
   }
 
@@ -124,6 +139,10 @@ export class DatosFacturaComponent implements OnInit {
 
   private usoFacturaLabel(): string {
     return usoCfdiLabel(this.uso);
+  }
+
+  private regimenFiscalResumen(): string {
+    return regimenFiscalLabel(this.regimenFiscal);
   }
 
   private construirResumen(): void {
@@ -139,6 +158,7 @@ export class DatosFacturaComponent implements OnInit {
       { label: 'Colonia', valor: this.colonia.trim() },
       { label: 'Código Postal', valor: this.codigoPostal.trim() },
       { label: 'Uso Factura', valor: this.usoFacturaLabel() },
+      { label: 'Régimen', valor: this.regimenFiscalResumen() },
       { label: 'Correo Electrónico', valor: this.correo.trim() },
       { label: 'Tipo de pago', valor: this.tipoPago?.trim() ? this.tipoPago.trim() : 'N/A' },
       { label: 'Subtotal', valor: this.formatoMoneda(this.subtotal) },
@@ -163,6 +183,10 @@ export class DatosFacturaComponent implements OnInit {
       return;
     }
     this.actualizarRegimen();
+    if (!normalizarRegimenFiscal(this.regimenFiscal)) {
+      this.mostrarError('Seleccione el régimen fiscal.');
+      return;
+    }
     const state = history.state as { datos?: DatosFacturaResponse } | undefined;
     const base = this.datosBase ?? this.store.obtener() ?? state?.datos ?? null;
     if (!base?.numeroTicket) {
@@ -232,7 +256,7 @@ export class DatosFacturaComponent implements OnInit {
         colonia: this.colonia.trim() || null,
         codigoPostal: this.codigoPostal.trim() || null,
         correoElectronico: this.correo.trim() || null,
-        regimenFiscal: this.regimen || null,
+        regimenFiscal: normalizarRegimenFiscal(this.regimenFiscal) || null,
         usoFactura: this.uso || null,
         estatus: base.cliente?.estatus ?? true,
       },

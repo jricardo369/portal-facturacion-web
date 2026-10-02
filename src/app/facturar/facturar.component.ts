@@ -23,6 +23,8 @@ export class FacturarComponent implements OnInit {
   pestana: Pestana = 'facturar';
   rfc = '';
   numeroTicket = '';
+  fecha = '';
+  total = '';
   numeroTicketConsulta = '';
   correoConsulta = '';
   cargando = false;
@@ -54,6 +56,8 @@ export class FacturarComponent implements OnInit {
     this.formFacturar?.nativeElement.reset();
     this.rfc = '';
     this.numeroTicket = '';
+    this.fecha = '';
+    this.total = '';
     void this.router.navigate(['/']);
   }
 
@@ -72,12 +76,17 @@ export class FacturarComponent implements OnInit {
     }
     const form = this.formFacturar?.nativeElement;
     if (form && !form.reportValidity()) return;
-    if (!this.rfc.trim() || !this.numeroTicket.trim()) {
-      this.mostrarError('Capture RFC y número de ticket.');
+    if (!this.rfc.trim() || !this.numeroTicket.trim() || !String(this.fecha).trim() || !String(this.total).trim()) {
+      this.mostrarError('Capture RFC, número de ticket, fecha y total.');
+      return;
+    }
+    const totalNumero = Number(this.total);
+    if (!Number.isFinite(totalNumero) || totalNumero <= 0) {
+      this.mostrarError('Capture un total válido mayor a cero.');
       return;
     }
     this.cargando = true;
-    this.facturacion.obtenerDatosFactura(this.rfc, this.numeroTicket).subscribe({
+    this.facturacion.obtenerDatosFactura(this.rfc, this.numeroTicket, String(this.fecha), totalNumero).subscribe({
       next: (datos) => {
         this.cargando = false;
         const rfcCapturado = this.rfc.trim();

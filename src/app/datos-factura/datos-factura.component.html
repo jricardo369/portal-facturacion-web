@@ -79,6 +79,15 @@
           }
         </select>
       </div>
+      <div class="campo span-4">
+        <label for="regimen"><span class="req" aria-hidden="true">*</span>Régimen:</label>
+        <select id="regimen" name="regimen" required [(ngModel)]="regimenFiscal">
+          <option value="">Seleccione</option>
+          @for (o of regimenFiscalOpciones; track o) {
+            <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </div>
 
       <div class="seccion-form span-12">
         <h3>Contacto</h3>

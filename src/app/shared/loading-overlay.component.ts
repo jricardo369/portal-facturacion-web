@@ -7,7 +7,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
     template: `
     <div class="loading-overlay" role="status" aria-live="polite" [attr.aria-label]="texto">
       <div class="loader">
-        <img class="loader-logo" src="assets/logo.png" alt="Oso Despierto" />
+        <img class="loader-logo" src="assets/logo.png" alt="oso despierto" />
       </div>
       <p class="loading-texto">{{ texto }}</p>
     </div>

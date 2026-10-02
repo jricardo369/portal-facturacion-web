@@ -46,6 +46,18 @@
         <button type="button" class="ayuda" title="Capture el número de ticket de su compra" aria-label="Ayuda: número de ticket" (click)="mostrarAyudaTicket()">?</button>
         <span id="ayuda-ticket-facturar" class="ayuda-texto">Lo encontrarás impreso en tu comprobante de compra.</span>
       </div>
+      <div class="campo requerido con-ayuda">
+        <label for="fecha">Fecha <span class="req" aria-hidden="true">*</span></label>
+        <input id="fecha" name="fecha" type="date" required autocomplete="off" aria-describedby="ayuda-fecha-facturar" [(ngModel)]="fecha" [disabled]="cargando" />
+        <button type="button" class="ayuda" title="Capture la fecha de su compra" aria-label="Ayuda: fecha del ticket" (click)="mostrarAyudaTicket()">?</button>
+        <span id="ayuda-fecha-facturar" class="ayuda-texto">La encontrarás impresa en tu comprobante de compra.</span>
+      </div>
+      <div class="campo requerido con-ayuda">
+        <label for="total">Total <span class="req" aria-hidden="true">*</span></label>
+        <input id="total" name="total" type="number" placeholder="Ej. 158.00" required min="0.01" step="0.01" inputmode="decimal" autocomplete="off" aria-describedby="ayuda-total-facturar" [(ngModel)]="total" [disabled]="cargando" />
+        <button type="button" class="ayuda" title="Capture el total de su compra" aria-label="Ayuda: total del ticket" (click)="mostrarAyudaTicket()">?</button>
+        <span id="ayuda-total-facturar" class="ayuda-texto">Lo encontrarás impreso en tu comprobante de compra.</span>
+      </div>
       <p class="nota">Los campos marcados con: * son obligatorios.</p>
     </form>
     <div class="acciones">

@@ -46,7 +46,7 @@
 .req { color: var(--brand-primary); }
 .ayuda-texto { color: var(--text-secondary); font-size: 12px; line-height: 1.4; }
 .formulario .nota {
-  grid-column: 1; grid-row: 2; margin: 0;
+  grid-column: 1 / -1; grid-row: auto; margin: 0;
   font-size: 13px; color: var(--text-secondary);
 }
 .ayuda {

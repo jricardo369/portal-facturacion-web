@@ -58,9 +58,13 @@ export class FacturacionService {
 
   constructor(private http: HttpClient) {}
 
-  obtenerDatosFactura(rfc: string, numeroTicket: string): Observable<DatosFacturaResponse> {
+  obtenerDatosFactura(rfc: string, numeroTicket: string, fecha?: string, total?: number): Observable<DatosFacturaResponse> {
     let params = new HttpParams().set('numeroTicket', numeroTicket.trim());
     if (rfc?.trim()) params = params.set('rfc', rfc.trim());
+    if (fecha?.trim()) params = params.set('fecha', fecha.trim());
+    if (total !== undefined && total !== null && Number.isFinite(Number(total))) {
+      params = params.set('total', String(total));
+    }
     return this.http.get<DatosFacturaResponse>(`${this.BASE}/datos-factura`, { params, headers: this.headers() });
   }
 
