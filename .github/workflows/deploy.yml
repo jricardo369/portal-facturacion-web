@@ -2,7 +2,7 @@ name: build-push-deploy-web
 
 # Secrets requeridos (Settings > Secrets > Actions):
 #   EC2_HOST, EC2_USER, EC2_SSH_KEY, EC2_PORT(22), GHCR_USER, GHCR_PAT(read:packages)
-# v29092026
+# v06102026
 # En el EC2 el orquestador vive en /opt/portal-facturacion-api (repo del API)
 # y la infra en /opt/portal-facturacion-configs/.env.prod (IMAGE_OWNER, APP_DOMAIN, WEB_*).
 # Este workflow solo construye la imagen web y luego hace pull/up en ese compose.
