@@ -13,7 +13,7 @@ export const REGIMENES_FISCALES: RegimenFiscal[] = [
   { value: '607', label: '607 Régimen de Enajenación o Adquisición de Bienes', fisica: true, moral: false },
   { value: '608', label: '608 Demás ingresos', fisica: true, moral: false },
   { value: '610', label: '610 Residentes en el Extranjero sin Establecimiento Permanente en México', fisica: true, moral: true },
-  { value: '611', label: '611 Ingresos por Dividendos (socios y accionistas)', fisica: true, moral: true },
+  { value: '611', label: '611 Ingresos por Dividendos (socios y accionistas)', fisica: true, moral: false },
   { value: '612', label: '612 Personas Físicas con Actividades Empresariales y Profesionales', fisica: true, moral: false },
   { value: '614', label: '614 Ingresos por intereses', fisica: true, moral: false },
   { value: '615', label: '615 Régimen de los ingresos por obtención de premios', fisica: true, moral: false },

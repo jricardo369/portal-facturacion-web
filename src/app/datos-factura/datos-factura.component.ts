@@ -50,7 +50,8 @@ export class DatosFacturaComponent implements OnInit {
   private usosExtra: { value: string; label: string }[] = [];
 
   get usoOpciones(): { value: string; label: string }[] {
-    const filtrados = filtrarUsosCfdi(this.regimen);
+    if (!this.regimenFiscal) return [];
+    const filtrados = filtrarUsosCfdi(this.regimenFiscal);
     const extras = this.usosExtra.filter((e) => !filtrados.some((f) => f.value === e.value));
     return [...filtrados, ...extras];
   }
@@ -113,19 +114,22 @@ export class DatosFacturaComponent implements OnInit {
     if (rfc.length === 12) this.regimen = 'moral';
     else if (rfc.length === 13) this.regimen = 'fisica';
     else this.regimen = '';
-    // Si el uso o régimen seleccionado no aplica al tipo de persona, limpiarlos para obligar a elegir uno válido.
-    if (this.uso) {
-      const permitidos = filtrarUsosCfdi(this.regimen);
-      const normalizado = normalizarUsoCfdi(this.uso);
-      if (normalizado !== this.uso) this.uso = normalizado;
-      if (this.regimen && !permitidos.some((o) => o.value === this.uso)) this.uso = '';
-    }
+    // Normalizar el régimen y descartarlo si no aplica al tipo de persona.
     if (this.regimenFiscal) {
       const normalizado = normalizarRegimenFiscal(this.regimenFiscal);
-      if (normalizado !== this.regimenFiscal) this.regimenFiscal = normalizado;
-      if (this.regimen && this.regimenFiscal
-        && !filtrarRegimenesFiscales(this.regimen).some((o) => o.value === this.regimenFiscal)) {
+      this.regimenFiscal = normalizado;
+      if (normalizado && this.regimen
+        && !filtrarRegimenesFiscales(this.regimen).some((o) => o.value === normalizado)) {
         this.regimenFiscal = '';
+      }
+    }
+    // El uso CFDI depende del régimen seleccionado; si no es válido, limpiarlo.
+    if (this.uso) {
+      const normalizado = normalizarUsoCfdi(this.uso);
+      this.uso = normalizado;
+      const permitidos = filtrarUsosCfdi(this.regimenFiscal);
+      if (!this.regimenFiscal || !permitidos.some((o) => o.value === this.uso)) {
+        this.uso = '';
       }
     }
   }

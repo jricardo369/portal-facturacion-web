@@ -38,6 +38,37 @@ const USOS_LEGACY: Record<string, string> = {
   mercancias: 'G01',
 };
 
+const G = ['G01', 'G02', 'G03'];
+const I = ['I01', 'I02', 'I03', 'I04', 'I05', 'I06', 'I07', 'I08'];
+const D = ['D01', 'D02', 'D03', 'D04', 'D05', 'D06', 'D07', 'D08', 'D09', 'D10'];
+const S = ['S01', 'CP01'];
+
+/**
+ * Usos de CFDI válidos por régimen fiscal del receptor.
+ * Fuente: catálogo c_UsoCFDI (columna "Régimen Fiscal Receptor"), Anexo 20 CFDI 4.0.
+ */
+export const USOS_POR_REGIMEN: Record<string, string[]> = {
+  '601': [...G, ...I, ...S],
+  '603': [...G, ...I, ...S],
+  '605': [...D, ...S, 'CN01'],
+  '606': [...G, ...I, ...D, ...S],
+  '607': [...D, ...S],
+  '608': [...D, ...S],
+  '610': [...S],
+  '611': [...D, ...S],
+  '612': [...G, ...I, ...D, ...S],
+  '614': [...D, ...S],
+  '615': [...D, ...S],
+  '616': [...S],
+  '620': [...G, ...I, ...S],
+  '621': [...G, ...I, ...S],
+  '622': [...G, ...I, ...S],
+  '623': [...G, ...I, ...S],
+  '624': [...G, ...I, ...S],
+  '625': [...G, ...I, ...D, ...S],
+  '626': [...G, ...I, ...S],
+};
+
 export function normalizarUsoCfdi(valor: string | null | undefined): string {
   const v = (valor ?? '').trim();
   if (!v) return '';
@@ -49,11 +80,14 @@ export function normalizarUsoCfdi(valor: string | null | undefined): string {
   return v;
 }
 
-export function filtrarUsosCfdi(regimen: string): UsoCfdi[] {
-  const r = (regimen || '').trim().toLowerCase();
-  if (r === 'moral') return USOS_CFDI.filter((u) => u.moral);
-  if (r === 'fisica') return USOS_CFDI.filter((u) => u.fisica);
-  return [...USOS_CFDI];
+/** Usos válidos para el régimen fiscal seleccionado. Sin régimen devuelve lista vacía. */
+export function filtrarUsosCfdi(regimenFiscal: string): UsoCfdi[] {
+  const codigo = (regimenFiscal ?? '').trim().toUpperCase();
+  if (!codigo) return [];
+  const permitidos = USOS_POR_REGIMEN[codigo];
+  if (!permitidos) return [...USOS_CFDI];
+  const set = new Set(permitidos);
+  return USOS_CFDI.filter((u) => set.has(u.value));
 }
 
 export function usoCfdiLabel(valor: string | null | undefined): string {

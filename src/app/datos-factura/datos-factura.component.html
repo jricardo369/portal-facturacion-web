@@ -68,22 +68,22 @@
 
       <div class="seccion-form span-12">
         <h3>Datos de facturación</h3>
-        <p>Selecciona el uso que corresponde al comprobante que necesitas.</p>
+        <p>Selecciona primero el régimen fiscal y después el uso que corresponde al comprobante que necesitas.</p>
       </div>
       <div class="campo span-4">
-        <label for="uso"><span class="req" aria-hidden="true">*</span>Uso Factura:</label>
-        <select id="uso" name="uso" required [(ngModel)]="uso">
+        <label for="regimen"><span class="req" aria-hidden="true">*</span>Régimen:</label>
+        <select id="regimen" name="regimen" required [(ngModel)]="regimenFiscal" (ngModelChange)="actualizarRegimen()">
           <option value="">Seleccione</option>
-          @for (o of usoOpciones; track o) {
+          @for (o of regimenFiscalOpciones; track o) {
             <option [value]="o.value">{{ o.label }}</option>
           }
         </select>
       </div>
       <div class="campo span-4">
-        <label for="regimen"><span class="req" aria-hidden="true">*</span>Régimen:</label>
-        <select id="regimen" name="regimen" required [(ngModel)]="regimenFiscal">
-          <option value="">Seleccione</option>
-          @for (o of regimenFiscalOpciones; track o) {
+        <label for="uso"><span class="req" aria-hidden="true">*</span>Uso Factura:</label>
+        <select id="uso" name="uso" required [(ngModel)]="uso" [disabled]="!regimenFiscal">
+          <option value="">{{ regimenFiscal ? 'Seleccione' : 'Elija primero el régimen' }}</option>
+          @for (o of usoOpciones; track o) {
             <option [value]="o.value">{{ o.label }}</option>
           }
         </select>

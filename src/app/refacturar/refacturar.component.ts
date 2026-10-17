@@ -8,12 +8,14 @@ import { FooterComponent } from '../layout/footer/footer.component';
 import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
 import { DatosFacturaPayload, DatosFacturaResponse, FacturacionService } from '../facturacion/facturacion.service';
 import { filtrarUsosCfdi, normalizarUsoCfdi, usoCfdiLabel } from '../facturacion/uso-cfdi.catalog';
+import { normalizarRegimenFiscal, regimenFiscalLabel } from '../facturacion/regimen-fiscal.catalog';
 
 interface DatosNuevaFactura {
   cliente: string;
   rfc: string;
   correo: string;
   regimen: string;
+  regimenFiscal: string;
   uso: string;
 }
 
@@ -31,12 +33,12 @@ export class RefacturarComponent {
   cargando = false;
   encontrada?: DatosFacturaResponse;
   nueva?: DatosFacturaResponse;
-  datos: DatosNuevaFactura = { cliente: '', rfc: '', correo: '', regimen: '', uso: '' };
+  datos: DatosNuevaFactura = { cliente: '', rfc: '', correo: '', regimen: '', regimenFiscal: '', uso: '' };
   confirmacionAbierta = false;
   resumenDatos: { label: string; valor: string }[] = [];
 
   get usoOpciones(): { value: string; label: string }[] {
-    return filtrarUsosCfdi(this.datos.regimen);
+    return filtrarUsosCfdi(this.datos.regimenFiscal);
   }
 
   constructor(private facturacion: FacturacionService, private router: Router) {}
@@ -59,6 +61,7 @@ export class RefacturarComponent {
           rfc: f.cliente?.rfc ?? '',
           correo: f.cliente?.correoElectronico ?? '',
           regimen: '',
+          regimenFiscal: normalizarRegimenFiscal(f.cliente?.regimenFiscal ?? ''),
           uso: normalizarUsoCfdi(f.cliente?.usoFactura ?? ''),
         };
         this.actualizarRegimen();
@@ -126,10 +129,12 @@ export class RefacturarComponent {
     if (rfc.length === 12) this.datos.regimen = 'moral';
     else if (rfc.length === 13) this.datos.regimen = 'fisica';
     else this.datos.regimen = '';
+    // El uso CFDI depende del régimen heredado de la factura original.
     if (this.datos.uso) {
       const normalizado = normalizarUsoCfdi(this.datos.uso);
-      if (normalizado !== this.datos.uso) this.datos.uso = normalizado;
-      if (this.datos.regimen && !filtrarUsosCfdi(this.datos.regimen).some((o) => o.value === this.datos.uso)) {
+      this.datos.uso = normalizado;
+      const permitidos = filtrarUsosCfdi(this.datos.regimenFiscal);
+      if (!this.datos.regimenFiscal || !permitidos.some((o) => o.value === this.datos.uso)) {
         this.datos.uso = '';
       }
     }
@@ -139,6 +144,10 @@ export class RefacturarComponent {
     return usoCfdiLabel(this.datos.uso);
   }
 
+  private regimenResumen(): string {
+    return regimenFiscalLabel(this.datos.regimenFiscal);
+  }
+
   private construirResumen(): void {
     this.resumenDatos = [
       { label: 'Ticket anterior', valor: this.encontrada?.numeroTicket ?? '' },
@@ -146,6 +155,7 @@ export class RefacturarComponent {
       { label: 'Razón social', valor: this.datos.cliente.trim() },
       { label: 'Correo electrónico', valor: this.datos.correo.trim() },
       { label: 'Uso CFDI', valor: this.usoFacturaLabel() },
+      { label: 'Régimen', valor: this.regimenResumen() },
       { label: 'Subtotal', valor: this.encontrada?.subtotal != null ? this.moneda(this.encontrada.subtotal) : '' },
       { label: 'Impuestos', valor: this.encontrada?.impuestos != null ? this.moneda(this.encontrada.impuestos) : '' },
       { label: 'Total', valor: this.moneda(this.resumenTotal) },
@@ -161,9 +171,7 @@ export class RefacturarComponent {
   }
 
   get resumenImpuestos(): number {
-    if (!this.encontrada) return 0;
-    if (this.datos.regimen === 'moral') return this.redondear(this.resumenSubtotal * 0.1);
-    return this.encontrada.impuestos ?? 0;
+    return this.encontrada?.impuestos ?? 0;
   }
 
   get resumenTotal(): number {
@@ -193,7 +201,7 @@ export class RefacturarComponent {
         colonia: base.cliente?.colonia ?? null,
         codigoPostal: base.cliente?.codigoPostal ?? null,
         correoElectronico: this.datos.correo.trim(),
-        regimenFiscal: this.datos.regimen || null,
+        regimenFiscal: normalizarRegimenFiscal(this.datos.regimenFiscal) || null,
         usoFactura: this.datos.uso || null,
         estatus: base.cliente?.estatus ?? true,
       },
