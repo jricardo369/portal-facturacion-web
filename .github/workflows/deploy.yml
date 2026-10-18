@@ -124,6 +124,8 @@ jobs:
             df -h /
             $COMPOSE pull web
             $COMPOSE up -d --force-recreate --no-deps web
+            $COMPOSE stop caddy || true
+            $COMPOSE rm -f caddy || true
             $COMPOSE up -d --no-deps caddy
             $COMPOSE ps
             for i in $(seq 1 12); do
