@@ -121,9 +121,10 @@ jobs:
             COMPOSE="docker compose --env-file $ENV_FILE -f docker-compose.prod.yml"
             # Liberar espacio: borrar imágenes que ya no se usan antes de bajar la nueva
             docker image prune -af || true
+            df -h /
             $COMPOSE pull web
             $COMPOSE up -d --force-recreate --no-deps web
-            $COMPOSE up -d caddy
+            $COMPOSE up -d --no-deps caddy
             $COMPOSE ps
             for i in $(seq 1 12); do
               if docker exec portal-facturacion-web wget -qO- http://127.0.0.1:80/ 2>/dev/null | grep -qi "<html"; then
