@@ -126,6 +126,8 @@ jobs:
             $COMPOSE up -d --force-recreate --no-deps web
             $COMPOSE stop caddy || true
             $COMPOSE rm -f caddy || true
+            # Esperar a que el proxy de Docker libere el puerto 80
+            sleep 5
             $COMPOSE up -d --no-deps caddy
             $COMPOSE ps
             for i in $(seq 1 12); do
