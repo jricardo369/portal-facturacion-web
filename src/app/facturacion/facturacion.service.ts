@@ -52,6 +52,26 @@ export interface DatosFacturaResponse {
 
 export type DatosFacturaPayload = DatosFacturaResponse;
 
+export interface FacturaResponse {
+  idFactura?: number | null;
+  folio?: string | null;
+  serie?: string | null;
+  fecha?: string | null;
+  cliente?: string | null;
+  rfc?: string | null;
+  razonSocial?: string | null;
+  noTicket?: string | null;
+  subtotal?: number | null;
+  impuesto?: number | null;
+  total?: number | null;
+  estatus?: string | null;
+  uuid?: string | null;
+  facturapiId?: string | null;
+  cancellationStatus?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class FacturacionService {
   private readonly BASE = '/api/v1/facturacion';
@@ -68,9 +88,9 @@ export class FacturacionService {
     return this.http.get<DatosFacturaResponse>(`${this.BASE}/datos-factura`, { params, headers: this.headers() });
   }
 
-  consultarFacturaPorTicket(numeroTicket: string): Observable<DatosFacturaResponse> {
+  obtenerFacturaPorTicket(numeroTicket: string): Observable<FacturaResponse> {
     const params = new HttpParams().set('numeroTicket', numeroTicket.trim());
-    return this.http.get<DatosFacturaResponse>(`${this.BASE}/factura`, { params, headers: this.headers() });
+    return this.http.get<FacturaResponse>(`${this.BASE}/factura`, { params, headers: this.headers() });
   }
 
   buscarFactura(filtro: string): Observable<DatosFacturaResponse> {
@@ -94,6 +114,18 @@ export class FacturacionService {
   reenviarFactura(correoElectronico: string, numeroTicket: string): Observable<any> {
     return this.http.post<any>(`${this.BASE}/reenviar-factura`,
       { correoElectronico, numeroTicket }, { headers: this.headers() });
+  }
+
+  descargarXml(uuid: string): Observable<Blob> {
+    const params = new HttpParams().set('uuid', uuid.trim());
+    return this.http.get(`${this.BASE}/factura/xml`,
+      { params, headers: this.headers(), responseType: 'blob' });
+  }
+
+  descargarPdf(uuid: string): Observable<Blob> {
+    const params = new HttpParams().set('uuid', uuid.trim());
+    return this.http.get(`${this.BASE}/factura/pdf`,
+      { params, headers: this.headers(), responseType: 'blob' });
   }
 
   private headers(): HttpHeaders {

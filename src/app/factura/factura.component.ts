@@ -24,6 +24,9 @@ export class FacturaComponent implements OnInit {
   intento = false;
   datos: DatosFacturaResponse | null = null;
 
+  private uuid = '';
+  private descargando = false;
+
   constructor(private router: Router, private store: DatosFacturaStore, private facturacion: FacturacionService) {}
 
   ngOnInit(): void {
@@ -130,11 +133,63 @@ export class FacturaComponent implements OnInit {
   }
 
   descargarXml(): void {
-    return;
+    this.descargarComprobante('xml');
   }
 
   descargarPdf(): void {
-    return;
+    this.descargarComprobante('pdf');
+  }
+
+  private descargarComprobante(tipo: 'xml' | 'pdf'): void {
+    if (this.descargando) return;
+    if (this.uuid) {
+      this.solicitarDescarga(this.uuid, tipo);
+      return;
+    }
+    const ticket = this.numeroTicket;
+    if (!ticket) return;
+    this.descargando = true;
+    this.facturacion.obtenerFacturaPorTicket(ticket).subscribe({
+      next: (factura) => {
+        const uuid = factura?.uuid?.trim() ?? '';
+        if (!uuid) {
+          this.descargando = false;
+          return;
+        }
+        this.uuid = uuid;
+        this.solicitarDescarga(uuid, tipo);
+      },
+      error: () => {
+        this.descargando = false;
+      },
+    });
+  }
+
+  private solicitarDescarga(uuid: string, tipo: 'xml' | 'pdf'): void {
+    this.descargando = true;
+    const peticion = tipo === 'pdf'
+      ? this.facturacion.descargarPdf(uuid)
+      : this.facturacion.descargarXml(uuid);
+    peticion.subscribe({
+      next: (blob) => {
+        this.descargando = false;
+        this.guardarArchivo(blob, uuid, tipo);
+      },
+      error: () => {
+        this.descargando = false;
+      },
+    });
+  }
+
+  private guardarArchivo(blob: Blob, uuid: string, tipo: 'xml' | 'pdf'): void {
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = `cfdi-${this.numeroTicket || uuid}.${tipo}`;
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+    URL.revokeObjectURL(url);
   }
 
   nuevaFactura(): void {
