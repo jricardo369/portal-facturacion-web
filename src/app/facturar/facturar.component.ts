@@ -1,7 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HeaderComponent } from '../layout/header/header.component';
 import { FooterComponent } from '../layout/footer/footer.component';
@@ -14,7 +14,7 @@ type Pestana = 'facturar' | 'consulta';
 
 @Component({
     selector: 'app-facturar',
-    imports: [FormsModule, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
+    imports: [FormsModule, RouterLink, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
     templateUrl: './facturar.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./facturar.component.css']
@@ -32,9 +32,11 @@ export class FacturarComponent implements OnInit {
   errorMensaje = '';
   correoConsultaEnviado = '';
   ayudaTicketVisible = false;
+  intento = false;
 
   @ViewChild('formFacturar') formFacturar?: ElementRef<HTMLFormElement>;
   @ViewChild('formConsulta') formConsulta?: ElementRef<HTMLFormElement>;
+  @ViewChild('closeAyuda') closeAyuda?: ElementRef<HTMLButtonElement>;
 
   constructor(
     private router: Router,
@@ -48,8 +50,30 @@ export class FacturarComponent implements OnInit {
     if (tab) this.pestana = tab;
   }
 
+  get hoy(): string {
+    const d = new Date();
+    const p = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  }
+
   mostrar(p: Pestana): void {
     this.pestana = p;
+    this.intento = false;
+  }
+
+  onTabsKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    const tabs = Array.from(
+      (event.currentTarget as HTMLElement).querySelectorAll<HTMLButtonElement>('[role="tab"]')
+    );
+    const actual = tabs.indexOf(document.activeElement as HTMLButtonElement);
+    if (actual === -1) return;
+    event.preventDefault();
+    const siguiente = event.key === 'ArrowRight'
+      ? (actual + 1) % tabs.length
+      : (actual - 1 + tabs.length) % tabs.length;
+    tabs[siguiente].focus();
+    this.mostrar(tabs[siguiente].id === 'tab-consulta' ? 'consulta' : 'facturar');
   }
 
   cancelar(): void {
@@ -58,6 +82,7 @@ export class FacturarComponent implements OnInit {
     this.numeroTicket = '';
     this.fecha = '';
     this.total = '';
+    this.intento = false;
     void this.router.navigate(['/']);
   }
 
@@ -66,6 +91,7 @@ export class FacturarComponent implements OnInit {
     this.numeroTicketConsulta = '';
     this.correoConsulta = '';
     this.correoConsultaEnviado = '';
+    this.intento = false;
     void this.router.navigate(['/']);
   }
 
@@ -74,6 +100,7 @@ export class FacturarComponent implements OnInit {
       this.continuarConsulta();
       return;
     }
+    this.intento = true;
     const form = this.formFacturar?.nativeElement;
     if (form && !form.reportValidity()) return;
     if (!this.rfc.trim() || !this.numeroTicket.trim() || !String(this.fecha).trim() || !String(this.total).trim()) {
@@ -101,6 +128,7 @@ export class FacturarComponent implements OnInit {
   }
 
   continuarConsulta(): void {
+    this.intento = true;
     const form = this.formConsulta?.nativeElement;
     if (form && !form.reportValidity()) return;
     const ticket = this.numeroTicketConsulta.trim();
@@ -117,6 +145,7 @@ export class FacturarComponent implements OnInit {
         this.formConsulta?.nativeElement.reset();
         this.numeroTicketConsulta = '';
         this.correoConsulta = '';
+        this.intento = false;
       },
       error: (e: HttpErrorResponse) => {
         this.cargando = false;
@@ -127,10 +156,18 @@ export class FacturarComponent implements OnInit {
 
   mostrarAyudaTicket(): void {
     this.ayudaTicketVisible = true;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => this.closeAyuda?.nativeElement.focus());
   }
 
   cerrarAyudaTicket(): void {
     this.ayudaTicketVisible = false;
+    document.body.style.overflow = '';
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.ayudaTicketVisible) this.cerrarAyudaTicket();
   }
 
   cerrarError(): void {

@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<main id="contenido" class="pagina">
+<main id="contenido" class="ui-page">
   @if (cargando) {
     <app-loading-overlay texto="Cargando clientes…"></app-loading-overlay>
   }
@@ -8,68 +8,158 @@
     <app-error-dialog titulo="No se pudieron cargar los clientes" [mensaje]="error" (cerrar)="error = ''"></app-error-dialog>
   }
 
-  <div class="encabezado">
-    <h1 class="titulo">Clientes</h1>
-    <button type="button" class="btn btn-cancelar" (click)="salir()">Cerrar sesión</button>
-  </div>
+  <header class="ui-page-head">
+    <div class="ui-heading">
+      <span class="ui-eyebrow">Administración</span>
+      <h1 class="ui-title">Clientes</h1>
+      <p class="ui-subtitle">Busca clientes por RFC, razón social o código postal y revisa sus datos fiscales.</p>
+    </div>
+    <div class="ui-head-actions">
+      <button type="button" class="ui-btn ui-btn--ghost" (click)="salir()">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Cerrar sesión
+      </button>
+    </div>
+  </header>
 
-  <section class="resumen" aria-label="Resumen">
-    <div class="stat"><span class="stat-num">{{ totalElementos }}</span><span class="stat-label">Clientes</span></div>
-    <div class="stat"><span class="stat-num">{{ activos }}</span><span class="stat-label">Activos</span></div>
+  <section class="ui-stats" aria-label="Resumen">
+    <article class="ui-stat">
+      <span class="ui-stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="8" r="3.4"/>
+          <path d="M3.5 19.5c.6-3.4 2.8-5.5 5.5-5.5s4.9 2.1 5.5 5.5"/>
+          <circle cx="17" cy="9.5" r="2.5"/>
+          <path d="M16.2 19.5c.4-2.4 1.6-4 3.2-4.6.9-.4 1.9-.3 2.6.1"/>
+        </svg>
+      </span>
+      <div class="ui-stat-body">
+        <span class="ui-stat-num">{{ totalElementos }}</span>
+        <span class="ui-stat-label">Clientes</span>
+      </div>
+    </article>
+    <article class="ui-stat">
+      <span class="ui-stat-icon ui-stat-icon--red" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="m8 12.5 2.5 2.5L16 9.5"/>
+        </svg>
+      </span>
+      <div class="ui-stat-body">
+        <span class="ui-stat-num">{{ activos }}</span>
+        <span class="ui-stat-label">Activos</span>
+      </div>
+    </article>
   </section>
 
-  <section class="filtros" aria-label="Filtros">
-    <div class="campo">
+  <section class="ui-filters" aria-label="Filtros">
+    <div class="ui-field">
       <label for="f-rfc">RFC</label>
-      <input id="f-rfc" [(ngModel)]="rfc" placeholder="Ej. AAA010101AAA" autocomplete="off" />
+      <input id="f-rfc" class="ui-input" [(ngModel)]="rfc" placeholder="Ej. AAA010101AAA" autocomplete="off" />
     </div>
-    <div class="campo">
+    <div class="ui-field">
       <label for="f-razon-social">Razón social</label>
-      <input id="f-razon-social" [(ngModel)]="razonSocial" placeholder="Ej. oso despierto sa de cv" autocomplete="off" />
+      <input id="f-razon-social" class="ui-input" [(ngModel)]="razonSocial" placeholder="Ej. oso despierto sa de cv" autocomplete="off" />
     </div>
-    <div class="campo">
+    <div class="ui-field">
       <label for="f-cp">Código postal</label>
-      <input id="f-cp" [(ngModel)]="codigoPostal" placeholder="Ej. 68000" autocomplete="off" />
+      <input id="f-cp" class="ui-input" [(ngModel)]="codigoPostal" placeholder="Ej. 68000" autocomplete="off" inputmode="numeric" />
     </div>
-    <button type="button" class="btn btn-buscar" (click)="buscar()">Buscar</button>
-    <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
+    <button type="button" class="ui-btn ui-btn--dark" (click)="buscar()">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        <path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Buscar
+    </button>
+    <button type="button" class="ui-btn ui-btn--soft" (click)="limpiar()">Limpiar</button>
   </section>
 
-  <section class="panel" aria-label="Listado de clientes">
-    <div class="tabla-wrap">
-      <table>
+  <section class="ui-panel" aria-label="Listado de clientes">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-title">Resultados</h2>
+      <span class="ui-panel-meta">{{ totalElementos }} {{ totalElementos === 1 ? 'registro' : 'registros' }}</span>
+    </div>
+    <div class="ui-table-wrap">
+      <table class="ui-table">
         <thead>
-          <tr><th>ID</th><th>Alta</th><th>RFC</th><th>Razón social</th><th>Correo</th><th>Municipio</th><th>Estado</th><th>C.P.</th><th>Estatus</th></tr>
+          <tr>
+            <th>ID</th>
+            <th>Alta</th>
+            <th>RFC</th>
+            <th>Razón social</th>
+            <th>Correo</th>
+            <th>Municipio</th>
+            <th>Estado</th>
+            <th>C.P.</th>
+            <th>Estatus</th>
+            <th class="ui-col-action"><span class="sr-only">Detalle</span></th>
+          </tr>
         </thead>
         <tbody>
           @for (c of clientes; track c) {
-            <tr class="clic" (click)="verDetalle(c)" title="Ver detalle del cliente">
-              <td class="folio">{{ c.idCliente }}</td>
-              <td>{{ formatearFecha(c.createdAt) }}</td>
-              <td>{{ c.rfc }}</td>
-              <td>{{ c.razonSocial }}</td>
-              <td>{{ c.correoElectronico }}</td>
-              <td>{{ c.municipio }}</td>
-              <td>{{ c.estado }}</td>
-              <td>{{ c.codigoPostal }}</td>
-              <td><span class="badge" [class.inactivo]="!c.estatus">{{ c.estatus ? 'Activo' : 'Inactivo' }}</span></td>
+            <tr class="is-clickable" (click)="verDetalle(c)" title="Ver detalle del cliente">
+              <td class="ui-cell-strong" data-label="ID">{{ c.idCliente }}</td>
+              <td data-label="Alta">{{ formatearFecha(c.createdAt) }}</td>
+              <td data-label="RFC">{{ c.rfc }}</td>
+              <td data-label="Razón social">{{ c.razonSocial }}</td>
+              <td data-label="Correo">{{ c.correoElectronico }}</td>
+              <td data-label="Municipio">{{ c.municipio }}</td>
+              <td data-label="Estado">{{ c.estado }}</td>
+              <td data-label="C.P.">{{ c.codigoPostal }}</td>
+              <td data-label="Estatus">
+                <span class="ui-badge" [class.ui-badge--danger]="!c.estatus" [class.ui-badge--ok]="c.estatus">{{ c.estatus ? 'Activo' : 'Inactivo' }}</span>
+              </td>
+              <td class="ui-cell-action">
+                <button type="button" class="ui-row-action" (click)="verDetalle(c); $event.stopPropagation()" [attr.aria-label]="'Ver detalle del cliente ' + c.idCliente">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Ver detalle</span>
+                </button>
+              </td>
             </tr>
           }
           @if (totalElementos === 0) {
-            <tr><td colspan="9" class="vacio">Sin resultados con los filtros aplicados.</td></tr>
+            <tr class="ui-empty-row">
+              <td colspan="10">
+                <div class="ui-empty">
+                  <span class="ui-empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="9" cy="8" r="3.4"/>
+                      <path d="M3.5 19.5c.6-3.4 2.8-5.5 5.5-5.5s4.9 2.1 5.5 5.5"/>
+                      <circle cx="17" cy="9.5" r="2.5"/>
+                      <path d="M16.2 19.5c.4-2.4 1.6-4 3.2-4.6.9-.4 1.9-.3 2.6.1"/>
+                    </svg>
+                  </span>
+                  <strong>Sin resultados</strong>
+                  <p>No hay clientes que coincidan con los filtros aplicados.</p>
+                </div>
+              </td>
+            </tr>
           }
         </tbody>
       </table>
     </div>
     @if (totalElementos > 0) {
-      <nav class="paginacion" aria-label="Paginación">
-        <span class="rango">{{ rango }}</span>
-        <div class="pag-btns">
-          <button type="button" class="pag" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Anterior">‹</button>
+      <nav class="ui-pagination" aria-label="Paginación">
+        <span class="ui-range">{{ rango }}</span>
+        <span class="ui-page-current">Página {{ pagina }} de {{ totalPaginas }}</span>
+        <div class="ui-page-btns">
+          <button type="button" class="ui-page-btn" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Página anterior">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+              <path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
           @for (p of paginas; track p) {
-            <button type="button" class="pag" [class.activa]="p === pagina" (click)="irAPagina(p)">{{ p }}</button>
+            <button type="button" class="ui-page-btn is-number" [class.is-active]="p === pagina" [attr.aria-current]="p === pagina ? 'page' : null" [attr.aria-label]="'Página ' + p" (click)="irAPagina(p)">{{ p }}</button>
           }
-          <button type="button" class="pag" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Siguiente">›</button>
+          <button type="button" class="ui-page-btn" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Página siguiente">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+              <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
       </nav>
     }

@@ -5,34 +5,43 @@ import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from 
     selector: 'app-error-dialog',
     imports: [],
     template: `
-    <div class="error-backdrop" (click)="cerrar.emit()">
-      <div class="error-dialogo" role="alertdialog" aria-modal="true" aria-labelledby="titulo-error" (click)="$event.stopPropagation()">
-        <div class="error-head">
-          <h2 id="titulo-error">{{ titulo }}</h2>
-          <button type="button" class="error-cerrar" (click)="cerrar.emit()" aria-label="Cerrar error">✕</button>
+    <div class="ui-backdrop" (click)="cerrar.emit()">
+      <div class="ui-dialog error-dialog" role="alertdialog" aria-modal="true" aria-labelledby="titulo-error" (click)="$event.stopPropagation()">
+        <div class="ui-dialog-head">
+          <div>
+            <h2 id="titulo-error">{{ titulo }}</h2>
+            <p class="error-sub">Revisa la información e intenta de nuevo.</p>
+          </div>
+          <button type="button" class="ui-close" (click)="cerrar.emit()" aria-label="Cerrar error">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
-        <div class="error-cuerpo">
-          <p>{{ mensaje }}</p>
+        <div class="ui-dialog-body">
+          <div class="error-mensaje">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M12 7.5v5.5M12 16.5h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p>{{ mensaje }}</p>
+          </div>
         </div>
-        <div class="error-pie">
-          <button type="button" class="btn-entendido" (click)="cerrar.emit()">Entendido</button>
+        <div class="ui-dialog-foot">
+          <button type="button" class="ui-btn ui-btn--primary" (click)="cerrar.emit()">Entendido</button>
         </div>
       </div>
     </div>
   `,
     changeDetection: ChangeDetectionStrategy.Eager,
     styles: [`
-    .error-backdrop { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.5); display: grid; place-items: center; padding: 20px; }
-    .error-dialogo { width: min(480px, 100%); background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
-    .error-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eee; }
-    .error-head h2 { margin: 0; font-family: "Comfortaa", "Nunito", sans-serif; font-size: 19px; color: #b3261e; }
-    .error-cerrar { border: 0; background: transparent; cursor: pointer; font-size: 18px; color: #6e6e6e; padding: 6px 10px; border-radius: 6px; }
-    .error-cerrar:hover { background: #f0f0f0; color: #333; }
-    .error-cuerpo { padding: 16px 20px; font-size: 14px; line-height: 1.6; color: #3c3c3c; }
-    .error-cuerpo p { margin: 0; white-space: pre-line; }
-    .error-pie { display: flex; justify-content: flex-end; padding: 14px 20px; border-top: 1px solid #eee; }
-    .btn-entendido { border: 0; cursor: pointer; font: inherit; font-size: 14px; padding: 8px 28px; border-radius: 4px; color: #fff; background: #b3261e; }
-    .btn-entendido:hover { background: #8f1d17; }
+    :host { display: contents; }
+    .error-dialog { width: min(480px, 100%); }
+    .error-dialog h2 { color: #B3261E; }
+    .error-sub { margin: 4px 0 0; font-size: 13px; color: var(--text-secondary); }
+    .error-mensaje { display: flex; gap: 12px; align-items: flex-start; }
+    .error-mensaje svg { width: 22px; height: 22px; flex: 0 0 22px; margin-top: 2px; color: #B3261E; }
+    .error-mensaje p { margin: 0; white-space: pre-line; font-size: 14px; line-height: 1.6; }
   `]
 })
 export class ErrorDialogComponent {

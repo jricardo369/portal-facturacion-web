@@ -21,16 +21,63 @@ export class FacturaComponent implements OnInit {
   errorInfo = false;
   esConsulta = false;
   correoEnviado = '';
+  intento = false;
+  datos: DatosFacturaResponse | null = null;
 
   constructor(private router: Router, private store: DatosFacturaStore, private facturacion: FacturacionService) {}
 
   ngOnInit(): void {
     const state = history.state as { datos?: DatosFacturaResponse; correo?: string; mensajeExito?: string; origen?: string } | undefined;
     const datos = state?.datos ?? this.store.obtener() ?? null;
+    this.datos = datos;
     this.correo = state?.correo?.trim() || datos?.cliente?.correoElectronico?.trim() || '';
     this.esConsulta = state?.origen === 'consulta';
     const ticket = datos?.numeroTicket?.trim() || '';
     this.mensajeExito = state?.mensajeExito?.trim() || (ticket ? `Factura generada con éxito para el ticket ${ticket}` : 'Factura generada con éxito');
+  }
+
+  get hayDatos(): boolean {
+    return !!this.datos?.numeroTicket;
+  }
+
+  get numeroTicket(): string {
+    return this.datos?.numeroTicket?.trim() ?? '';
+  }
+
+  get rfc(): string {
+    return this.datos?.cliente?.rfc?.trim() ?? '';
+  }
+
+  get razonSocial(): string {
+    return this.datos?.cliente?.razonSocial?.trim() ?? '';
+  }
+
+  get tipoPago(): string {
+    return this.datos?.tipoPago?.trim() ?? '';
+  }
+
+  get subtotal(): number | null {
+    return this.datos?.subtotal ?? null;
+  }
+
+  get impuestos(): number | null {
+    return this.datos?.impuestos ?? null;
+  }
+
+  get total(): number | null {
+    const total = this.datos?.total;
+    if (total !== null && total !== undefined) return total;
+    const subtotal = this.subtotal;
+    if (subtotal === null) return null;
+    return Math.round((subtotal + (this.impuestos ?? 0)) * 100) / 100;
+  }
+
+  get fechaEmision(): string {
+    const fecha = this.datos?.fechaEmision;
+    if (!fecha) return '';
+    const parsed = new Date(fecha);
+    if (Number.isNaN(parsed.getTime())) return fecha;
+    return parsed.toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' });
   }
 
   get textoCorreo(): string {
@@ -43,20 +90,36 @@ export class FacturaComponent implements OnInit {
     return this.esConsulta ? 'Enviar' : 'Enviar nuevamente';
   }
 
+  get correoInvalido(): boolean {
+    return this.intento && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.correo.trim());
+  }
+
+  formatoMoneda(valor: number | null): string {
+    if (valor === null || valor === undefined) return '—';
+    return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(valor);
+  }
+
+  formatoImpuestos(valor: number | null): string {
+    if (valor === null || valor === undefined) return '—';
+    if (valor === 0) return 'Sin impuestos';
+    return this.formatoMoneda(valor);
+  }
+
   enviarNuevamente(): void {
-    if (!this.correo.trim()) {
-      this.mensajeInfo = 'Capture un correo electrónico para reenviar la factura.';
+    this.intento = true;
+    if (!this.correo.trim() || this.correoInvalido) {
+      this.mensajeInfo = 'Capture un correo electrónico válido para reenviar la factura.';
       this.errorInfo = true;
       this.correoEnviado = '';
       return;
     }
-    const datos = this.store.obtener();
-    const ticket = datos?.numeroTicket?.trim() || '';
+    const ticket = this.numeroTicket;
     this.facturacion.enviarCorreo(this.correo.trim(), ticket).subscribe({
       next: () => {
         this.correoEnviado = this.correo.trim();
         this.mensajeInfo = 'Factura reenviada';
         this.errorInfo = false;
+        this.intento = false;
       },
       error: () => {
         this.mensajeInfo = 'Error al enviar la factura. Intenta de nuevo.';
@@ -77,5 +140,10 @@ export class FacturaComponent implements OnInit {
   nuevaFactura(): void {
     this.store.limpiar();
     void this.router.navigate(['/']);
+  }
+
+  irAFacturar(): void {
+    this.store.limpiar();
+    void this.router.navigate(['/facturar']);
   }
 }

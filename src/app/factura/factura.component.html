@@ -1,62 +1,152 @@
 <app-header></app-header>
 
-<main id="contenido" class="pagina">
-  <!-- Referencia: src/assets/9-PantallaDeEnvioODescargaFactura.png -->
-  <h1 class="titulo">Factura</h1>
+<main id="contenido" class="ui-page">
+  <div class="ui-page-head">
+    <div class="ui-heading">
+      <span class="ui-eyebrow">{{ esConsulta ? 'Consulta de factura' : 'Paso 3 de 3 · Factura' }}</span>
+      <h1 class="ui-title">{{ esConsulta ? 'Consulta y reenvía tu factura' : 'Tu factura está lista' }}</h1>
+      <p class="ui-subtitle">
+        Descarga tu comprobante fiscal o recíbelo nuevamente por correo electrónico.
+      </p>
+    </div>
+  </div>
 
-  <section class="panel" aria-labelledby="titulo-opciones">
-    <h2 class="sr-only" id="titulo-opciones">Opciones de entrega de factura</h2>
+  <section class="ui-steps" aria-label="Progreso de facturación">
+    <article class="ui-step is-done">
+      <span class="ui-step-num" aria-hidden="true">1</span>
+      <div>
+        <p class="ui-step-title">Ticket</p>
+        <p class="ui-step-text">Datos de compra validados.</p>
+      </div>
+    </article>
+    <article class="ui-step is-done">
+      <span class="ui-step-num" aria-hidden="true">2</span>
+      <div>
+        <p class="ui-step-title">Datos fiscales</p>
+        <p class="ui-step-text">Información capturada.</p>
+      </div>
+    </article>
+    <article class="ui-step is-active" aria-current="step">
+      <span class="ui-step-num" aria-hidden="true">3</span>
+      <div>
+        <p class="ui-step-title">Factura</p>
+        <p class="ui-step-text">Descarga o recibe tu CFDI.</p>
+      </div>
+    </article>
+  </section>
 
-    @if (mensajeExito) {
-      <div class="confirmacion-exito" role="status" aria-live="polite">
-        <span class="confirmacion-icono" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false">
-            <path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </span>
-        <div>
-          <h3>¡Tu factura está lista!</h3>
-          <p>{{ mensajeExito }}</p>
+  @if (!hayDatos) {
+    <div class="ui-empty">
+      <span class="ui-empty-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <path d="M6 3h9l4 4v14l-2-1.4L15 21l-3-1.4L9 21l-3-1.4V3Z"/>
+          <path d="M9 8h6M9 12h6M9 16h3"/>
+        </svg>
+      </span>
+      <strong>No encontramos una factura</strong>
+      <p>Para generar o consultar una factura necesitamos localizar tu ticket de compra.</p>
+      <button type="button" class="ui-btn ui-btn--primary" (click)="irAFacturar()">Facturar un ticket</button>
+    </div>
+  } @else {
+    <div class="factura-grid">
+      <section class="ui-card factura-resumen" aria-labelledby="titulo-resumen">
+        <h2 class="ui-panel-title" id="titulo-resumen">Resumen de tu factura</h2>
+
+        <div class="ui-alert ui-alert--success" role="status" aria-live="polite">
+          <span class="ui-alert-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <div>
+            <strong>¡Tu factura está lista!</strong>
+            <p>{{ mensajeExito }}</p>
+          </div>
+        </div>
+
+        <dl class="ui-dl factura-dl">
+          <div class="is-wide is-mono"><dt>Ticket</dt><dd>{{ numeroTicket || '—' }}</dd></div>
+          <div><dt>RFC</dt><dd>{{ rfc || '—' }}</dd></div>
+          <div><dt>Fecha de emisión</dt><dd>{{ fechaEmision || '—' }}</dd></div>
+          <div class="is-wide"><dt>Razón social</dt><dd>{{ razonSocial || '—' }}</dd></div>
+          <div><dt>Tipo de pago</dt><dd>{{ tipoPago || 'N/A' }}</dd></div>
+          <div><dt>Subtotal</dt><dd>{{ formatoMoneda(subtotal) }}</dd></div>
+          <div><dt>Impuestos</dt><dd>{{ formatoImpuestos(impuestos) }}</dd></div>
+          <div class="is-total is-wide"><dt>Total</dt><dd>{{ formatoMoneda(total) }}</dd></div>
+        </dl>
+      </section>
+
+      <div class="factura-columna">
+        <section class="ui-card factura-entrega" aria-labelledby="titulo-descarga">
+          <h2 class="ui-panel-title" id="titulo-descarga">Descargar comprobante</h2>
+          <p class="ui-muted factura-ayuda">
+            El <strong>XML</strong> es tu comprobante fiscal ante el SAT; el <strong>PDF</strong> es su representación impresa.
+          </p>
+          <div class="descargas">
+            <button type="button" class="ui-btn ui-btn--primary ui-btn--block" (click)="descargarPdf()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/>
+              </svg>
+              Descargar PDF
+            </button>
+            <button type="button" class="ui-btn ui-btn--outline ui-btn--block" (click)="descargarXml()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M8 4h6l4 4v12H8z"/><path d="m10 12 2 2 2-2M12 9v5"/>
+              </svg>
+              Descargar XML
+            </button>
+          </div>
+        </section>
+
+        <section class="ui-card factura-entrega" aria-labelledby="titulo-correo">
+          <h2 class="ui-panel-title" id="titulo-correo">Envío por correo</h2>
+          <p class="ui-muted factura-ayuda">{{ textoCorreo }}</p>
+
+          <div class="campo-correo">
+            <label class="ui-label" for="correo-envio">Correo electrónico</label>
+            <input id="correo-envio" name="correo-envio" type="email" class="ui-input" autocomplete="email" inputmode="email"
+              placeholder="nombre@ejemplo.com"
+              [class.is-invalid]="correoInvalido"
+              [attr.aria-invalid]="correoInvalido"
+              [(ngModel)]="correo" />
+            @if (correoInvalido) {
+              <p class="ui-error">Captura un correo electrónico válido.</p>
+            }
+            <button type="button" class="ui-btn ui-btn--dark ui-btn--block" (click)="enviarNuevamente()">{{ textoBotonEnviar }}</button>
+          </div>
+
+          @if (mensajeInfo) {
+            @if (errorInfo) {
+              <div class="ui-alert ui-alert--danger factura-aviso" role="alert">
+                <span class="ui-alert-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" focusable="false">
+                    <path d="M12 8v5m0 3.5v.5"/><circle cx="12" cy="12" r="9"/>
+                  </svg>
+                </span>
+                <div><strong>No pudimos completar el envío</strong><p>{{ mensajeInfo }}</p></div>
+              </div>
+            } @else {
+              <div class="ui-alert ui-alert--success factura-aviso" role="status" aria-live="polite">
+                <span class="ui-alert-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <div>
+                  <strong>¡Listo! Reenviamos tu factura</strong>
+                  <p>La enviamos a <strong>{{ correoEnviado }}</strong>.</p>
+                </div>
+              </div>
+            }
+          }
+        </section>
+
+        <div class="factura-nueva">
+          <button type="button" class="ui-btn ui-btn--ghost" (click)="nuevaFactura()">Generar nueva factura</button>
         </div>
       </div>
-    }
-
-    <p class="linea">{{ textoCorreo }}</p>
-
-    <form class="formulario" action="#" method="get" onsubmit="return false">
-      <div class="campo-correo">
-        <label class="sr-only" for="correo-envio">Correo electrónico</label>
-        <input id="correo-envio" name="correo-envio" type="email" autocomplete="email" [(ngModel)]="correo" />
-        <button type="button" class="btn btn-reenviar" (click)="enviarNuevamente()">{{ textoBotonEnviar }}</button>
-      </div>
-      @if (mensajeInfo) {
-        @if (errorInfo) {
-          <p class="aviso aviso-error" role="alert">{{ mensajeInfo }}</p>
-        } @else {
-          <div class="confirmacion-exito confirmacion-reenvio" role="status" aria-live="polite">
-            <span class="confirmacion-icono" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </span>
-            <div>
-              <h3>¡Listo! Reenviamos tu factura</h3>
-              <p>La enviamos a <strong>{{ correoEnviado }}</strong>.</p>
-            </div>
-          </div>
-        }
-      }
-    </form>
-
-    <div class="acciones-descarga">
-      <button type="button" class="btn btn-descarga-secundaria" (click)="descargarXml()">Descargar XML</button>
-      <button type="button" class="btn btn-facturar" (click)="descargarPdf()">Descargar PDF</button>
     </div>
-
-    <div class="acciones-nueva">
-      <button type="button" class="btn btn-facturar" (click)="nuevaFactura()">Generar nueva factura</button>
-    </div>
-  </section>
+  }
 </main>
 
 <app-footer></app-footer>

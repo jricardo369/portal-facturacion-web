@@ -1,123 +1,239 @@
 <app-header></app-header>
 
-<main id="contenido" class="pagina">
-  <!-- Referencia: src/assets/6-DatosParaGenerarFactura.png -->
-  <h1 class="titulo">Servicio de facturación en línea</h1>
+<main id="contenido" class="ui-page">
+  <div class="ui-page-head">
+    <div class="ui-heading">
+      <span class="ui-eyebrow">Paso 2 de 3 · Datos fiscales</span>
+      <h1 class="ui-title">Completa tus datos de facturación</h1>
+      <p class="ui-subtitle">
+        Captura los datos de tu constancia de situación fiscal. Los revisaremos
+        contigo antes de generar tu CFDI.
+      </p>
+    </div>
+    <div class="ui-head-actions">
+      <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" (click)="volver()">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M19 12H6M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Regresar
+      </button>
+    </div>
+  </div>
 
-  <section class="panel" aria-labelledby="titulo-panel">
-    <h2 class="panel-titulo" id="titulo-panel">Capture la información solicitada</h2>
+  <section class="ui-steps" aria-label="Progreso de facturación">
+    <article class="ui-step is-done">
+      <span class="ui-step-num" aria-hidden="true">1</span>
+      <div>
+        <p class="ui-step-title">Ticket</p>
+        <p class="ui-step-text">Datos de compra validados.</p>
+      </div>
+    </article>
+    <article class="ui-step is-active" aria-current="step">
+      <span class="ui-step-num" aria-hidden="true">2</span>
+      <div>
+        <p class="ui-step-title">Datos fiscales</p>
+        <p class="ui-step-text">Captura tu RFC, régimen y correo.</p>
+      </div>
+    </article>
+    <article class="ui-step">
+      <span class="ui-step-num" aria-hidden="true">3</span>
+      <div>
+        <p class="ui-step-title">Factura</p>
+        <p class="ui-step-text">Descarga o recibe tu CFDI.</p>
+      </div>
+    </article>
+  </section>
 
-    <form #formDatos class="formulario" action="#" method="get" onsubmit="return false" (submit)="enviar()">
-      <div class="seccion-form span-12">
-        <h3>Datos fiscales</h3>
-        <p>Captura la información tal como aparece en tu constancia de situación fiscal.</p>
-      </div>
-      <div class="campo span-6">
-        <label for="rfc"><span class="req" aria-hidden="true">*</span>RFC:</label>
-        <input id="rfc" name="rfc" type="text" placeholder="Ejem:GOOD990102UH3" required minlength="12" maxlength="13" autocomplete="off" [(ngModel)]="rfc" (ngModelChange)="actualizarRegimen()" />
-      </div>
+  <div class="datos-grid">
+    <form #formDatos class="formulario-datos" action="#" method="get" (ngSubmit)="aceptar()" novalidate>
+      <fieldset class="grupo">
+        <legend>Datos fiscales</legend>
+        <p class="grupo-sub">El RFC define el tipo de persona y el régimen disponible.</p>
+        <div class="campos">
+          <div class="ui-field">
+            <label for="rfc">RFC <span class="req" aria-hidden="true">*</span></label>
+            <input
+              id="rfc" name="rfc" type="text" class="ui-input" placeholder="Ej. GOOD990102UH3"
+              required minlength="12" maxlength="13" autocomplete="off" autocapitalize="characters" spellcheck="false"
+              aria-describedby="ayuda-rfc"
+              [attr.aria-invalid]="rfcField.invalid && (rfcField.touched || intento)"
+              [class.is-invalid]="rfcField.invalid && (rfcField.touched || intento)"
+              [(ngModel)]="rfc" #rfcField="ngModel" (ngModelChange)="actualizarRegimen()" [disabled]="cargando" />
+            <p class="ui-help" id="ayuda-rfc">
+              @if (tipoPersona) {
+                <span class="ui-badge ui-badge--info">{{ tipoPersona === 'moral' ? 'Persona moral · 12' : 'Persona física · 13' }}</span>
+              } @else {
+                12 caracteres para persona moral o 13 para persona física.
+              }
+            </p>
+            @if (rfcField.invalid && (rfcField.touched || intento)) {
+              <p class="ui-error">Captura un RFC de 12 o 13 caracteres.</p>
+            }
+          </div>
 
-      <div class="campo span-6">
-        <label for="razon"><span class="req" aria-hidden="true">*</span>Razón Social:</label>
-        <input id="razon" name="razon" type="text" autocomplete="organization" [(ngModel)]="razonSocial" />
-      </div>
+          <div class="ui-field">
+            <label for="razon">Razón social <span class="req" aria-hidden="true">*</span></label>
+            <input
+              id="razon" name="razon" type="text" class="ui-input" placeholder="Nombre o razón social"
+              required autocomplete="organization"
+              [attr.aria-invalid]="razonField.invalid && (razonField.touched || intento)"
+              [class.is-invalid]="razonField.invalid && (razonField.touched || intento)"
+              [(ngModel)]="razonSocial" #razonField="ngModel" [disabled]="cargando" />
+            @if (razonField.invalid && (razonField.touched || intento)) {
+              <p class="ui-error">Captura la razón social tal como aparece en tu constancia.</p>
+            }
+          </div>
+        </div>
+      </fieldset>
 
-      <div class="seccion-form span-12">
-        <h3>Domicilio fiscal</h3>
-        <p>Usa el domicilio registrado ante el SAT. Los campos sin asterisco son opcionales.</p>
-      </div>
-      <div class="campo span-6">
-        <label for="calle">Calle:</label>
-        <input id="calle" name="calle" type="text" autocomplete="street-address" [(ngModel)]="calle" />
-      </div>
+      <fieldset class="grupo">
+        <legend>Domicilio fiscal <span class="opcional">opcional</span></legend>
+        <p class="grupo-sub">Usa el domicilio registrado ante el SAT. Solo el código postal es obligatorio.</p>
+        <div class="campos">
+          <div class="ui-field ui-field--full">
+            <label for="calle">Calle</label>
+            <input id="calle" name="calle" type="text" class="ui-input" autocomplete="street-address" [(ngModel)]="calle" [disabled]="cargando" />
+          </div>
+          <div class="ui-field">
+            <label for="num-ext">Número exterior</label>
+            <input id="num-ext" name="num-ext" type="text" class="ui-input" autocomplete="off" [(ngModel)]="numExterior" [disabled]="cargando" />
+          </div>
+          <div class="ui-field">
+            <label for="num-int">Número interior</label>
+            <input id="num-int" name="num-int" type="text" class="ui-input" autocomplete="off" [(ngModel)]="numInterior" [disabled]="cargando" />
+          </div>
+          <div class="ui-field">
+            <label for="cp">Código postal <span class="req" aria-hidden="true">*</span></label>
+            <input
+              id="cp" name="cp" type="text" class="ui-input" inputmode="numeric" maxlength="5" pattern="[0-9]{5}"
+              required autocomplete="postal-code"
+              [attr.aria-invalid]="cpField.invalid && (cpField.touched || intento)"
+              [class.is-invalid]="cpField.invalid && (cpField.touched || intento)"
+              [(ngModel)]="codigoPostal" #cpField="ngModel" [disabled]="cargando" />
+            @if (cpField.invalid && (cpField.touched || intento)) {
+              <p class="ui-error">Captura un código postal de 5 dígitos.</p>
+            }
+          </div>
+          <div class="ui-field">
+            <label for="colonia">Colonia</label>
+            <input id="colonia" name="colonia" type="text" class="ui-input" autocomplete="off" [(ngModel)]="colonia" [disabled]="cargando" />
+          </div>
+          <div class="ui-field">
+            <label for="estado">Estado</label>
+            <input id="estado" name="estado" type="text" class="ui-input" autocomplete="address-level1" [(ngModel)]="estado" [disabled]="cargando" />
+          </div>
+          <div class="ui-field">
+            <label for="municipio">Municipio o delegación</label>
+            <input id="municipio" name="municipio" type="text" class="ui-input" autocomplete="address-level2" [(ngModel)]="municipio" [disabled]="cargando" />
+          </div>
+          <div class="ui-field ui-field--full">
+            <label for="referencia">Referencia</label>
+            <input id="referencia" name="referencia" type="text" class="ui-input" placeholder="Entre calles, referencias del domicilio" autocomplete="off" [(ngModel)]="referencia" [disabled]="cargando" />
+          </div>
+        </div>
+      </fieldset>
 
-      <div class="campo span-3">
-        <label for="num-ext">Número exterior:</label>
-        <input id="num-ext" name="num-ext" type="text" autocomplete="off" [(ngModel)]="numExterior" />
-      </div>
+      <fieldset class="grupo">
+        <legend>Datos de facturación</legend>
+        <p class="grupo-sub">Elige primero el régimen fiscal y después el uso del CFDI.</p>
+        <div class="campos">
+          <div class="ui-field">
+            <label for="regimen">Régimen fiscal <span class="req" aria-hidden="true">*</span></label>
+            <select
+              id="regimen" name="regimen" class="ui-input ui-select" required
+              [attr.aria-invalid]="regimenField.invalid && (regimenField.touched || intento)"
+              [class.is-invalid]="regimenField.invalid && (regimenField.touched || intento)"
+              [(ngModel)]="regimenFiscal" #regimenField="ngModel" (ngModelChange)="actualizarRegimen()" [disabled]="cargando">
+              <option value="">Seleccione</option>
+              @for (o of regimenFiscalOpciones; track o) {
+                <option [value]="o.value">{{ o.label }}</option>
+              }
+            </select>
+            @if (regimenField.invalid && (regimenField.touched || intento)) {
+              <p class="ui-error">Selecciona tu régimen fiscal.</p>
+            }
+          </div>
 
-      <div class="campo span-3">
-        <label for="num-int">Número interior:</label>
-        <input id="num-int" name="num-int" type="text" autocomplete="off" [(ngModel)]="numInterior" />
-      </div>
+          <div class="ui-field">
+            <label for="uso">Uso del CFDI <span class="req" aria-hidden="true">*</span></label>
+            <select
+              id="uso" name="uso" class="ui-input ui-select" required
+              [attr.aria-invalid]="usoField.invalid && (usoField.touched || intento)"
+              [class.is-invalid]="usoField.invalid && (usoField.touched || intento)"
+              [(ngModel)]="uso" #usoField="ngModel" [disabled]="!regimenFiscal || cargando">
+              <option value="">{{ regimenFiscal ? 'Seleccione' : 'Elija primero el régimen' }}</option>
+              @for (o of usoOpciones; track o) {
+                <option [value]="o.value">{{ o.label }}</option>
+              }
+            </select>
+            @if (usoField.invalid && (usoField.touched || intento)) {
+              <p class="ui-error">Selecciona el uso del CFDI.</p>
+            }
+          </div>
+        </div>
+      </fieldset>
 
-      <div class="campo span-4">
-        <label for="estado">Estado:</label>
-        <input id="estado" name="estado" type="text" autocomplete="address-level1" [(ngModel)]="estado" />
-      </div>
+      <fieldset class="grupo">
+        <legend>Contacto</legend>
+        <p class="grupo-sub">Enviaremos tu factura y su XML a este correo electrónico.</p>
+        <div class="campos">
+          <div class="ui-field ui-field--full">
+            <label for="correo">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+            <input
+              id="correo" name="correo" type="email" class="ui-input" placeholder="nombre@ejemplo.com"
+              required autocomplete="email" inputmode="email"
+              [attr.aria-invalid]="correoField.invalid && (correoField.touched || intento)"
+              [class.is-invalid]="correoField.invalid && (correoField.touched || intento)"
+              [(ngModel)]="correo" #correoField="ngModel" [disabled]="cargando" />
+            @if (correoField.invalid && (correoField.touched || intento)) {
+              <p class="ui-error">Captura un correo electrónico válido.</p>
+            }
+          </div>
+        </div>
+      </fieldset>
 
-      <div class="campo span-4">
-        <label for="municipio">Municipio/Delegación:</label>
-        <input id="municipio" name="municipio" type="text" autocomplete="address-level2" [(ngModel)]="municipio" />
-      </div>
+      <p class="nota">Los campos marcados con <span class="req" aria-hidden="true">*</span> son obligatorios.</p>
 
-      <div class="campo span-4">
-        <label for="referencia">Referencia:</label>
-        <input id="referencia" name="referencia" type="text" autocomplete="off" [(ngModel)]="referencia" />
-      </div>
-
-      <div class="campo span-4">
-        <label for="cp"><span class="req" aria-hidden="true">*</span>Código Postal:</label>
-        <input id="cp" name="cp" type="text" inputmode="numeric" autocomplete="postal-code" [(ngModel)]="codigoPostal" />
-      </div>
-
-      <div class="campo span-4">
-        <label for="colonia">Colonia:</label>
-        <input id="colonia" name="colonia" type="text" autocomplete="off" [(ngModel)]="colonia" />
-      </div>
-
-      <div class="seccion-form span-12">
-        <h3>Datos de facturación</h3>
-        <p>Selecciona primero el régimen fiscal y después el uso que corresponde al comprobante que necesitas.</p>
-      </div>
-      <div class="campo span-4">
-        <label for="regimen"><span class="req" aria-hidden="true">*</span>Régimen:</label>
-        <select id="regimen" name="regimen" required [(ngModel)]="regimenFiscal" (ngModelChange)="actualizarRegimen()">
-          <option value="">Seleccione</option>
-          @for (o of regimenFiscalOpciones; track o) {
-            <option [value]="o.value">{{ o.label }}</option>
-          }
-        </select>
-      </div>
-      <div class="campo span-4">
-        <label for="uso"><span class="req" aria-hidden="true">*</span>Uso Factura:</label>
-        <select id="uso" name="uso" required [(ngModel)]="uso" [disabled]="!regimenFiscal">
-          <option value="">{{ regimenFiscal ? 'Seleccione' : 'Elija primero el régimen' }}</option>
-          @for (o of usoOpciones; track o) {
-            <option [value]="o.value">{{ o.label }}</option>
-          }
-        </select>
-      </div>
-
-      <div class="seccion-form span-12">
-        <h3>Contacto</h3>
-        <p>Enviaremos tu factura a este correo electrónico.</p>
-      </div>
-      <div class="campo span-6">
-        <label for="correo"><span class="req" aria-hidden="true">*</span>Correo Electrónico:</label>
-        <input id="correo" name="correo" type="email" required autocomplete="email" [(ngModel)]="correo" />
-      </div>
-
-      <div class="resumen" aria-label="Resumen de compra">
-        <h3>Resumen de compra</h3>
-        <div><strong>Tipo de pago</strong><span>{{ tipoPago?.trim() ? tipoPago : 'N/A' }}</span></div>
-        <div><strong>Subtotal</strong><span>{{ formatoMoneda(subtotal) }}</span></div>
-        <div><strong>Impuestos</strong><span>{{ formatoImpuestos(impuestos) }}</span></div>
-        <div class="total"><strong>Total</strong><span>{{ formatoMoneda(total) }}</span></div>
+      <div class="acciones">
+        <button type="button" class="ui-btn ui-btn--ghost" (click)="cancelar()" [disabled]="cargando">Cancelar</button>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="aceptar()" [disabled]="cargando">
+          Revisar y generar
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
     </form>
 
-    <p class="nota"><span>Los campos marcados con: * son obligatorios.</span></p>
-
-    <div class="acciones">
-      <button type="button" class="btn btn-cancelar" (click)="cancelar()" [disabled]="cargando">Cancelar</button>
-      <button type="button" class="btn btn-aceptar" (click)="aceptar()" [disabled]="cargando">{{ cargando ? 'Facturando…' : 'Aceptar' }}</button>
-    </div>
-  </section>
+    <aside class="resumen-aside" aria-label="Resumen de compra">
+      <div class="ui-card resumen">
+        <div class="resumen-head">
+          <span class="resumen-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M6 3h9l4 4v14l-2-1.4L15 21l-3-1.4L9 21l-3-1.4V3Z"/>
+              <path d="M9 8h6M9 12h6M9 16h3"/>
+            </svg>
+          </span>
+          <div>
+            <p class="ui-panel-title">Resumen de compra</p>
+            <p class="resumen-ticket">Ticket {{ numeroTicket || '—' }}</p>
+          </div>
+        </div>
+        <hr class="ui-divider resumen-div" />
+        <dl class="ui-dl resumen-dl">
+          <div><dt>Tipo de pago</dt><dd>{{ tipoPago?.trim() ? tipoPago : 'N/A' }}</dd></div>
+          <div><dt>Subtotal</dt><dd>{{ formatoMoneda(subtotal) }}</dd></div>
+          <div><dt>Impuestos</dt><dd>{{ formatoImpuestos(impuestos) }}</dd></div>
+          <div class="is-total is-wide"><dt>Total</dt><dd>{{ formatoMoneda(total) }}</dd></div>
+        </dl>
+        <p class="resumen-nota">Con los datos correctos, el CFDI se timbra y se envía a tu correo.</p>
+      </div>
+    </aside>
+  </div>
 </main>
 
 @if (cargando) {
-  <app-loading-overlay texto="Generando factura…"></app-loading-overlay>
+  <app-loading-overlay texto="Generando tu factura…"></app-loading-overlay>
 }
 
 @if (errorAbierto) {
@@ -125,25 +241,32 @@
 }
 
 @if (confirmacionAbierta) {
-  <div class="confirmar-backdrop">
-    <div class="confirmar-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
-      <div class="confirmar-head">
-        <h2 id="titulo-confirmar">Confirmación de datos</h2>
+  <div class="ui-backdrop" (click)="cancelarConfirmacion()">
+    <div class="ui-dialog ui-dialog--lg" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar" (click)="$event.stopPropagation()">
+      <div class="ui-dialog-head">
+        <div>
+          <h2 id="titulo-confirmar">Confirma tus datos</h2>
+          <p class="confirmar-sub">Revisa la información antes de generar tu factura.</p>
+        </div>
+        <button type="button" class="ui-close" #closeConfirm (click)="cancelarConfirmacion()" aria-label="Cerrar confirmación">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
-      <div class="confirmar-cuerpo">
-        <p class="confirmar-mensaje">Revisa la información ingresada, posterior se generará la factura.</p>
+      <div class="ui-dialog-body">
         <dl class="confirmar-lista">
           @for (d of resumenDatos; track d) {
             <div class="confirmar-item">
               <dt>{{ d.label }}</dt>
-              <dd>{{ d.valor }}</dd>
+              <dd>{{ d.valor || 'N/A' }}</dd>
             </div>
           }
         </dl>
       </div>
-      <div class="confirmar-pie">
-        <button type="button" class="btn-confirmar-cancelar" (click)="cancelarConfirmacion()">Cancelar</button>
-        <button type="button" class="btn-confirmar-aceptar" (click)="generar()">Aceptar</button>
+      <div class="ui-dialog-foot">
+        <button type="button" class="ui-btn ui-btn--ghost" (click)="cancelarConfirmacion()">Cancelar</button>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="generar()">Generar factura</button>
       </div>
     </div>
   </div>

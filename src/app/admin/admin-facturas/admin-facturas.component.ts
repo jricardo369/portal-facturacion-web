@@ -52,7 +52,13 @@ export class AdminFacturasComponent implements OnInit {
   }
 
   get paginas(): number[] {
-    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+    const total = this.totalPaginas;
+    const maximo = 5;
+    if (total <= maximo) return Array.from({ length: total }, (_, i) => i + 1);
+    let inicio = Math.max(1, this.pagina - 2);
+    const fin = Math.min(total, inicio + maximo - 1);
+    inicio = Math.max(1, fin - maximo + 1);
+    return Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i);
   }
 
   get rango(): string {

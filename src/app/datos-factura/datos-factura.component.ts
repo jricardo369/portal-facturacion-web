@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -44,10 +44,21 @@ export class DatosFacturaComponent implements OnInit {
   errorAbierto = false;
   errorMensaje = '';
   confirmacionAbierta = false;
+  intento = false;
   resumenDatos: { label: string; valor: string }[] = [];
   private datosBase: DatosFacturaResponse | null = null;
 
+  @ViewChild('closeConfirm') closeConfirm?: ElementRef<HTMLButtonElement>;
+
   private usosExtra: { value: string; label: string }[] = [];
+
+  get tipoPersona(): string {
+    return this.regimen;
+  }
+
+  get numeroTicket(): string {
+    return this.datosBase?.numeroTicket ?? '';
+  }
 
   get usoOpciones(): { value: string; label: string }[] {
     if (!this.regimenFiscal) return [];
@@ -176,7 +187,12 @@ export class DatosFacturaComponent implements OnInit {
     void this.router.navigate(['/facturar']);
   }
 
+  volver(): void {
+    void this.router.navigate(['/facturar']);
+  }
+
   aceptar(): void {
+    this.intento = true;
     const form = this.formDatos?.nativeElement;
     if (form && !form.reportValidity()) {
       return;
@@ -199,14 +215,24 @@ export class DatosFacturaComponent implements OnInit {
     }
     this.construirResumen();
     this.confirmacionAbierta = true;
+    this.intento = false;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => this.closeConfirm?.nativeElement.focus());
   }
 
   cancelarConfirmacion(): void {
     this.confirmacionAbierta = false;
+    document.body.style.overflow = '';
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.confirmacionAbierta) this.cancelarConfirmacion();
   }
 
   generar(): void {
     this.confirmacionAbierta = false;
+    document.body.style.overflow = '';
     const state = history.state as { datos?: DatosFacturaResponse } | undefined;
     const base = this.datosBase ?? this.store.obtener() ?? state?.datos ?? null;
     if (!base?.numeroTicket) {

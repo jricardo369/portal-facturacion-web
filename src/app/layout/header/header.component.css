@@ -1,4 +1,8 @@
 .topbar { background: var(--brand-ink); color: #fff; }
+.topbar.is-admin {
+  position: sticky; top: 0; z-index: 40;
+  box-shadow: 0 10px 26px rgba(34, 28, 30, .16);
+}
 .topbar-inner {
   display: flex; align-items: center; gap: 28px;
   padding: 12px 28px 12px 15px; min-height: 64px;
@@ -24,8 +28,9 @@
 .faq { color: rgba(255,255,255,.85); font-family: "Comfortaa", "Nunito", sans-serif; font-size: 14px; text-decoration: none; }
 .faq:hover { text-decoration: underline; }
 @media (max-width: 640px) {
-  .topbar-inner { padding: 10px 16px; gap: 14px; flex-wrap: wrap; }
+  .topbar-inner { padding: 10px 16px; gap: 12px; flex-wrap: wrap; }
   .marca-nombre { font-size: 17px; }
-  .menu { margin-left: 0; width: 100%; }
-  .menu a { flex: 1; justify-content: center; padding: 8px 10px; min-height: 44px; }
+  .menu { margin-left: 0; width: 100%; gap: 6px; }
+  .menu a { flex: 1; justify-content: center; padding: 8px 8px; min-height: 44px; font-size: 13px; }
+  .menu a svg { width: 18px; height: 18px; flex-basis: 18px; }
 }

@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<main id="contenido" class="pagina">
+<main id="contenido" class="ui-page">
   @if (cargando) {
     <app-loading-overlay texto="Cargando facturas…"></app-loading-overlay>
   }
@@ -8,66 +8,153 @@
     <app-error-dialog titulo="No se pudieron cargar las facturas" [mensaje]="error" (cerrar)="error = ''"></app-error-dialog>
   }
 
-  <div class="encabezado">
-    <h1 class="titulo">Facturas emitidas</h1>
-    <button type="button" class="btn btn-cancelar" (click)="salir()">Cerrar sesión</button>
-  </div>
+  <header class="ui-page-head">
+    <div class="ui-heading">
+      <span class="ui-eyebrow">Administración</span>
+      <h1 class="ui-title">Facturas emitidas</h1>
+      <p class="ui-subtitle">Consulta los comprobantes, aplica filtros y abre el detalle de cada factura.</p>
+    </div>
+    <div class="ui-head-actions">
+      <button type="button" class="ui-btn ui-btn--ghost" (click)="salir()">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Cerrar sesión
+      </button>
+    </div>
+  </header>
 
-  <section class="resumen" aria-label="Resumen">
-    <div class="stat"><span class="stat-num">{{ totalElementos }}</span><span class="stat-label">Facturas</span></div>
-    <div class="stat"><span class="stat-num">{{ total | currency:'MXN':'symbol-narrow':'1.2-2' }}</span><span class="stat-label">Total vigente</span></div>
+  <section class="ui-stats" aria-label="Resumen">
+    <article class="ui-stat">
+      <span class="ui-stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/>
+          <path d="M14 3v5h5M9 13h6M9 17h4"/>
+        </svg>
+      </span>
+      <div class="ui-stat-body">
+        <span class="ui-stat-num">{{ totalElementos }}</span>
+        <span class="ui-stat-label">Facturas</span>
+      </div>
+    </article>
+    <article class="ui-stat">
+      <span class="ui-stat-icon ui-stat-icon--red" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v10M15 9.5c0-1.1-1.3-2-3-2s-3 .9-3 2 1.3 2 3 2 3 .9 3 2-1.3 2-3 2-3-.9-3-2"/>
+        </svg>
+      </span>
+      <div class="ui-stat-body">
+        <span class="ui-stat-num">{{ total | currency:'MXN':'symbol-narrow':'1.2-2' }}</span>
+        <span class="ui-stat-label">Total vigente</span>
+      </div>
+    </article>
   </section>
 
-  <section class="filtros" aria-label="Filtros">
-    <div class="campo">
+  <section class="ui-filters" aria-label="Filtros">
+    <div class="ui-field">
       <label for="f-ticket">No. ticket</label>
-      <input id="f-ticket" [(ngModel)]="ticket" placeholder="Ej. 00000" autocomplete="off" />
+      <input id="f-ticket" class="ui-input" [(ngModel)]="ticket" placeholder="Ej. 00000" autocomplete="off" inputmode="numeric" />
     </div>
-    <div class="campo">
+    <div class="ui-field">
       <label for="f-desde">Desde</label>
-      <input id="f-desde" type="date" [(ngModel)]="desde" />
+      <input id="f-desde" class="ui-input" type="date" [(ngModel)]="desde" />
     </div>
-    <div class="campo">
+    <div class="ui-field">
       <label for="f-hasta">Hasta</label>
-      <input id="f-hasta" type="date" [(ngModel)]="hasta" />
+      <input id="f-hasta" class="ui-input" type="date" [(ngModel)]="hasta" />
     </div>
-    <button type="button" class="btn btn-buscar" (click)="buscar()">Buscar</button>
-    <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
+    <button type="button" class="ui-btn ui-btn--dark" (click)="buscar()">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        <path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Buscar
+    </button>
+    <button type="button" class="ui-btn ui-btn--soft" (click)="limpiar()">Limpiar</button>
   </section>
 
-  <section class="panel" aria-label="Listado de facturas">
-    <div class="tabla-wrap">
-      <table>
+  <section class="ui-panel" aria-label="Listado de facturas">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-title">Resultados</h2>
+      <span class="ui-panel-meta">{{ totalElementos }} {{ totalElementos === 1 ? 'registro' : 'registros' }}</span>
+    </div>
+    <div class="ui-table-wrap">
+      <table class="ui-table">
         <thead>
-          <tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>RFC</th><th>Ticket</th><th>Total</th><th>Estado</th></tr>
+          <tr>
+            <th>Folio</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>RFC</th>
+            <th>Ticket</th>
+            <th class="ui-cell-num">Total</th>
+            <th>Estado</th>
+            <th class="ui-col-action"><span class="sr-only">Detalle</span></th>
+          </tr>
         </thead>
         <tbody>
           @for (f of facturas; track f) {
-            <tr class="clic" (click)="verDetalle(f)" title="Ver detalle de la factura">
-              <td class="folio">{{ f.folio }}</td>
-              <td>{{ formatearFecha(f.fecha) }}</td>
-              <td>{{ cliente(f) }}</td>
-              <td>{{ f.rfc }}</td>
-              <td>{{ f.noTicket }}</td>
-              <td class="num">{{ f.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
-              <td><span class="badge" [class.cancelada]="esCancelada(f)" [class.cargada]="esCargada(f)">{{ estado(f) }}</span></td>
+            <tr class="is-clickable" (click)="verDetalle(f)" title="Ver detalle de la factura">
+              <td class="ui-cell-strong" data-label="Folio">{{ f.folio }}</td>
+              <td data-label="Fecha">{{ formatearFecha(f.fecha) }}</td>
+              <td data-label="Cliente">{{ cliente(f) }}</td>
+              <td data-label="RFC">{{ f.rfc }}</td>
+              <td data-label="Ticket">{{ f.noTicket }}</td>
+              <td class="ui-cell-num" data-label="Total">{{ f.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+              <td data-label="Estado">
+                <span class="ui-badge"
+                      [class.ui-badge--danger]="esCancelada(f)"
+                      [class.ui-badge--ok]="esCargada(f)"
+                      [class.ui-badge--neutral]="!f.estatus">{{ estado(f) }}</span>
+              </td>
+              <td class="ui-cell-action">
+                <button type="button" class="ui-row-action" (click)="verDetalle(f); $event.stopPropagation()" [attr.aria-label]="'Ver detalle de la factura ' + f.folio">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Ver detalle</span>
+                </button>
+              </td>
             </tr>
           }
           @if (totalElementos === 0) {
-            <tr><td colspan="7" class="vacio">Sin resultados con los filtros aplicados.</td></tr>
+            <tr class="ui-empty-row">
+              <td colspan="8">
+                <div class="ui-empty">
+                  <span class="ui-empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/>
+                      <path d="M14 3v5h5M9 13h6M9 17h4"/>
+                    </svg>
+                  </span>
+                  <strong>Sin resultados</strong>
+                  <p>No hay facturas que coincidan con los filtros aplicados.</p>
+                </div>
+              </td>
+            </tr>
           }
         </tbody>
       </table>
     </div>
     @if (totalElementos > 0) {
-      <nav class="paginacion" aria-label="Paginación">
-        <span class="rango">{{ rango }}</span>
-        <div class="pag-btns">
-          <button type="button" class="pag" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Anterior">‹</button>
+      <nav class="ui-pagination" aria-label="Paginación">
+        <span class="ui-range">{{ rango }}</span>
+        <span class="ui-page-current">Página {{ pagina }} de {{ totalPaginas }}</span>
+        <div class="ui-page-btns">
+          <button type="button" class="ui-page-btn" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)" aria-label="Página anterior">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+              <path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
           @for (p of paginas; track p) {
-            <button type="button" class="pag" [class.activa]="p === pagina" (click)="irAPagina(p)">{{ p }}</button>
+            <button type="button" class="ui-page-btn is-number" [class.is-active]="p === pagina" [attr.aria-current]="p === pagina ? 'page' : null" [attr.aria-label]="'Página ' + p" (click)="irAPagina(p)">{{ p }}</button>
           }
-          <button type="button" class="pag" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Siguiente">›</button>
+          <button type="button" class="ui-page-btn" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)" aria-label="Página siguiente">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+              <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
       </nav>
     }

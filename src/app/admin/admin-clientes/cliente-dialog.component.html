@@ -1,44 +1,68 @@
-<div class="cliente-backdrop" (click)="cerrar.emit()">
-  <div class="cliente-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-cliente" (click)="$event.stopPropagation()">
-    <div class="cliente-head">
-      <h2 id="titulo-cliente">Cliente #{{ cliente?.idCliente }}</h2>
-      <button type="button" class="cliente-cerrar" (click)="cerrar.emit()" aria-label="Cerrar detalle">✕</button>
+<div class="ui-backdrop" (click)="cerrar.emit()">
+  <div class="ui-dialog" role="dialog" aria-modal="true" aria-labelledby="titulo-cliente" (click)="$event.stopPropagation()">
+    <div class="ui-dialog-head">
+      <div>
+        <h2 id="titulo-cliente">Cliente #{{ cliente?.idCliente }}</h2>
+        <p class="dialog-sub">Datos generales y fiscales</p>
+      </div>
+      <button #closeBtn type="button" class="ui-close" (click)="cerrar.emit()" aria-label="Cerrar detalle">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
-    <div class="cliente-cuerpo">
-      <h3 class="cliente-seccion">Datos generales</h3>
-      <dl class="cliente-datos">
-        <div><dt>RFC</dt><dd>{{ cliente?.rfc || '—' }}</dd></div>
-        <div><dt>Razón social</dt><dd>{{ cliente?.razonSocial || '—' }}</dd></div>
-        <div><dt>Estatus</dt><dd><span class="badge" [class.inactivo]="!cliente?.estatus">{{ cliente?.estatus ? 'Activo' : 'Inactivo' }}</span></dd></div>
-      </dl>
 
-      <h3 class="cliente-seccion">Domicilio</h3>
-      <dl class="cliente-datos">
-        <div><dt>Calle</dt><dd>{{ cliente?.calle || '—' }}</dd></div>
-        <div><dt>No. exterior</dt><dd>{{ cliente?.numExterior || '—' }}</dd></div>
-        <div><dt>No. interior</dt><dd>{{ cliente?.numInterior || '—' }}</dd></div>
-        <div><dt>Colonia</dt><dd>{{ cliente?.colonia || '—' }}</dd></div>
-        <div><dt>Municipio</dt><dd>{{ cliente?.municipio || '—' }}</dd></div>
-        <div><dt>Estado</dt><dd>{{ cliente?.estado || '—' }}</dd></div>
-        <div><dt>Código postal</dt><dd>{{ cliente?.codigoPostal || '—' }}</dd></div>
-        <div><dt>Referencia</dt><dd>{{ cliente?.referencia || '—' }}</dd></div>
-      </dl>
+    <div class="ui-dialog-body">
+      <section class="ui-detail-section" aria-labelledby="sec-generales">
+        <h3 class="ui-section-title" id="sec-generales">Datos generales</h3>
+        <dl class="ui-dl">
+          <div><dt>RFC</dt><dd>{{ cliente?.rfc || '—' }}</dd></div>
+          <div>
+            <dt>Estatus</dt>
+            <dd>
+              <span class="ui-badge" [class.ui-badge--danger]="!cliente?.estatus" [class.ui-badge--ok]="cliente?.estatus">
+                {{ cliente?.estatus ? 'Activo' : 'Inactivo' }}
+              </span>
+            </dd>
+          </div>
+          <div class="is-wide"><dt>Razón social</dt><dd>{{ cliente?.razonSocial || '—' }}</dd></div>
+        </dl>
+      </section>
 
-      <h3 class="cliente-seccion">Datos fiscales</h3>
-      <dl class="cliente-datos">
-        <div><dt>Correo electrónico</dt><dd>{{ cliente?.correoElectronico || '—' }}</dd></div>
-        <div><dt>Régimen fiscal</dt><dd>{{ cliente?.regimenFiscal || '—' }}</dd></div>
-        <div><dt>Uso de CFDI</dt><dd>{{ cliente?.usoFactura || '—' }}</dd></div>
-      </dl>
+      <section class="ui-detail-section" aria-labelledby="sec-domicilio">
+        <h3 class="ui-section-title" id="sec-domicilio">Domicilio</h3>
+        <dl class="ui-dl">
+          <div><dt>Calle</dt><dd>{{ cliente?.calle || '—' }}</dd></div>
+          <div><dt>No. exterior</dt><dd>{{ cliente?.numExterior || '—' }}</dd></div>
+          <div><dt>No. interior</dt><dd>{{ cliente?.numInterior || '—' }}</dd></div>
+          <div><dt>Colonia</dt><dd>{{ cliente?.colonia || '—' }}</dd></div>
+          <div><dt>Municipio</dt><dd>{{ cliente?.municipio || '—' }}</dd></div>
+          <div><dt>Estado</dt><dd>{{ cliente?.estado || '—' }}</dd></div>
+          <div><dt>Código postal</dt><dd>{{ cliente?.codigoPostal || '—' }}</dd></div>
+          <div><dt>Referencia</dt><dd>{{ cliente?.referencia || '—' }}</dd></div>
+        </dl>
+      </section>
 
-      <h3 class="cliente-seccion">Registro</h3>
-      <dl class="cliente-datos">
-        <div><dt>Creado</dt><dd>{{ formatearFecha($safeNavigationMigration(cliente?.createdAt)) }}</dd></div>
-        <div><dt>Actualizado</dt><dd>{{ formatearFecha($safeNavigationMigration(cliente?.updatedAt)) }}</dd></div>
-      </dl>
+      <section class="ui-detail-section" aria-labelledby="sec-fiscales">
+        <h3 class="ui-section-title" id="sec-fiscales">Datos fiscales</h3>
+        <dl class="ui-dl">
+          <div class="is-wide"><dt>Correo electrónico</dt><dd>{{ cliente?.correoElectronico || '—' }}</dd></div>
+          <div><dt>Régimen fiscal</dt><dd>{{ cliente?.regimenFiscal || '—' }}</dd></div>
+          <div><dt>Uso de CFDI</dt><dd>{{ cliente?.usoFactura || '—' }}</dd></div>
+        </dl>
+      </section>
+
+      <section class="ui-detail-section" aria-labelledby="sec-registro-cliente">
+        <h3 class="ui-section-title" id="sec-registro-cliente">Registro</h3>
+        <dl class="ui-dl">
+          <div><dt>Creado</dt><dd>{{ formatearFecha($safeNavigationMigration(cliente?.createdAt)) }}</dd></div>
+          <div><dt>Actualizado</dt><dd>{{ formatearFecha($safeNavigationMigration(cliente?.updatedAt)) }}</dd></div>
+        </dl>
+      </section>
     </div>
-    <div class="cliente-pie">
-      <button type="button" class="btn-cerrar" (click)="cerrar.emit()">Cerrar</button>
+
+    <div class="ui-dialog-foot">
+      <button type="button" class="ui-btn ui-btn--primary" (click)="cerrar.emit()">Cerrar</button>
     </div>
   </div>
 </div>

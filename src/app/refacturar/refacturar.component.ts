@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -66,6 +66,7 @@ export class RefacturarComponent {
         };
         this.actualizarRegimen();
         this.paso = 2;
+        this.irAlInicio();
       },
       error: (e: HttpErrorResponse) => {
         this.cargando = false;
@@ -104,6 +105,7 @@ export class RefacturarComponent {
         this.cargando = false;
         this.nueva = nueva;
         this.paso = 3;
+        this.irAlInicio();
       },
       error: (e: HttpErrorResponse) => {
         this.cargando = false;
@@ -118,6 +120,24 @@ export class RefacturarComponent {
     this.encontrada = undefined;
     this.nueva = undefined;
     this.error = '';
+    this.irAlInicio();
+  }
+
+  volver(): void {
+    this.paso = 1;
+    this.error = '';
+    this.irAlInicio();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.confirmacionAbierta) this.cancelarConfirmacion();
+  }
+
+  private irAlInicio(): void {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   salir(): void {

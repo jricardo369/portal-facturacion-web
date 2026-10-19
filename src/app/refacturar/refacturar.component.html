@@ -1,106 +1,157 @@
 <app-header></app-header>
 
-<main id="contenido" class="pagina">
-  <h1 class="titulo">Refacturación</h1>
+<main id="contenido" class="ui-page">
+  <header class="ui-page-head">
+    <div class="ui-heading">
+      <span class="ui-eyebrow">Administración</span>
+      <h1 class="ui-title">Refacturación</h1>
+      <p class="ui-subtitle">Sustituye una factura vigente y deja ligados ambos comprobantes por UUID.</p>
+    </div>
+  </header>
 
   <section class="aviso" aria-labelledby="titulo-como">
-    <h2 id="titulo-como">¿Cómo funciona?</h2>
-    <p>Se genera una <strong>nueva factura</strong> con relación <strong>04 Sustitución de CFDI previos</strong> y después se cancela la anterior con motivo <strong>01</strong>, quedando ambas ligadas por UUID.</p>
+    <span class="aviso-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12a8 8 0 0 1 14.5-4.6M20 12a8 8 0 0 1-14.5 4.6"/>
+        <path d="M18.5 2.8v4.4h-4.4M5.5 21.2v-4.4h4.4"/>
+      </svg>
+    </span>
+    <div>
+      <h2 id="titulo-como">¿Cómo funciona?</h2>
+      <p>Se genera una <strong>nueva factura</strong> con relación <strong>04 Sustitución de CFDI previos</strong> y después se cancela la anterior con motivo <strong>01</strong>, quedando ambas ligadas por UUID.</p>
+    </div>
   </section>
 
   <ol class="pasos" aria-label="Progreso">
-    <li [class.activo]="paso === 1" [class.ok]="paso > 1"><span>1</span> Localizar factura</li>
-    <li [class.activo]="paso === 2" [class.ok]="paso > 2"><span>2</span> Datos nueva factura</li>
-    <li [class.activo]="paso === 3"><span>3</span> Ligado y cancelación</li>
+    <li [class.activo]="paso === 1" [class.ok]="paso > 1">
+      <span class="paso-num" aria-hidden="true">
+        @if (paso > 1) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>
+        } @else {
+          1
+        }
+      </span>
+      <span class="paso-txt"><strong>Localizar factura</strong><small>Busca por ticket o UUID</small></span>
+    </li>
+    <li [class.activo]="paso === 2" [class.ok]="paso > 2">
+      <span class="paso-num" aria-hidden="true">
+        @if (paso > 2) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>
+        } @else {
+          2
+        }
+      </span>
+      <span class="paso-txt"><strong>Datos nueva factura</strong><small>Completa los datos fiscales</small></span>
+    </li>
+    <li [class.activo]="paso === 3">
+      <span class="paso-num" aria-hidden="true">3</span>
+      <span class="paso-txt"><strong>Ligado y cancelación</strong><small>Confirma el resultado</small></span>
+    </li>
   </ol>
 
   @if (paso === 1) {
-    <section class="panel" aria-labelledby="t-paso1">
-      <h2 class="panel-titulo" id="t-paso1">Localizar factura a refacturar</h2>
-      <p class="panel-sub">Ingrese No. ticket o UUID. Solo facturas vigentes.</p>
+    <section class="ui-panel paso-panel" aria-labelledby="t-paso1">
+      <h2 class="ui-panel-title" id="t-paso1">Localizar factura a refacturar</h2>
+      <p class="panel-sub">Ingrese No. ticket o UUID. Solo se pueden refacturar facturas vigentes.</p>
       <form class="formulario una-columna" (ngSubmit)="buscar()">
         <div class="campo requerido">
           <label for="q">Folio, número de ticket o UUID <span class="req" aria-hidden="true">*</span></label>
-          <input id="q" name="q" [(ngModel)]="busqueda" placeholder="Ej. 00000 o UUID" autocomplete="off" [disabled]="cargando" />
+          <input id="q" class="ui-input" name="q" [(ngModel)]="busqueda" placeholder="Ej. 00000 o UUID" autocomplete="off" [disabled]="cargando" />
         </div>
         @if (error) {
           <p class="error" role="alert">{{ error }}</p>
         }
         <div class="acciones">
-          <button type="button" class="btn btn-cancelar" (click)="salir()" [disabled]="cargando">Cancelar</button>
-          <button type="submit" class="btn btn-continuar" [disabled]="cargando">{{ cargando ? 'Buscando…' : 'Buscar' }}</button>
+          <button type="button" class="ui-btn ui-btn--ghost" (click)="salir()" [disabled]="cargando">Cancelar</button>
+          <button type="submit" class="ui-btn ui-btn--primary" [disabled]="cargando">{{ cargando ? 'Buscando…' : 'Buscar factura' }}</button>
         </div>
       </form>
     </section>
   }
 
   @if (paso === 2 && encontrada) {
-    <section class="panel" aria-labelledby="t-paso2">
-      <h2 class="panel-titulo" id="t-paso2">Generar factura que sustituye</h2>
+    <section class="ui-panel paso-panel" aria-labelledby="t-paso2">
+      <h2 class="ui-panel-title" id="t-paso2">Generar factura que sustituye</h2>
       <p class="panel-sub">Anterior: {{ encontrada.numeroTicket }} · {{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</p>
-      <div class="original">
+
+      <div class="original" aria-label="Datos de la factura original">
         <div><strong>Ticket</strong><span>{{ encontrada.numeroTicket }}</span></div>
         <div><strong>Fecha</strong><span>{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</span></div>
         <div><strong>Subtotal</strong><span>{{ encontrada.subtotal | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
         <div><strong>Impuestos</strong><span>{{ encontrada.impuestos | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
         <div><strong>Total</strong><span>{{ encontrada.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</span></div>
       </div>
+
       <form class="formulario" (ngSubmit)="generar()">
         <div class="campo requerido">
           <label for="rfc">RFC <span class="req" aria-hidden="true">*</span></label>
-          <input id="rfc" name="rfc" [(ngModel)]="datos.rfc" (ngModelChange)="actualizarRegimen()" placeholder="Ej. GOOD990102UH3" />
+          <input id="rfc" class="ui-input" name="rfc" [(ngModel)]="datos.rfc" (ngModelChange)="actualizarRegimen()" placeholder="Ej. GOOD990102UH3" />
         </div>
         <div class="campo requerido">
           <label for="cliente">Razón social <span class="req" aria-hidden="true">*</span></label>
-          <input id="cliente" name="cliente" [(ngModel)]="datos.cliente" placeholder="Nombre registrado ante el SAT" />
+          <input id="cliente" class="ui-input" name="cliente" [(ngModel)]="datos.cliente" placeholder="Nombre registrado ante el SAT" />
         </div>
         <div class="campo requerido">
           <label for="correo">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
-          <input id="correo" name="correo" type="email" [(ngModel)]="datos.correo" placeholder="nombre@ejemplo.com" />
+          <input id="correo" class="ui-input" name="correo" type="email" [(ngModel)]="datos.correo" placeholder="nombre@ejemplo.com" inputmode="email" />
         </div>
         <div class="campo requerido">
           <label for="uso">Uso CFDI <span class="req" aria-hidden="true">*</span></label>
-          <select id="uso" name="uso" [(ngModel)]="datos.uso">
-            <option value="">Uso CFDI…</option>
+          <select id="uso" class="ui-input" name="uso" [(ngModel)]="datos.uso">
+            <option value="">Selecciona un uso CFDI…</option>
             @for (o of usoOpciones; track o) {
               <option [value]="o.value">{{ o.label }}</option>
             }
           </select>
         </div>
       </form>
+
       @if (error) {
         <p class="error" role="alert">{{ error }}</p>
       }
-      <p class="nota">Los campos marcados con: * son obligatorios.</p>
+      <p class="nota">Los campos marcados con * son obligatorios.</p>
+
       <div class="acciones">
-        <button type="button" class="btn btn-cancelar" (click)="paso = 1" [disabled]="cargando">Atrás</button>
-        <button type="button" class="btn btn-continuar" (click)="generar()" [disabled]="cargando">{{ cargando ? 'Generando…' : 'Generar y cancelar anterior' }}</button>
+        <button type="button" class="ui-btn ui-btn--ghost" (click)="volver()" [disabled]="cargando">Atrás</button>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="generar()" [disabled]="cargando">{{ cargando ? 'Generando…' : 'Generar y cancelar anterior' }}</button>
       </div>
     </section>
   }
 
   @if (paso === 3 && nueva && encontrada) {
-    <section class="panel exito" aria-labelledby="t-paso3">
-      <h2 class="panel-titulo" id="t-paso3">Refacturación completada</h2>
-      <p class="panel-sub">Nueva factura ligada a la anterior.</p>
+    <section class="ui-panel paso-panel panel-exito" aria-labelledby="t-paso3">
+      <span class="exito-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m5 12.5 4.5 4.5L19 7"/>
+        </svg>
+      </span>
+      <h2 class="ui-panel-title" id="t-paso3">Refacturación completada</h2>
+      <p class="panel-sub">La nueva factura quedó ligada a la anterior.</p>
+
       <div class="ligado">
         <article>
           <h3>Anterior · Cancelada motivo 01</h3>
           <p class="folio">{{ encontrada.numeroTicket }}</p>
-          <p class="uuid">{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
-          <span class="badge cancelada">Cancelada</span>
+          <p class="fecha">{{ encontrada.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
+          <span class="ui-badge ui-badge--neutral">Cancelada</span>
         </article>
-        <div class="link" aria-hidden="true">⇄</div>
+        <div class="link" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12a8 8 0 0 1 14.5-4.6M20 12a8 8 0 0 1-14.5 4.6"/>
+            <path d="M18.5 2.8v4.4h-4.4M5.5 21.2v-4.4h4.4"/>
+          </svg>
+        </div>
         <article>
           <h3>Nueva · Relación 04</h3>
           <p class="folio">{{ nueva.numeroTicket }}</p>
-          <p class="uuid">{{ nueva.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
-          <span class="badge">Vigente</span>
+          <p class="fecha">{{ nueva.fechaEmision | date:'yyyy-MM-dd HH:mm' }}</p>
+          <span class="ui-badge ui-badge--ok">Vigente</span>
         </article>
       </div>
+
       <div class="acciones">
-        <button type="button" class="btn btn-cancelar" (click)="reiniciar()">Refacturar otra</button>
-        <button type="button" class="btn btn-continuar" (click)="salir()">Salir</button>
+        <button type="button" class="ui-btn ui-btn--ghost" (click)="reiniciar()">Refacturar otra</button>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="salir()">Salir</button>
       </div>
     </section>
   }
@@ -111,13 +162,21 @@
 }
 
 @if (confirmacionAbierta) {
-  <div class="confirmar-backdrop">
-    <div class="confirmar-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
-      <div class="confirmar-head">
-        <h2 id="titulo-confirmar">Confirmación de datos</h2>
+  <div class="ui-backdrop" (click)="cancelarConfirmacion()">
+    <div class="ui-dialog" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar" (click)="$event.stopPropagation()">
+      <div class="ui-dialog-head">
+        <div>
+          <h2 id="titulo-confirmar">Confirmación de datos</h2>
+          <p class="dialog-sub">Revisa la información antes de continuar.</p>
+        </div>
+        <button type="button" class="ui-close" (click)="cancelarConfirmacion()" aria-label="Cerrar confirmación">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
-      <div class="confirmar-cuerpo">
-        <p class="confirmar-mensaje">Revisa los datos ingresados, al generar la factura se cancelará la anterior.</p>
+      <div class="ui-dialog-body">
+        <p class="confirmar-mensaje">Al generar la factura se cancelará la anterior. Verifica que los datos sean correctos.</p>
         <dl class="confirmar-lista">
           @for (d of resumenDatos; track d) {
             <div class="confirmar-item">
@@ -127,9 +186,9 @@
           }
         </dl>
       </div>
-      <div class="confirmar-pie">
-        <button type="button" class="btn-confirmar-cancelar" (click)="cancelarConfirmacion()">Cancelar</button>
-        <button type="button" class="btn-confirmar-aceptar" (click)="generarFinal()">Aceptar</button>
+      <div class="ui-dialog-foot">
+        <button type="button" class="ui-btn ui-btn--ghost" (click)="cancelarConfirmacion()">Cancelar</button>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="generarFinal()">Aceptar y generar</button>
       </div>
     </div>
   </div>

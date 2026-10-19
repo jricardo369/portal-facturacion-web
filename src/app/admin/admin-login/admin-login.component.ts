@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AdminAuthService } from '../auth.service';
 import { LoadingOverlayComponent } from '../../shared/loading-overlay.component';
 
 @Component({
     selector: 'app-admin-login',
-    imports: [FormsModule, LoadingOverlayComponent],
+    imports: [FormsModule, RouterLink, LoadingOverlayComponent],
     templateUrl: './admin-login.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./admin-login.component.css']

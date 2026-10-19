@@ -1,41 +1,66 @@
-<div class="factura-backdrop" (click)="cerrar.emit()">
-  <div class="factura-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-factura" (click)="$event.stopPropagation()">
-    <div class="factura-head">
-      <h2 id="titulo-factura">Factura {{ factura?.folio || factura?.idFactura }}</h2>
-      <button type="button" class="factura-cerrar" (click)="cerrar.emit()" aria-label="Cerrar detalle">✕</button>
+<div class="ui-backdrop" (click)="cerrar.emit()">
+  <div class="ui-dialog" role="dialog" aria-modal="true" aria-labelledby="titulo-factura" (click)="$event.stopPropagation()">
+    <div class="ui-dialog-head">
+      <div>
+        <h2 id="titulo-factura">Factura {{ factura?.folio || factura?.idFactura }}</h2>
+        <p class="dialog-sub">Detalle del comprobante</p>
+      </div>
+      <button #closeBtn type="button" class="ui-close" (click)="cerrar.emit()" aria-label="Cerrar detalle">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
-    <div class="factura-cuerpo">
-      <h3 class="factura-seccion">Datos de la factura</h3>
-      <dl class="factura-datos">
-        <div><dt>Folio</dt><dd>{{ factura?.folio || '—' }}</dd></div>
-        <div><dt>Serie</dt><dd>{{ factura?.serie || '—' }}</dd></div>
-        <div><dt>UUID</dt><dd class="uuid">{{ factura?.uuid || '—' }}</dd></div>
-        <div><dt>Fecha</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.fecha)) }}</dd></div>
-        <div><dt>Estatus</dt><dd><span class="badge" [class.cancelada]="esCancelada(factura)" [class.cargada]="esCargada(factura)">{{ estado(factura) }}</span></dd></div>
-      </dl>
 
-      <h3 class="factura-seccion">Cliente</h3>
-      <dl class="factura-datos">
-        <div><dt>Cliente</dt><dd>{{ cliente(factura) }}</dd></div>
-        <div><dt>RFC</dt><dd>{{ factura?.rfc || '—' }}</dd></div>
-        <div><dt>No. ticket</dt><dd>{{ factura?.noTicket || '—' }}</dd></div>
-      </dl>
+    <div class="ui-dialog-body">
+      <section class="ui-detail-section" aria-labelledby="sec-factura">
+        <h3 class="ui-section-title" id="sec-factura">Datos de la factura</h3>
+        <dl class="ui-dl">
+          <div><dt>Folio</dt><dd>{{ factura?.folio || '—' }}</dd></div>
+          <div><dt>Serie</dt><dd>{{ factura?.serie || '—' }}</dd></div>
+          <div class="is-wide is-mono"><dt>UUID</dt><dd>{{ factura?.uuid || '—' }}</dd></div>
+          <div><dt>Fecha</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.fecha)) }}</dd></div>
+          <div>
+            <dt>Estatus</dt>
+            <dd>
+              <span class="ui-badge"
+                    [class.ui-badge--danger]="esCancelada(factura)"
+                    [class.ui-badge--ok]="esCargada(factura)"
+                    [class.ui-badge--neutral]="estado(factura) === '—'">{{ estado(factura) }}</span>
+            </dd>
+          </div>
+        </dl>
+      </section>
 
-      <h3 class="factura-seccion">Importes</h3>
-      <dl class="factura-datos">
-        <div><dt>Subtotal</dt><dd>{{ importe($safeNavigationMigration(factura?.subtotal)) }}</dd></div>
-        <div><dt>Impuesto</dt><dd>{{ importe($safeNavigationMigration(factura?.impuesto)) }}</dd></div>
-        <div><dt>Total</dt><dd class="factura-total">{{ importe($safeNavigationMigration(factura?.total)) }}</dd></div>
-      </dl>
+      <section class="ui-detail-section" aria-labelledby="sec-cliente">
+        <h3 class="ui-section-title" id="sec-cliente">Cliente</h3>
+        <dl class="ui-dl">
+          <div><dt>Cliente</dt><dd>{{ cliente(factura) }}</dd></div>
+          <div><dt>RFC</dt><dd>{{ factura?.rfc || '—' }}</dd></div>
+          <div><dt>No. ticket</dt><dd>{{ factura?.noTicket || '—' }}</dd></div>
+        </dl>
+      </section>
 
-      <h3 class="factura-seccion">Registro</h3>
-      <dl class="factura-datos">
-        <div><dt>Creado</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.createdAt)) }}</dd></div>
-        <div><dt>Actualizado</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.updatedAt)) }}</dd></div>
-      </dl>
+      <section class="ui-detail-section" aria-labelledby="sec-importes">
+        <h3 class="ui-section-title" id="sec-importes">Importes</h3>
+        <dl class="ui-dl">
+          <div><dt>Subtotal</dt><dd>{{ importe($safeNavigationMigration(factura?.subtotal)) }}</dd></div>
+          <div><dt>Impuesto</dt><dd>{{ importe($safeNavigationMigration(factura?.impuesto)) }}</dd></div>
+          <div class="is-total"><dt>Total</dt><dd>{{ importe($safeNavigationMigration(factura?.total)) }}</dd></div>
+        </dl>
+      </section>
+
+      <section class="ui-detail-section" aria-labelledby="sec-registro">
+        <h3 class="ui-section-title" id="sec-registro">Registro</h3>
+        <dl class="ui-dl">
+          <div><dt>Creado</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.createdAt)) }}</dd></div>
+          <div><dt>Actualizado</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.updatedAt)) }}</dd></div>
+        </dl>
+      </section>
     </div>
-    <div class="factura-pie">
-      <button type="button" class="btn-cerrar" (click)="cerrar.emit()">Cerrar</button>
+
+    <div class="ui-dialog-foot">
+      <button type="button" class="ui-btn ui-btn--primary" (click)="cerrar.emit()">Cerrar</button>
     </div>
   </div>
 </div>

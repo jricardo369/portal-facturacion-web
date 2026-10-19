@@ -1,105 +1,281 @@
 <app-header></app-header>
 
-<main id="contenido" class="pagina">
-  <!-- Referencias: src/assets/4-DatosBusquedaTicketAFacturar.png y src/assets/5-SeccionDeBusquedaTicketparaReenviarFacutra.png -->
-  <h1 class="titulo">Servicio de facturación en línea</h1>
-
-  <section class="aviso" aria-labelledby="titulo-importante">
-    <h2 id="titulo-importante">Importante</h2>
-    <p>
-      Estimado Cliente/Socio: Le informamos que conforme a las disposiciones
-      fiscales mexicanas respecto a la emisión de Comprobantes Fiscales
-      (Facturas), no es posible emitir Comprobantes Fiscales (Facturas) por
-      la compra de Tarjetas de Regalo; sino que dicho comprobante se generará
-      y se podrá solicitar al momento de hacer efectiva la Tarjeta de Regalo
-      (Cuando se realice la compra de la mercancía con dicha tarjeta).
-    </p>
-  </section>
-
-  <p class="instruccion">Seleccione una opción y capture los datos solicitados</p>
-
-  <div class="pestanas" role="tablist" aria-label="Opciones de facturación">
-    <button
-      type="button" role="tab" id="tab-facturar" aria-controls="panel-facturar"
-      [attr.aria-selected]="pestana === 'facturar'"
-      [class.activa]="pestana === 'facturar'"
-    (click)="mostrar('facturar')">Facturar</button>
-    <button
-      type="button" role="tab" id="tab-consulta" aria-controls="panel-consulta"
-      [attr.aria-selected]="pestana === 'consulta'"
-      [class.activa]="pestana === 'consulta'"
-    (click)="mostrar('consulta')">Consulta o reenvía tu factura</button>
+<main id="contenido" class="ui-page">
+  <div class="ui-page-head">
+    <div class="ui-heading">
+      <span class="ui-eyebrow">Facturación en línea</span>
+      <h1 class="ui-title">Factura tu compra</h1>
+      <p class="ui-subtitle">
+        Genera tu factura o reenvíala a tu correo en unos segundos. Ten a la mano
+        tu ticket de compra para capturar los datos.
+      </p>
+    </div>
+    <div class="ui-head-actions">
+      <a class="ui-btn ui-btn--ghost ui-btn--sm" routerLink="/aviso-privacidad">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3 5 6v5c0 4.2 2.9 8 7 10 4.1-2 7-5.8 7-10V6l-7-3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M9.5 12.2l1.8 1.8 3.4-3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Aviso de privacidad
+      </a>
+    </div>
   </div>
 
-  <section
-    class="panel" id="panel-facturar" role="tabpanel" aria-labelledby="tab-facturar"
-    [hidden]="pestana !== 'facturar'">
-    <h2 class="panel-titulo">Facturar</h2>
-    <form #formFacturar class="formulario" action="#" method="get" onsubmit="return false" (submit)="enviar()">
-      <div class="campo requerido">
-        <label for="rfc">RFC <span class="req" aria-hidden="true">*</span></label>
-        <input id="rfc" name="rfc" type="text" placeholder="Ej. GOOD990102UH3" required minlength="12" maxlength="13" autocomplete="off" [(ngModel)]="rfc" [disabled]="cargando" />
+  <section class="ui-steps" aria-label="Cómo obtener tu factura">
+    <article class="ui-step">
+      <span class="ui-step-num" aria-hidden="true">1</span>
+      <div>
+        <p class="ui-step-title">Ubica tu ticket</p>
+        <p class="ui-step-text">En tu ticket están impresos el RFC, el número de ticket, la fecha y el total.</p>
       </div>
-      <div class="campo requerido con-ayuda">
-        <label for="ticket">Número de ticket <span class="req" aria-hidden="true">*</span></label>
-        <input id="ticket" name="ticket" type="text" placeholder="Ej. 00001234" required autocomplete="off" aria-describedby="ayuda-ticket-facturar" [(ngModel)]="numeroTicket" [disabled]="cargando" />
-        <button type="button" class="ayuda" title="Capture el número de ticket de su compra" aria-label="Ayuda: número de ticket" (click)="mostrarAyudaTicket()">?</button>
-        <span id="ayuda-ticket-facturar" class="ayuda-texto">Lo encontrarás impreso en tu comprobante de compra.</span>
+    </article>
+    <article class="ui-step">
+      <span class="ui-step-num" aria-hidden="true">2</span>
+      <div>
+        <p class="ui-step-title">Captura los datos</p>
+        <p class="ui-step-text">Escríbelos tal como aparecen en tu comprobante para validar tu compra.</p>
       </div>
-      <div class="campo requerido con-ayuda">
-        <label for="fecha">Fecha <span class="req" aria-hidden="true">*</span></label>
-        <input id="fecha" name="fecha" type="date" required autocomplete="off" aria-describedby="ayuda-fecha-facturar" [(ngModel)]="fecha" [disabled]="cargando" />
-        <button type="button" class="ayuda" title="Capture la fecha de su compra" aria-label="Ayuda: fecha del ticket" (click)="mostrarAyudaTicket()">?</button>
-        <span id="ayuda-fecha-facturar" class="ayuda-texto">La encontrarás impresa en tu comprobante de compra.</span>
+    </article>
+    <article class="ui-step">
+      <span class="ui-step-num" aria-hidden="true">3</span>
+      <div>
+        <p class="ui-step-title">Recibe tu factura</p>
+        <p class="ui-step-text">Completa tus datos fiscales y te enviaremos el CFDI a tu correo.</p>
       </div>
-      <div class="campo requerido con-ayuda">
-        <label for="total">Total <span class="req" aria-hidden="true">*</span></label>
-        <input id="total" name="total" type="number" placeholder="Ej. 158.00" required min="0.01" step="0.01" inputmode="decimal" autocomplete="off" aria-describedby="ayuda-total-facturar" [(ngModel)]="total" [disabled]="cargando" />
-        <button type="button" class="ayuda" title="Capture el total de su compra" aria-label="Ayuda: total del ticket" (click)="mostrarAyudaTicket()">?</button>
-        <span id="ayuda-total-facturar" class="ayuda-texto">Lo encontrarás impreso en tu comprobante de compra.</span>
-      </div>
-      <p class="nota">Los campos marcados con: * son obligatorios.</p>
-    </form>
-    <div class="acciones">
-      <button type="button" class="btn btn-cancelar" (click)="cancelar()" [disabled]="cargando">Cancelar</button>
-      <button type="button" class="btn btn-continuar" (click)="continuar()" [disabled]="cargando">{{ cargando && pestana === 'facturar' ? 'Buscando…' : 'Continuar' }}</button>
+    </article>
+  </section>
+
+  <section class="ui-alert ui-alert--warning aviso" aria-labelledby="titulo-importante">
+    <span class="ui-alert-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+        <path d="M10.3 4.3 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z"/>
+        <path d="M12 9v4M12 17h.01"/>
+      </svg>
+    </span>
+    <div>
+      <strong id="titulo-importante">Importante</strong>
+      <p>
+        Estimado Cliente/Socio: conforme a las disposiciones fiscales mexicanas
+        respecto a la emisión de Comprobantes Fiscales (Facturas), no es posible
+        emitir Comprobantes Fiscales (Facturas) por la compra de Tarjetas de Regalo;
+        dicho comprobante se generará y se podrá solicitar al momento de hacer
+        efectiva la Tarjeta de Regalo (cuando se realice la compra de la mercancía
+        con dicha tarjeta).
+      </p>
     </div>
   </section>
 
-  <section
-    class="panel" id="panel-consulta" role="tabpanel" aria-labelledby="tab-consulta"
-    [hidden]="pestana !== 'consulta'">
-    <h2 class="panel-titulo">Consultar por Número de Ticket</h2>
-    <p class="panel-sub">Para reenviar tu factura es necesario ingresar el número de ticket y el correo electrónico</p>
-    <form #formConsulta class="formulario" action="#" method="get" onsubmit="return false" (submit)="continuarConsulta()">
-      <div class="campo requerido con-ayuda">
-        <label for="ticket-consulta">Número de ticket <span class="req" aria-hidden="true">*</span></label>
-        <input id="ticket-consulta" name="ticket-consulta" type="text" placeholder="Ej. 00001234" required autocomplete="off" aria-describedby="ayuda-ticket-consulta" [(ngModel)]="numeroTicketConsulta" [disabled]="cargando" />
-        <button type="button" class="ayuda" title="Capture el número de ticket de su compra" aria-label="Ayuda: número de ticket" (click)="mostrarAyudaTicket()">?</button>
-        <span id="ayuda-ticket-consulta" class="ayuda-texto">Lo encontrarás impreso en tu comprobante de compra.</span>
-      </div>
-      <div class="campo requerido">
-        <label for="correo-consulta">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
-        <input id="correo-consulta" name="correo-consulta" type="email" placeholder="nombre@ejemplo.com" required autocomplete="email" [(ngModel)]="correoConsulta" [disabled]="cargando" />
-      </div>
-      <p class="nota">Los campos marcados con: * son obligatorios.</p>
-    </form>
+  <div class="ui-tabs" role="tablist" aria-label="Opciones de facturación" (keydown)="onTabsKeydown($event)">
+    <button
+      type="button" role="tab" id="tab-facturar" class="ui-tab" aria-controls="panel-facturar"
+      [attr.aria-selected]="pestana === 'facturar'" [class.is-active]="pestana === 'facturar'"
+      [attr.tabindex]="pestana === 'facturar' ? 0 : -1"
+      (click)="mostrar('facturar')">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M6 3h9l4 4v14l-2-1.4L15 21l-3-1.4L9 21l-3-1.4V3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M9 8h6M9 12h6M9 16h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Facturar
+    </button>
+    <button
+      type="button" role="tab" id="tab-consulta" class="ui-tab" aria-controls="panel-consulta"
+      [attr.aria-selected]="pestana === 'consulta'" [class.is-active]="pestana === 'consulta'"
+      [attr.tabindex]="pestana === 'consulta' ? 0 : -1"
+      (click)="mostrar('consulta')">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M3.5 6.5 12 12l8.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="3.5" y="5" width="17" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      </svg>
+      Consulta o reenvía tu factura
+    </button>
+  </div>
+
+  <section class="ui-panel tab-panel" id="panel-facturar" role="tabpanel" aria-labelledby="tab-facturar" [hidden]="pestana !== 'facturar'">
+    <div class="facturar-grid">
+      <form #formFacturar class="formulario" action="#" method="get" (ngSubmit)="continuar()" novalidate>
+        <div class="ui-field ui-field--full">
+          <label for="rfc">RFC <span class="req" aria-hidden="true">*</span></label>
+          <input
+            id="rfc" name="rfc" type="text" class="ui-input" placeholder="Ej. GOOD990102UH3"
+            required minlength="12" maxlength="13" pattern="[A-Za-zÑñ&amp;]{3,4}[0-9]{6}[A-Za-z0-9]{3}"
+            autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="ayuda-rfc"
+            [attr.aria-invalid]="rfcField.invalid && (rfcField.touched || intento)"
+            [class.is-invalid]="rfcField.invalid && (rfcField.touched || intento)"
+            [(ngModel)]="rfc" #rfcField="ngModel" [disabled]="cargando" />
+          <p class="ui-help" id="ayuda-rfc">13 caracteres para persona física o 12 para persona moral.</p>
+          @if (rfcField.invalid && (rfcField.touched || intento)) {
+            <p class="ui-error">Captura un RFC válido (12 o 13 caracteres).</p>
+          }
+        </div>
+
+        <div class="ui-field ui-field--full">
+          <label for="ticket">Número de ticket <span class="req" aria-hidden="true">*</span></label>
+          <input
+            id="ticket" name="ticket" type="text" class="ui-input" placeholder="Ej. 00001234"
+            required pattern="[0-9]+" inputmode="numeric" autocomplete="off" aria-describedby="ayuda-ticket"
+            [attr.aria-invalid]="ticketField.invalid && (ticketField.touched || intento)"
+            [class.is-invalid]="ticketField.invalid && (ticketField.touched || intento)"
+            [(ngModel)]="numeroTicket" #ticketField="ngModel" [disabled]="cargando" />
+          <p class="ui-help" id="ayuda-ticket">
+            Solo números, va impreso en tu comprobante.
+            <button type="button" class="ui-btn ui-btn--link btn-inline" (click)="mostrarAyudaTicket()">Ver ejemplo de ticket</button>
+          </p>
+          @if (ticketField.invalid && (ticketField.touched || intento)) {
+            <p class="ui-error">Captura el número de ticket (solo números).</p>
+          }
+        </div>
+
+        <div class="ui-field">
+          <label for="fecha">Fecha de compra <span class="req" aria-hidden="true">*</span></label>
+          <input
+            id="fecha" name="fecha" type="date" class="ui-input" required [max]="hoy"
+            autocomplete="off" aria-describedby="ayuda-fecha"
+            [attr.aria-invalid]="fechaField.invalid && (fechaField.touched || intento)"
+            [class.is-invalid]="fechaField.invalid && (fechaField.touched || intento)"
+            [(ngModel)]="fecha" #fechaField="ngModel" [disabled]="cargando" />
+          <p class="ui-help" id="ayuda-fecha">La fecha impresa en tu ticket (no puede ser futura).</p>
+          @if (fechaField.invalid && (fechaField.touched || intento)) {
+            <p class="ui-error">Selecciona la fecha de tu compra.</p>
+          }
+        </div>
+
+        <div class="ui-field">
+          <label for="total">Total <span class="req" aria-hidden="true">*</span></label>
+          <input
+            id="total" name="total" type="number" class="ui-input" placeholder="Ej. 158.00"
+            required min="0.01" step="0.01" inputmode="decimal" autocomplete="off" aria-describedby="ayuda-total"
+            [attr.aria-invalid]="totalField.invalid && (totalField.touched || intento)"
+            [class.is-invalid]="totalField.invalid && (totalField.touched || intento)"
+            [(ngModel)]="total" #totalField="ngModel" [disabled]="cargando" />
+          <p class="ui-help" id="ayuda-total">Importe total con IVA que aparece en tu ticket.</p>
+          @if (totalField.invalid && (totalField.touched || intento)) {
+            <p class="ui-error">Captura un total mayor a cero.</p>
+          }
+        </div>
+
+        <p class="nota">Los campos marcados con <span class="req" aria-hidden="true">*</span> son obligatorios.</p>
+      </form>
+
+      <aside class="ui-card guia" aria-label="Ayuda para localizar tus datos">
+        <div class="guia-head">
+          <span class="guia-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M6 3h9l4 4v14l-2-1.4L15 21l-3-1.4L9 21l-3-1.4V3Z"/>
+              <path d="M9 8h6M9 12h6M9 16h3"/>
+            </svg>
+          </span>
+          <div>
+            <p class="ui-panel-title">¿Dónde encuentro los datos?</p>
+            <p class="guia-sub">Búscalos tal cual aparecen en tu ticket de compra.</p>
+          </div>
+        </div>
+        <ul class="guia-list">
+          <li><strong>RFC</strong><span>Aparece en tu constancia de situación fiscal.</span></li>
+          <li><strong>Número de ticket</strong><span>Está impreso en la parte superior del ticket.</span></li>
+          <li><strong>Fecha y total</strong><span>Los verás junto al detalle de tu compra.</span></li>
+        </ul>
+        <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm ui-btn--block" (click)="mostrarAyudaTicket()">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M12 7.5v5.5M12 16.5h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Ver ejemplo de ticket
+        </button>
+      </aside>
+    </div>
+
+    <div class="acciones">
+      <button type="button" class="ui-btn ui-btn--ghost" (click)="cancelar()" [disabled]="cargando">Cancelar</button>
+      <button type="button" class="ui-btn ui-btn--primary" (click)="continuar()" [disabled]="cargando">
+        {{ cargando && pestana === 'facturar' ? 'Buscando…' : 'Continuar' }}
+        @if (!(cargando && pestana === 'facturar')) {
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        }
+      </button>
+    </div>
+  </section>
+
+  <section class="ui-panel tab-panel" id="panel-consulta" role="tabpanel" aria-labelledby="tab-consulta" [hidden]="pestana !== 'consulta'">
+    <div class="facturar-grid">
+      <form #formConsulta class="formulario" action="#" method="get" (ngSubmit)="continuarConsulta()" novalidate>
+        <div class="ui-field ui-field--full">
+          <label for="ticket-consulta">Número de ticket <span class="req" aria-hidden="true">*</span></label>
+          <input
+            id="ticket-consulta" name="ticket-consulta" type="text" class="ui-input" placeholder="Ej. 00001234"
+            required pattern="[0-9]+" inputmode="numeric" autocomplete="off" aria-describedby="ayuda-ticket-consulta"
+            [attr.aria-invalid]="ticketConsultaField.invalid && (ticketConsultaField.touched || intento)"
+            [class.is-invalid]="ticketConsultaField.invalid && (ticketConsultaField.touched || intento)"
+            [(ngModel)]="numeroTicketConsulta" #ticketConsultaField="ngModel" [disabled]="cargando" />
+          <p class="ui-help" id="ayuda-ticket-consulta">El mismo número de ticket que usaste al facturar.</p>
+          @if (ticketConsultaField.invalid && (ticketConsultaField.touched || intento)) {
+            <p class="ui-error">Captura el número de ticket (solo números).</p>
+          }
+        </div>
+
+        <div class="ui-field ui-field--full">
+          <label for="correo-consulta">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+          <input
+            id="correo-consulta" name="correo-consulta" type="email" class="ui-input" placeholder="nombre@ejemplo.com"
+            required autocomplete="email" inputmode="email" aria-describedby="ayuda-correo"
+            [attr.aria-invalid]="correoConsultaField.invalid && (correoConsultaField.touched || intento)"
+            [class.is-invalid]="correoConsultaField.invalid && (correoConsultaField.touched || intento)"
+            [(ngModel)]="correoConsulta" #correoConsultaField="ngModel" [disabled]="cargando" />
+          <p class="ui-help" id="ayuda-correo">Debe coincidir con el correo con el que solicitaste tu factura.</p>
+          @if (correoConsultaField.invalid && (correoConsultaField.touched || intento)) {
+            <p class="ui-error">Captura un correo electrónico válido.</p>
+          }
+        </div>
+
+        <p class="nota">Los campos marcados con <span class="req" aria-hidden="true">*</span> son obligatorios.</p>
+      </form>
+
+      <aside class="ui-card guia" aria-label="Ayuda para reenviar tu factura">
+        <div class="guia-head">
+          <span class="guia-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M3.5 6.5 12 12l8.5-5.5"/>
+              <rect x="3.5" y="5" width="17" height="14" rx="2.5"/>
+            </svg>
+          </span>
+          <div>
+            <p class="ui-panel-title">¿Ya facturaste?</p>
+            <p class="guia-sub">Si ya generaste tu factura, te la reenviamos al correo registrado.</p>
+          </div>
+        </div>
+        <ul class="guia-list">
+          <li><strong>Número de ticket</strong><span>El mismo que usaste al facturar.</span></li>
+          <li><strong>Correo electrónico</strong><span>Debe coincidir con el correo registrado.</span></li>
+        </ul>
+      </aside>
+    </div>
+
     @if (correoConsultaEnviado) {
-      <div class="confirmacion-exito" role="status" aria-live="polite">
-        <span class="confirmacion-icono" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false">
-            <path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      <div class="ui-alert ui-alert--success confirmacion" role="status" aria-live="polite">
+        <span class="ui-alert-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path d="M20 6 9 17l-5-5"/>
           </svg>
         </span>
         <div>
-          <h3>¡Listo! Reenviamos tu factura</h3>
-          <p>La enviamos a <strong>{{ correoConsultaEnviado }}</strong>.</p>
+          <strong>Factura reenviada</strong>
+          <p>Enviamos tu factura a <b>{{ correoConsultaEnviado }}</b>. Revisa tu bandeja de entrada y la carpeta de spam.</p>
         </div>
       </div>
     }
+
     <div class="acciones">
-      <button type="button" class="btn btn-cancelar" (click)="cancelarConsulta()" [disabled]="cargando">Cancelar</button>
-      <button type="button" class="btn btn-continuar" (click)="continuarConsulta()" [disabled]="cargando">{{ cargando && pestana === 'consulta' ? 'Buscando…' : 'Continuar' }}</button>
+      <button type="button" class="ui-btn ui-btn--ghost" (click)="cancelarConsulta()" [disabled]="cargando">Cancelar</button>
+      <button type="button" class="ui-btn ui-btn--primary" (click)="continuarConsulta()" [disabled]="cargando">
+        {{ cargando && pestana === 'consulta' ? 'Enviando…' : 'Reenviar factura' }}
+        @if (!(cargando && pestana === 'consulta')) {
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M22 2 11 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 2 15 22l-4-9-9-4 20-7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        }
+      </button>
     </div>
   </section>
 </main>
@@ -109,10 +285,25 @@
 }
 
 @if (ayudaTicketVisible) {
-  <div class="ayuda-backdrop" (click)="cerrarAyudaTicket()">
-    <div class="ayuda-dialogo" role="dialog" aria-modal="true" aria-label="Ayuda: número de ticket" (click)="$event.stopPropagation()">
-      <button type="button" class="ayuda-cerrar" (click)="cerrarAyudaTicket()" aria-label="Cerrar ayuda">✕</button>
-      <img src="assets/ticketOsoDespierto.png" alt="Ejemplo de número de ticket" class="ayuda-imagen" />
+  <div class="ui-backdrop" (click)="cerrarAyudaTicket()">
+    <div class="ui-dialog ui-dialog--sm ayuda-dialogo" role="dialog" aria-modal="true" aria-labelledby="titulo-ayuda" (click)="$event.stopPropagation()">
+      <div class="ui-dialog-head">
+        <div>
+          <h2 id="titulo-ayuda">Ejemplo de ticket</h2>
+          <p class="ayuda-sub">Localiza el número de ticket, la fecha y el total como se muestra.</p>
+        </div>
+        <button type="button" class="ui-close" #closeAyuda (click)="cerrarAyudaTicket()" aria-label="Cerrar ayuda">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="ui-dialog-body ayuda-body">
+        <img src="assets/ticketOsoDespierto.png" alt="Ejemplo de un ticket de compra con el número de ticket, la fecha y el total" class="ayuda-imagen" />
+      </div>
+      <div class="ui-dialog-foot">
+        <button type="button" class="ui-btn ui-btn--primary" (click)="cerrarAyudaTicket()">Entendido</button>
+      </div>
     </div>
   </div>
 }
