@@ -1,67 +1,149 @@
 <app-header></app-header>
 
 <main id="contenido" class="pagina">
-  <!-- Recurso base: img1/img2/img3.jpg de la cafetería. -->
   <section class="heroe" aria-labelledby="titulo-bienvenida">
     <div class="heroe-copia">
-      <p class="sobretitulo">oso despierto · FACTURACIÓN EN LÍNEA</p>
+      <p class="sobretitulo">oso despierto · Facturación en línea</p>
       <h1 id="titulo-bienvenida">Factura tus compras de oso despierto</h1>
       <p class="subtitulo">
         Solicita tu factura con los datos de tu ticket. El proceso es sencillo y puedes hacerlo en cualquier momento.
       </p>
       <div class="cta">
         <p class="cta-etiqueta">¿Tienes tu ticket de compra?</p>
-        <a class="btn-factura" routerLink="/facturar">Iniciar facturación <span aria-hidden="true">→</span></a>
+        <a class="ui-btn ui-btn--primary ui-btn--lg" routerLink="/facturar">
+          Iniciar facturación
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
       </div>
     </div>
-    <div class="heroe-media" role="group" aria-label="Cafetería oso despierto">
+    <div class="heroe-media">
       <figure>
         <img src="assets/img1.jpg" width="1448" height="2048" alt="Figura de oso con lentes frente a letrero de neón coffee" fetchpriority="high" />
-      </figure>
-      <figure>
-        <img src="assets/img2.jpg" width="1080" height="1350" alt="Vaso de café oso despierto junto a una bolsa de galletas" loading="lazy" />
-      </figure>
-      <figure>
-        <img src="assets/img3.jpg" width="1416" height="1350" alt="Dos manos brindando con vasos de café oso despierto" loading="lazy" />
       </figure>
     </div>
   </section>
 
+  <section class="pasos" aria-labelledby="titulo-pasos">
+    <div class="seccion-head">
+      <p class="ui-eyebrow">Así de fácil</p>
+      <h2 class="seccion-titulo" id="titulo-pasos">Factura tu compra en 3 pasos</h2>
+      <p class="seccion-texto">Solo necesitas tu ticket y tus datos fiscales. Te guiamos en cada paso.</p>
+    </div>
+    <ol class="ui-steps pasos-lista">
+      <li class="ui-step">
+        <span class="ui-step-num" aria-hidden="true">1</span>
+        <div>
+          <p class="ui-step-title">Ten tu ticket a la mano</p>
+          <p class="ui-step-text">Localiza el número de ticket que aparece en tu compra.</p>
+        </div>
+      </li>
+      <li class="ui-step">
+        <span class="ui-step-num" aria-hidden="true">2</span>
+        <div>
+          <p class="ui-step-title">Captura tus datos</p>
+          <p class="ui-step-text">Ingresa tu RFC y régimen fiscal tal como están registrados en el SAT.</p>
+        </div>
+      </li>
+      <li class="ui-step">
+        <span class="ui-step-num" aria-hidden="true">3</span>
+        <div>
+          <p class="ui-step-title">Descarga tu factura</p>
+          <p class="ui-step-text">Recibe tu PDF y XML en pantalla y por correo electrónico.</p>
+        </div>
+      </li>
+    </ol>
+    <div class="pasos-cta">
+      <a class="ui-btn ui-btn--outline ui-btn--lg" routerLink="/facturar">
+        Iniciar facturación
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
   <section class="info" aria-label="Información del servicio">
-    <article class="tarjeta">
-      <div class="tarjeta-head">
-        <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false">
-          <rect x="10" y="8" width="34" height="52" rx="3" fill="none" stroke="#fff" stroke-width="2"/>
-          <rect x="18" y="8" width="26" height="10" fill="none" stroke="#fff" stroke-width="2"/>
-          <line x1="17" y1="30" x2="37" y2="30" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-          <line x1="17" y1="37" x2="37" y2="37" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-          <line x1="17" y1="44" x2="30" y2="44" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="44" cy="50" r="12" fill="none" stroke="#fff" stroke-width="2"/>
-          <polyline points="38.5,50 42.5,54 50,45.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <article class="info-card">
+      <span class="info-icono" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M6.5 3h7l4.5 4.5V21H6.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M13.5 3v4.5H18" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M9.2 14l2 2 3.8-4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <h2>Disposiciones Fiscales</h2>
+      </span>
+      <div>
+        <h2>Disposiciones fiscales</h2>
+        <p>La factura se emitirá con la fecha en que la solicites. No es posible cancelar facturas de años anteriores.</p>
       </div>
-      <p class="tarjeta-cuerpo">La factura se emitirá con la fecha en que la solicites. No es posible cancelar facturas de años anteriores.</p>
     </article>
 
-    <article class="tarjeta">
-      <div class="tarjeta-head">
-        <svg viewBox="0 0 72 72" aria-hidden="true" focusable="false">
-          <rect x="10" y="14" width="52" height="48" rx="8" fill="none" stroke="#fff" stroke-width="2"/>
-          <line x1="10" y1="26" x2="62" y2="26" stroke="#fff" stroke-width="2"/>
-          <line x1="22" y1="8" x2="22" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-          <line x1="50" y1="8" x2="50" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-          <g fill="#fff">
-            <circle cx="22" cy="36" r="2.4"/><circle cx="31" cy="36" r="2.4"/><circle cx="40" cy="36" r="2.4"/><circle cx="49" cy="36" r="2.4"/>
-            <circle cx="22" cy="44" r="2.4"/><circle cx="31" cy="44" r="2.4"/><circle cx="40" cy="44" r="2.4"/><circle cx="49" cy="44" r="2.4"/>
-            <circle cx="22" cy="52" r="2.4"/><circle cx="31" cy="52" r="2.4"/><circle cx="40" cy="52" r="2.4"/>
-          </g>
+    <article class="info-card">
+      <span class="info-icono" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h13A1.5 1.5 0 0 1 20 7.5v2.2a2.3 2.3 0 0 0 0 4.6v2.2A1.5 1.5 0 0 1 18.5 18h-13A1.5 1.5 0 0 1 4 16.5v-2.2a2.3 2.3 0 0 0 0-4.6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M14.5 6.5v11" stroke="currentColor" stroke-width="1.6" stroke-dasharray="1.5 2.5" stroke-linecap="round"/>
         </svg>
+      </span>
+      <div>
         <h2>Resguardo</h2>
+        <p>Conserva tu ticket de compra: lo necesitarás para facturar o consultar el envío de tu comprobante.</p>
       </div>
-      <p class="tarjeta-cuerpo">Conserva tu ticket de compra: lo necesitarás para facturar o consultar el envío de tu comprobante.</p>
     </article>
+  </section>
 
+  <section class="redes" aria-labelledby="titulo-redes">
+    <div class="redes-copia">
+      <h2 class="redes-titulo" id="titulo-redes">Síguenos</h2>
+      <p class="redes-texto">Conoce nuestras novedades, promociones y el día a día de oso despierto.</p>
+    </div>
+    <ul class="redes-lista">
+      <li>
+        <a class="red-social" href="https://instagram.com/osodespierto" target="_blank" rel="noopener noreferrer" aria-label="Instagram de oso despierto">
+          <span class="red-icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="17" cy="7" r="1.1" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="red-texto"><strong>Instagram</strong><small>@osodespierto</small></span>
+        </a>
+      </li>
+      <li>
+        <a class="red-social" href="https://facebook.com/osodespierto" target="_blank" rel="noopener noreferrer" aria-label="Facebook de oso despierto">
+          <span class="red-icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M14.6 8.4h-1.1c-.9 0-1.4.5-1.4 1.4v1.2M11.2 12.4h3.3M12.7 12.3v6.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="red-texto"><strong>Facebook</strong><small>/osodespierto</small></span>
+        </a>
+      </li>
+      <li>
+        <a class="red-social" href="https://tiktok.com/@osodespierto" target="_blank" rel="noopener noreferrer" aria-label="TikTok de oso despierto">
+          <span class="red-icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M9.4 9.4a4 4 0 1 0 3.9 4V3.6c.7 1.7 2.2 2.9 4 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="red-texto"><strong>TikTok</strong><small>@osodespierto</small></span>
+        </a>
+      </li>
+      <li>
+        <a class="red-social" href="https://wa.me/5215500000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de oso despierto">
+          <span class="red-icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M20 11.6a8 8 0 0 1-11.7 7.1L4 20l1.3-4.2A8 8 0 1 1 20 11.6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M9.1 8.5c.3-.2.7-.1.9.2l.5.8c.1.2.1.4 0 .6l-.3.4c.5.9 1.2 1.6 2.1 2.1l.4-.3c.2-.1.4-.1.6 0l.8.5c.3.2.4.6.2.9-.3.5-.9.8-1.5.7-2.2-.4-3.9-2-4.3-4.2-.1-.6.2-1.2.7-1.5z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="red-texto"><strong>WhatsApp</strong><small>Escríbenos</small></span>
+        </a>
+      </li>
+    </ul>
   </section>
 </main>
 
