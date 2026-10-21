@@ -271,6 +271,22 @@
 
 .ui-btn[disabled] { opacity: .55; cursor: not-allowed; box-shadow: none; }
 
+/* ---------- Spinner (estado de carga en botones) ---------- */
+.ui-spinner {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  opacity: .9;
+  animation: ui-spin .7s linear infinite;
+}
+
+@keyframes ui-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ---------- Resumen / tarjetas ---------- */
 .ui-stats {
   display: grid;
@@ -999,4 +1015,5 @@
   .ui-row-action,
   .ui-close { transition: none; }
   .ui-dialog { animation: none; }
+  .ui-spinner { animation-duration: 1.6s; }
 }

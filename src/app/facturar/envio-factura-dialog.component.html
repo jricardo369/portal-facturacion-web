@@ -1,0 +1,167 @@
+<div class="ui-backdrop" (click)="cerrar.emit()">
+  <div
+    #dialogo
+    class="ui-dialog envio-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-envio"
+    aria-describedby="descripcion-envio"
+    (click)="$event.stopPropagation()"
+    (keydown)="onDialogKeydown($event)">
+
+    <div class="ui-dialog-head">
+      <div class="envio-head">
+        <span class="envio-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path d="M20 6 9 17l-5-5"/>
+          </svg>
+        </span>
+        <div>
+          <h2 id="titulo-envio">Factura enviada</h2>
+          <p class="envio-sub" id="descripcion-envio">
+            Enviamos tu comprobante fiscal a <b>{{ correoEnviado() }}</b>.
+          </p>
+        </div>
+      </div>
+      <button #cerrarBtn type="button" class="ui-close" (click)="cerrar.emit()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ui-dialog-body">
+      <div class="ui-alert ui-alert--success" role="status" aria-live="polite">
+        <span class="ui-alert-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            <path d="M4 4h16v12H7l-3 3V4Z"/>
+            <path d="m8.5 10 2.4 2.4L15.5 8"/>
+          </svg>
+        </span>
+        <div>
+          <strong>Revisa tu bandeja de entrada</strong>
+          <p>
+            El correo incluye el XML y el PDF adjuntos. Si no lo ves en unos minutos,
+            revisa también la carpeta de spam o correo no deseado.
+          </p>
+        </div>
+      </div>
+
+      <div class="ui-detail-section">
+        <div class="ui-field ui-field--full">
+          <label for="correo-envio">Correo electrónico de destino</label>
+          <input
+            id="correo-envio"
+            name="correo-envio"
+            type="email"
+            class="ui-input"
+            placeholder="nombre@ejemplo.com"
+            required
+            autocomplete="email"
+            inputmode="email"
+            aria-describedby="ayuda-correo-envio"
+            [attr.aria-invalid]="intento() && correoInvalido()"
+            [class.is-invalid]="intento() && correoInvalido()"
+            [ngModel]="correoEnvio()"
+            (ngModelChange)="correoEnvio.set($event)" />
+          <p class="ui-help" id="ayuda-correo-envio">
+            Puedes cambiarlo y volver a enviar la factura a otra dirección.
+          </p>
+          @if (intento() && correoInvalido()) {
+            <p class="ui-error">Captura un correo electrónico válido.</p>
+          }
+        </div>
+      </div>
+
+      <div class="ui-detail-section">
+        <p class="ui-section-title">Descargar comprobante</p>
+        <div class="ui-cluster">
+          <button
+            type="button"
+            class="ui-btn ui-btn--outline"
+            (click)="descargar('xml')"
+            [disabled]="descargando()">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 3v12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7.5 10.5 12 15l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4.5 19.5h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            {{ descargando() && tipoDescarga() === 'xml' ? 'Descargando…' : 'Descargar XML' }}
+          </button>
+          <button
+            type="button"
+            class="ui-btn ui-btn--outline"
+            (click)="descargar('pdf')"
+            [disabled]="descargando()">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 3v12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7.5 10.5 12 15l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4.5 19.5h15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            {{ descargando() && tipoDescarga() === 'pdf' ? 'Descargando…' : 'Descargar PDF' }}
+          </button>
+        </div>
+
+        @if (errorDescarga()) {
+          <div class="ui-alert ui-alert--danger envio-error" role="alert">
+            <span class="ui-alert-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7.5v5.5M12 16.5h.01"/>
+              </svg>
+            </span>
+            <div>
+              <strong>No se pudo descargar</strong>
+              <p>{{ errorDescarga() }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div aria-live="polite">
+        @if (mensajeReenvio()) {
+          <div class="ui-alert ui-alert--success envio-ok">
+            <span class="ui-alert-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+            </span>
+            <div>
+              <strong>Correo reenviado</strong>
+              <p>{{ mensajeReenvio() }}</p>
+            </div>
+          </div>
+        }
+        @if (errorReenvio()) {
+          <div class="ui-alert ui-alert--danger envio-error" role="alert">
+            <span class="ui-alert-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7.5v5.5M12 16.5h.01"/>
+              </svg>
+            </span>
+            <div>
+              <strong>No se pudo reenviar</strong>
+              <p>{{ errorReenvio() }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="ui-dialog-foot envio-foot">
+      <button type="button" class="ui-btn ui-btn--ghost" (click)="cerrar.emit()">Cerrar</button>
+      <button
+        type="button"
+        class="ui-btn ui-btn--primary"
+        (click)="reenviar()"
+        [disabled]="enviando() || descargando()">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M22 2 11 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 2 15 22l-4-9-9-4 20-7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ enviando() ? 'Enviando…' : 'Reenviar a este correo' }}
+      </button>
+    </div>
+  </div>
+</div>

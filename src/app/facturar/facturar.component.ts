@@ -7,6 +7,7 @@ import { HeaderComponent } from '../layout/header/header.component';
 import { FooterComponent } from '../layout/footer/footer.component';
 import { ErrorDialogComponent } from '../shared/error-dialog.component';
 import { LoadingOverlayComponent } from '../shared/loading-overlay.component';
+import { EnvioFacturaDialogComponent } from './envio-factura-dialog.component';
 import { FacturacionService } from '../facturacion/facturacion.service';
 import { DatosFacturaStore } from '../facturacion/datos-factura.store';
 
@@ -14,7 +15,7 @@ type Pestana = 'facturar' | 'consulta';
 
 @Component({
     selector: 'app-facturar',
-    imports: [FormsModule, RouterLink, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent],
+    imports: [FormsModule, RouterLink, HeaderComponent, FooterComponent, ErrorDialogComponent, LoadingOverlayComponent, EnvioFacturaDialogComponent],
     templateUrl: './facturar.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./facturar.component.css']
@@ -31,6 +32,8 @@ export class FacturarComponent implements OnInit {
   errorAbierto = false;
   errorMensaje = '';
   correoConsultaEnviado = '';
+  ticketConsultaEnviado = '';
+  dialogoEnvioAbierto = false;
   ayudaTicketVisible = false;
   intento = false;
 
@@ -91,6 +94,8 @@ export class FacturarComponent implements OnInit {
     this.numeroTicketConsulta = '';
     this.correoConsulta = '';
     this.correoConsultaEnviado = '';
+    this.ticketConsultaEnviado = '';
+    this.dialogoEnvioAbierto = false;
     this.intento = false;
     void this.router.navigate(['/']);
   }
@@ -142,6 +147,8 @@ export class FacturarComponent implements OnInit {
       next: () => {
         this.cargando = false;
         this.correoConsultaEnviado = correo;
+        this.ticketConsultaEnviado = ticket;
+        this.dialogoEnvioAbierto = true;
         this.formConsulta?.nativeElement.reset();
         this.numeroTicketConsulta = '';
         this.correoConsulta = '';
@@ -152,6 +159,10 @@ export class FacturarComponent implements OnInit {
         this.mostrarError(this.mensajeError(e));
       },
     });
+  }
+
+  cerrarDialogoEnvio(): void {
+    this.dialogoEnvioAbierto = false;
   }
 
   mostrarAyudaTicket(): void {

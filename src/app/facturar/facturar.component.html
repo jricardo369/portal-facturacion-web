@@ -21,30 +21,6 @@
     </div>
   </div>
 
-  <section class="ui-steps" aria-label="Cómo obtener tu factura">
-    <article class="ui-step">
-      <span class="ui-step-num" aria-hidden="true">1</span>
-      <div>
-        <p class="ui-step-title">Ubica tu ticket</p>
-        <p class="ui-step-text">En tu ticket están impresos el RFC, el número de ticket, la fecha y el total.</p>
-      </div>
-    </article>
-    <article class="ui-step">
-      <span class="ui-step-num" aria-hidden="true">2</span>
-      <div>
-        <p class="ui-step-title">Captura los datos</p>
-        <p class="ui-step-text">Escríbelos tal como aparecen en tu comprobante para validar tu compra.</p>
-      </div>
-    </article>
-    <article class="ui-step">
-      <span class="ui-step-num" aria-hidden="true">3</span>
-      <div>
-        <p class="ui-step-title">Recibe tu factura</p>
-        <p class="ui-step-text">Completa tus datos fiscales y te enviaremos el CFDI a tu correo.</p>
-      </div>
-    </article>
-  </section>
-
   <section class="ui-alert ui-alert--warning aviso" aria-labelledby="titulo-importante">
     <span class="ui-alert-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
@@ -91,6 +67,41 @@
   </div>
 
   <section class="ui-panel tab-panel" id="panel-facturar" role="tabpanel" aria-labelledby="tab-facturar" [hidden]="pestana !== 'facturar'">
+    <section class="pasos-guide" aria-labelledby="titulo-pasos">
+      <h2 class="pasos-guide-titulo" id="titulo-pasos">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M9 6h11M9 12h11M9 18h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M4 6h.01M4 12h.01M4 18h.01" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        Cómo obtener tu factura
+        <span class="pasos-guide-paso">Paso 1 de 3</span>
+      </h2>
+
+      <ol class="ui-steps pasos-lista">
+        <li class="ui-step is-active">
+          <div class="paso-cab">
+            <span class="ui-step-num" aria-hidden="true">1</span>
+            <p class="ui-step-title">Ubica tu ticket</p>
+          </div>
+          <p class="ui-step-text">Tu ticket imprime el RFC, el número de ticket, la fecha y el total.</p>
+        </li>
+        <li class="ui-step">
+          <div class="paso-cab">
+            <span class="ui-step-num" aria-hidden="true">2</span>
+            <p class="ui-step-title">Captura los datos</p>
+          </div>
+          <p class="ui-step-text">Escríbelos tal como aparecen para validar tu compra.</p>
+        </li>
+        <li class="ui-step">
+          <div class="paso-cab">
+            <span class="ui-step-num" aria-hidden="true">3</span>
+            <p class="ui-step-title">Recibe tu factura</p>
+          </div>
+          <p class="ui-step-text">Completa tus datos fiscales y te enviamos el CFDI.</p>
+        </li>
+      </ol>
+    </section>
+
     <div class="facturar-grid">
       <form #formFacturar class="formulario" action="#" method="get" (ngSubmit)="continuar()" novalidate>
         <div class="ui-field ui-field--full">
@@ -251,7 +262,7 @@
       </aside>
     </div>
 
-    @if (correoConsultaEnviado) {
+    @if (correoConsultaEnviado && !dialogoEnvioAbierto) {
       <div class="ui-alert ui-alert--success confirmacion" role="status" aria-live="polite">
         <span class="ui-alert-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
@@ -306,6 +317,15 @@
       </div>
     </div>
   </div>
+}
+
+@if (dialogoEnvioAbierto) {
+  <app-envio-factura-dialog
+    [numeroTicket]="ticketConsultaEnviado"
+    [correoInicial]="correoConsultaEnviado"
+    (cerrar)="cerrarDialogoEnvio()"
+    (reenviado)="correoConsultaEnviado = $event">
+  </app-envio-factura-dialog>
 }
 
 @if (errorAbierto) {

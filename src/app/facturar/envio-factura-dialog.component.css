@@ -1,0 +1,54 @@
+:host { display: contents; }
+
+.envio-dialog {
+  width: min(560px, 100%);
+}
+
+.envio-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  min-width: 0;
+}
+
+.envio-head h2 {
+  color: var(--ui-teal);
+}
+
+.envio-sub {
+  margin: 4px 0 0;
+  font-size: var(--ui-text-sm);
+  color: var(--ui-muted);
+  overflow-wrap: anywhere;
+}
+
+.envio-check {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 50%;
+  background: var(--ui-green-soft);
+  color: var(--ui-green);
+}
+
+.envio-check svg { width: 20px; height: 20px; }
+
+.envio-error,
+.envio-ok {
+  margin-top: var(--ui-space-4);
+}
+
+.envio-foot {
+  flex-wrap: wrap;
+}
+
+.envio-foot .ui-btn--primary { margin-left: auto; }
+
+@media (max-width: 480px) {
+  .envio-dialog { width: 100%; }
+  .envio-foot { flex-direction: column-reverse; align-items: stretch; }
+  .envio-foot .ui-btn { width: 100%; }
+  .envio-foot .ui-btn--primary { margin-left: 0; }
+}

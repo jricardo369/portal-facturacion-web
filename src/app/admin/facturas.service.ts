@@ -44,6 +44,18 @@ export class FacturasService {
     return this.http.get<PaginaFactura>(this.BASE, { params, headers: this.headers() });
   }
 
+  descargarXml(uuid: string): Observable<Blob> {
+    const params = new HttpParams().set('uuid', uuid.trim());
+    return this.http.get(`${API_BASE}/facturacion/factura/xml`,
+      { params, headers: this.headers(), responseType: 'blob' });
+  }
+
+  descargarPdf(uuid: string): Observable<Blob> {
+    const params = new HttpParams().set('uuid', uuid.trim());
+    return this.http.get(`${API_BASE}/facturacion/factura/pdf`,
+      { params, headers: this.headers(), responseType: 'blob' });
+  }
+
   private headers(): HttpHeaders {
     const session = this.auth.getSession<{ token?: string; tokenType?: string }>();
     const token = session?.token?.trim();

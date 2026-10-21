@@ -5,3 +5,19 @@
   font-size: 13px;
   color: var(--text-secondary);
 }
+
+.descargas {
+  margin-top: var(--ui-space-3);
+}
+
+.descargas .ui-btn {
+  flex: 1 1 190px;
+}
+
+.descargas-help {
+  margin: 0;
+}
+
+.descargas-error {
+  margin-top: var(--ui-space-3);
+}
