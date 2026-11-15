@@ -1,0 +1,192 @@
+<div class="ui-backdrop" (click)="!enviando() && cerrar.emit()">
+  <div
+    #dialogo
+    class="ui-dialog contacto-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-contacto"
+    aria-describedby="descripcion-contacto"
+    (click)="$event.stopPropagation()"
+    (keydown)="onDialogKeydown($event)">
+
+    <div class="ui-dialog-head">
+      <div class="contacto-head">
+        <span class="contacto-icono" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" focusable="false">
+            <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div>
+          <h2 id="titulo-contacto">Contáctanos</h2>
+          <p class="contacto-sub" id="descripcion-contacto">
+            Cuéntanos tu motivo de contacto y te daremos seguimiento por correo.
+          </p>
+        </div>
+      </div>
+      <button type="button" class="ui-close" (click)="cerrar.emit()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ui-dialog-body">
+      @if (mensajeExito()) {
+        <div class="ui-alert ui-alert--success" role="status" aria-live="polite">
+          <span class="ui-alert-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M20 6 9 17l-5-5"/>
+            </svg>
+          </span>
+          <div>
+            <strong>Solicitud registrada</strong>
+            <p>{{ mensajeExito() }}</p>
+          </div>
+        </div>
+      } @else {
+        <div class="ui-field">
+          <label for="contacto-motivo">Motivo</label>
+          <select
+            #primerCampo
+            id="contacto-motivo"
+            name="contacto-motivo"
+            class="ui-input"
+            [ngModel]="motivo()"
+            (ngModelChange)="cambiarMotivo($event)">
+            <option value="DUDA">Duda</option>
+            <option value="ACLARACION">Aclaración factura</option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label for="contacto-nombre">Nombre</label>
+          <input
+            id="contacto-nombre"
+            name="contacto-nombre"
+            type="text"
+            class="ui-input"
+            placeholder="Nombre y apellidos"
+            autocomplete="name"
+            required
+            [attr.aria-invalid]="intento() && nombreInvalido()"
+            [class.is-invalid]="intento() && nombreInvalido()"
+            [ngModel]="nombre()"
+            (ngModelChange)="nombre.set($event)" />
+          @if (intento() && nombreInvalido()) {
+            <p class="ui-error">Captura tu nombre completo.</p>
+          }
+        </div>
+
+        @if (esAclaracion()) {
+          <div class="contacto-grid">
+            <div class="ui-field">
+              <label for="contacto-fecha">Fecha de la compra</label>
+              <input
+                id="contacto-fecha"
+                name="contacto-fecha"
+                type="date"
+                class="ui-input"
+                required
+                [attr.aria-invalid]="intento() && !fecha()"
+                [class.is-invalid]="intento() && !fecha()"
+                [ngModel]="fecha()"
+                (ngModelChange)="fecha.set($event)" />
+              @if (intento() && !fecha()) {
+                <p class="ui-error">Captura la fecha.</p>
+              }
+            </div>
+            <div class="ui-field">
+              <label for="contacto-hora">Hora de la compra</label>
+              <input
+                id="contacto-hora"
+                name="contacto-hora"
+                type="time"
+                class="ui-input"
+                required
+                [attr.aria-invalid]="intento() && !hora()"
+                [class.is-invalid]="intento() && !hora()"
+                [ngModel]="hora()"
+                (ngModelChange)="hora.set($event)" />
+              @if (intento() && !hora()) {
+                <p class="ui-error">Captura la hora.</p>
+              }
+            </div>
+            <div class="ui-field">
+              <label for="contacto-total">Total del ticket</label>
+              <input
+                id="contacto-total"
+                name="contacto-total"
+                type="number"
+                class="ui-input"
+                min="0.01"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="0.00"
+                required
+                [attr.aria-invalid]="intento() && totalInvalido()"
+                [class.is-invalid]="intento() && totalInvalido()"
+                [ngModel]="total()"
+                (ngModelChange)="total.set($event)" />
+              @if (intento() && totalInvalido()) {
+                <p class="ui-error">Captura el total del ticket.</p>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="ui-field">
+          <label for="contacto-descripcion">
+            {{ esAclaracion() ? 'Descripción de la aclaración' : 'Descripción de tu duda' }}
+          </label>
+          <textarea
+            id="contacto-descripcion"
+            name="contacto-descripcion"
+            class="ui-input contacto-textarea"
+            rows="4"
+            [placeholder]="esAclaracion() ? 'Ej. Cobro duplicado en el ticket…' : 'Escribe tu duda con el mayor detalle posible…'"
+            required
+            [attr.aria-invalid]="intento() && descripcionInvalida()"
+            [class.is-invalid]="intento() && descripcionInvalida()"
+            [ngModel]="descripcion()"
+            (ngModelChange)="descripcion.set($event)"></textarea>
+          @if (intento() && descripcionInvalida()) {
+            <p class="ui-error">Describe tu {{ esAclaracion() ? 'aclaración' : 'duda' }} con al menos 10 caracteres.</p>
+          }
+        </div>
+
+        @if (errorEnvio()) {
+          <div class="ui-alert ui-alert--danger" role="alert">
+            <span class="ui-alert-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7.5v5.5M12 16.5h.01"/>
+              </svg>
+            </span>
+            <div>
+              <strong>No se pudo enviar</strong>
+              <p>{{ errorEnvio() }}</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <div class="ui-dialog-foot contacto-foot">
+      <button
+        type="button"
+        class="ui-btn ui-btn--ghost"
+        (click)="cerrar.emit()"
+        [disabled]="enviando()">Cerrar</button>
+      @if (!mensajeExito()) {
+        <button
+          type="button"
+          class="ui-btn ui-btn--primary"
+          (click)="enviar()"
+          [disabled]="enviando()">
+          {{ enviando() ? 'Enviando…' : 'Enviar solicitud' }}
+        </button>
+      }
+    </div>
+  </div>
+</div>
