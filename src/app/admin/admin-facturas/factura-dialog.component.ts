@@ -14,14 +14,16 @@ import {
 } from '@angular/core';
 
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { FacturaItem, FacturasService } from '../facturas.service';
+import { FacturacionService } from '../../facturacion/facturacion.service';
 
 type TipoComprobante = 'xml' | 'pdf';
 
 @Component({
     selector: 'app-factura-dialog',
-    imports: [],
+    imports: [FormsModule],
     templateUrl: './factura-dialog.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./factura-dialog.component.css']
@@ -33,6 +35,10 @@ export class FacturaDialogComponent implements OnInit, AfterViewInit, OnDestroy 
   private previousOverflow = '';
 
   private readonly facturas = inject(FacturasService);
+  private readonly facturacion = inject(FacturacionService);
+  correoReenvio = '';
+  reenviando = false;
+  mensajeReenvio = '';
 
   descargando = false;
   tipoDescarga: TipoComprobante | null = null;
@@ -92,6 +98,19 @@ export class FacturaDialogComponent implements OnInit, AfterViewInit, OnDestroy 
 
   tieneComprobante(): boolean {
     return !!(this.factura?.uuid ?? '').trim();
+  }
+
+  reenviar(): void {
+    const correo = this.correoReenvio.trim();
+    if (!correo) return;
+    const ticket = (this.factura?.tickets?.[0]?.numeroTicket ?? this.factura?.noTicket ?? '').trim();
+    if (!ticket) return;
+    this.reenviando = true;
+    this.mensajeReenvio = '';
+    this.facturacion.reenviarFactura(correo, ticket).subscribe({
+      next: () => { this.reenviando = false; this.mensajeReenvio = 'Factura reenviada.'; },
+      error: () => { this.reenviando = false; this.mensajeReenvio = 'No se pudo reenviar.'; },
+    });
   }
 
   descargar(tipo: TipoComprobante): void {

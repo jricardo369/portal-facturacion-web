@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HeaderComponent } from '../layout/header/header.component';
 import { FooterComponent } from '../layout/footer/footer.component';
 import { DatosFacturaStore } from '../facturacion/datos-factura.store';
@@ -9,7 +9,7 @@ import { DatosFacturaResponse, FacturacionService } from '../facturacion/factura
 
 @Component({
     selector: 'app-factura',
-    imports: [FormsModule, HeaderComponent, FooterComponent],
+    imports: [FormsModule, RouterLink, HeaderComponent, FooterComponent],
     templateUrl: './factura.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./factura.component.css']
@@ -22,14 +22,21 @@ export class FacturaComponent implements OnInit {
   esConsulta = false;
   correoEnviado = '';
   intento = false;
+  desdeAdmin = false;
   datos: DatosFacturaResponse | null = null;
 
   private uuid = '';
   private descargando = false;
 
-  constructor(private router: Router, private store: DatosFacturaStore, private facturacion: FacturacionService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private store: DatosFacturaStore,
+    private facturacion: FacturacionService
+  ) {}
 
   ngOnInit(): void {
+    this.desdeAdmin = this.route.snapshot.queryParamMap.get('admin') === '1';
     const state = history.state as { datos?: DatosFacturaResponse; correo?: string; mensajeExito?: string; origen?: string } | undefined;
     const datos = state?.datos ?? this.store.obtener() ?? null;
     this.datos = datos;
@@ -65,6 +72,37 @@ export class FacturaComponent implements OnInit {
 
   get impuestos(): number | null {
     return this.datos?.impuestos ?? null;
+  }
+
+  get tipoPersona(): 'moral' | 'fisica' | '' {
+    const longitud = this.rfc.length;
+    if (longitud === 12) return 'moral';
+    if (longitud === 13) return 'fisica';
+    return '';
+  }
+
+  private get factorTotal(): number {
+    return this.tipoPersona === 'fisica' ? 1.16 : 1.1475;
+  }
+
+  get subtotalCalculado(): number | null {
+    const total = this.total;
+    if (total !== null && total !== undefined) return this.redondear(total / this.factorTotal);
+    const subtotal = this.datos?.subtotal;
+    if (subtotal === null || subtotal === undefined) return null;
+    return this.redondear(subtotal);
+  }
+
+  get ivaCalculado(): number | null {
+    const subtotal = this.subtotalCalculado;
+    if (subtotal === null || !this.tipoPersona) return null;
+    return this.redondear(subtotal * 0.16);
+  }
+
+  get isrCalculado(): number | null {
+    const subtotal = this.subtotalCalculado;
+    if (subtotal === null || this.tipoPersona !== 'moral') return null;
+    return this.redondear(subtotal * 0.0125);
   }
 
   get total(): number | null {
@@ -106,6 +144,10 @@ export class FacturaComponent implements OnInit {
     if (valor === null || valor === undefined) return '—';
     if (valor === 0) return 'Sin impuestos';
     return this.formatoMoneda(valor);
+  }
+
+  private redondear(valor: number): number {
+    return Math.round(valor * 100) / 100;
   }
 
   enviarNuevamente(): void {
@@ -194,11 +236,12 @@ export class FacturaComponent implements OnInit {
 
   nuevaFactura(): void {
     this.store.limpiar();
-    void this.router.navigate(['/']);
+    const destino = this.desdeAdmin ? '/facturar' : '/';
+    void this.router.navigate([destino], { queryParams: this.desdeAdmin ? { admin: 1 } : {} });
   }
 
   irAFacturar(): void {
     this.store.limpiar();
-    void this.router.navigate(['/facturar']);
+    void this.router.navigate(['/facturar'], { queryParams: this.desdeAdmin ? { admin: 1 } : {} });
   }
 }

@@ -100,7 +100,7 @@
               <td data-label="Fecha">{{ formatearFecha(f.fecha) }}</td>
               <td data-label="Cliente">{{ cliente(f) }}</td>
               <td data-label="RFC">{{ f.rfc }}</td>
-              <td data-label="Ticket">{{ f.noTicket }}</td>
+              <td data-label="Ticket">{{ (f.tickets?.length ? f.tickets.map(t => t.numeroTicket).join(', ') : f.noTicket) }}</td>
               <td class="ui-cell-num" data-label="Total">{{ f.total | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
               <td data-label="Estado">
                 <span class="ui-badge"

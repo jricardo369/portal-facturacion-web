@@ -1,5 +1,41 @@
 :host { display: block; }
 
+.heroe {
+  width: 100%;
+  background: #FAF6EF;
+  color: var(--ui-ink);
+  padding: 24px var(--ui-space-7, 28px);
+}
+
+.heroe-inner {
+  max-width: 1230px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.heroe-titulo-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.heroe-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.heroe-logo:hover {
+  transform: scale(1.05);
+}
+
+.heroe .ui-heading { flex: 1 1 auto; }
+
 .factura-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
@@ -8,12 +44,123 @@
   margin-top: clamp(18px, 2.6vw, 24px);
 }
 
-.factura-resumen { display: grid; gap: 16px; padding: var(--ui-space-4) 18px; }
+.factura-resumen { display: grid; gap: 14px; padding: var(--ui-space-4) 18px; }
 .factura-resumen .ui-panel-title { margin: 0; }
 .factura-resumen .ui-alert { margin: 0; }
 
-.factura-dl { margin: 0; }
-.factura-dl dd { font-variant-numeric: tabular-nums; }
+.resumen-head { display: flex; align-items: center; gap: 12px; }
+.resumen-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ui-radius-md, 12px);
+  background: var(--ui-teal-soft);
+  color: var(--ui-teal);
+}
+.resumen-icon svg { width: 22px; height: 22px; }
+.resumen-ticket { margin: 2px 0 0; font-size: var(--ui-text-sm); color: var(--ui-muted); }
+
+.resumen-div { margin: 0; }
+
+.resumen-meta {
+  display: grid;
+  margin: 0;
+  padding: 4px 14px;
+  border: 1px solid var(--ui-border-soft);
+  border-radius: var(--ui-radius-md, 12px);
+  background: var(--ui-surface-muted);
+}
+.resumen-meta > div {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--ui-border-soft);
+}
+.resumen-meta > div:last-child { border-bottom: 0; }
+.resumen-meta dt {
+  font-size: var(--ui-text-xs);
+  font-weight: 800;
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+  color: var(--ui-muted);
+}
+.resumen-meta dd {
+  margin: 2px 0 0;
+  font-size: var(--ui-text-sm);
+  font-weight: 700;
+  text-align: left;
+  color: var(--ui-ink);
+  overflow-wrap: anywhere;
+}
+
+.resumen-importes { margin: 0; }
+.resumen-importes > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--ui-border-soft);
+}
+.resumen-importes > div:last-child { border-bottom: 0; }
+.resumen-importes dt {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: var(--ui-text-sm);
+  font-weight: 600;
+  color: var(--ui-muted);
+}
+.resumen-importes dt small {
+  flex-basis: 100%;
+  font-size: var(--ui-text-2xs, 10.5px);
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--ui-muted);
+}
+.resumen-tasa {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-teal-soft);
+  color: var(--ui-teal);
+  font-size: var(--ui-text-2xs, 10.5px);
+  font-weight: 800;
+}
+.resumen-importes dd {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--ui-ink);
+}
+.resumen-importes .is-retenido dd { color: var(--ui-red-ink); }
+
+.resumen-importes > .resumen-total {
+  margin-top: 4px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: var(--ui-radius-md, 12px);
+  background: var(--ui-red-soft);
+}
+.resumen-total dt {
+  font-size: var(--ui-text-xs);
+  font-weight: 800;
+  letter-spacing: var(--ui-tracking-caps);
+  text-transform: uppercase;
+  color: var(--ui-red-ink);
+}
+.resumen-total dd {
+  font-family: var(--ui-font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ui-red-ink);
+}
+
+.resumen-nota { margin: 0; font-size: var(--ui-text-xs); line-height: 1.5; color: var(--ui-muted); }
 
 .factura-columna { display: grid; gap: 18px; }
 
@@ -37,5 +184,10 @@
 }
 
 @media (max-width: 640px) {
+  .heroe { padding: 18px 16px; }
+  .heroe-inner { gap: 16px; }
+  .heroe-titulo-container { align-items: flex-start; gap: 12px; }
+  .heroe-logo { width: 84px; height: 84px; }
+  .heroe .ui-heading { min-width: 0; }
   .factura-nueva .ui-btn { width: 100%; }
 }

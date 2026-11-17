@@ -1,5 +1,116 @@
 :host { display: contents; }
 
+.invoice-modal {
+  max-width: 780px;
+  width: 100%;
+}
+
+.invoice-top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--ui-border, #e2e8f0);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.brand-badge {
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo-img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.invoice-meta {
+  text-align: right;
+  font-size: 13px;
+  display: grid;
+  gap: 4px;
+}
+
+.meta-row span {
+  color: var(--text-secondary, #64748b);
+  margin-right: 6px;
+}
+
+.uuid-row {
+  font-size: 11px;
+}
+.mono {
+  font-family: monospace;
+}
+
+.invoice-parties {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+  background: var(--ui-surface-subtle, #f8fafc);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.party-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #64748b);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.party-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 2px;
+  color: var(--text-main, #0f172a);
+}
+
+.party-detail {
+  font-size: 13px;
+  margin: 0;
+  color: var(--text-secondary, #475569);
+}
+
+.invoice-totals-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
+.invoice-totals {
+  width: 260px;
+  display: grid;
+  gap: 6px;
+  background: var(--ui-surface-subtle, #f8fafc);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-secondary, #475569);
+}
+
+.grand-total {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  border-top: 1px solid var(--ui-border, #e2e8f0);
+  padding-top: 6px;
+  margin-top: 4px;
+}
+
 .dialog-sub {
   margin: 4px 0 0;
   font-size: 13px;
@@ -7,17 +118,25 @@
 }
 
 .descargas {
-  margin-top: var(--ui-space-3);
-}
-
-.descargas .ui-btn {
-  flex: 1 1 190px;
-}
-
-.descargas-help {
-  margin: 0;
+  margin-top: var(--ui-space-2);
 }
 
 .descargas-error {
-  margin-top: var(--ui-space-3);
+  margin-top: var(--ui-space-2);
+}
+
+.ui-detail-section {
+  margin-bottom: 16px;
+}
+
+.ui-cluster {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.ui-cluster .ui-input {
+  flex: 1;
+  min-width: 0;
 }

@@ -13,8 +13,11 @@ export class HeaderComponent {
   constructor(private router: Router) {}
 
   get showMenu(): boolean {
-    const url = this.router.url.split('?')[0].split('#')[0];
+    const sinHash = this.router.url.split('#')[0];
+    const [url, query = ''] = sinHash.split('?');
     if (url === '/admin' || url === '/admin/') return false;
-    return url.includes('admin') || url.includes('refacturar');
+    if (url.includes('admin') || url.includes('refacturar')) return true;
+    const rutasProceso = ['/facturar', '/datos-factura', '/factura'];
+    return rutasProceso.includes(url) && new URLSearchParams(query).get('admin') === '1';
   }
 }

@@ -1,9 +1,9 @@
 <div class="ui-backdrop" (click)="cerrar.emit()">
-  <div class="ui-dialog" role="dialog" aria-modal="true" aria-labelledby="titulo-factura" (click)="$event.stopPropagation()">
+  <div class="ui-dialog invoice-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-factura" (click)="$event.stopPropagation()">
     <div class="ui-dialog-head">
       <div>
         <h2 id="titulo-factura">Factura {{ factura?.folio || factura?.idFactura }}</h2>
-        <p class="dialog-sub">Detalle del comprobante</p>
+        <p class="dialog-sub">Comprobante Fiscal Digital</p>
       </div>
       <button #closeBtn type="button" class="ui-close" (click)="cerrar.emit()" aria-label="Cerrar detalle">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -12,112 +12,124 @@
       </button>
     </div>
 
-    <div class="ui-dialog-body">
-      <section class="ui-detail-section" aria-labelledby="sec-factura">
-        <h3 class="ui-section-title" id="sec-factura">Datos de la factura</h3>
-        <dl class="ui-dl">
-          <div><dt>Folio</dt><dd>{{ factura?.folio || '—' }}</dd></div>
-          <div><dt>Serie</dt><dd>{{ factura?.serie || '—' }}</dd></div>
-          <div class="is-wide is-mono"><dt>UUID</dt><dd>{{ factura?.uuid || '—' }}</dd></div>
-          <div><dt>Fecha</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.fecha)) }}</dd></div>
-          <div>
-            <dt>Estatus</dt>
-            <dd>
-              <span class="ui-badge"
-                    [class.ui-badge--danger]="esCancelada(factura)"
-                    [class.ui-badge--ok]="esCargada(factura)"
-                    [class.ui-badge--neutral]="estado(factura) === '—'">{{ estado(factura) }}</span>
-            </dd>
+    <div class="ui-dialog-body invoice-body">
+      <!-- Invoice Header Meta -->
+      <div class="invoice-top-header">
+        <div class="brand-badge">
+          <img src="assets/logo.png" alt="Oso Despierto" class="brand-logo-img" />
+        </div>
+        <div class="invoice-meta">
+          <div class="meta-row"><span>Folio:</span> <strong>{{ factura?.folio || '—' }}</strong></div>
+          <div class="meta-row"><span>Serie:</span> <strong>{{ factura?.serie || '—' }}</strong></div>
+          <div class="meta-row"><span>Fecha:</span> <strong>{{ formatearFecha(factura?.fecha) }}</strong></div>
+          <div class="meta-row uuid-row"><span>UUID:</span> <span class="mono">{{ factura?.uuid || '—' }}</span></div>
+          <div class="meta-row">
+            <span>Estatus:</span>
+            <span class="ui-badge"
+                  [class.ui-badge--danger]="esCancelada(factura)"
+                  [class.ui-badge--ok]="esCargada(factura)"
+                  [class.ui-badge--neutral]="estado(factura) === '—'">{{ estado(factura) }}</span>
           </div>
-        </dl>
-      </section>
+        </div>
+      </div>
 
-      <section class="ui-detail-section" aria-labelledby="sec-cliente">
-        <h3 class="ui-section-title" id="sec-cliente">Cliente</h3>
-        <dl class="ui-dl">
-          <div><dt>Cliente</dt><dd>{{ cliente(factura) }}</dd></div>
-          <div><dt>RFC</dt><dd>{{ factura?.rfc || '—' }}</dd></div>
-          <div><dt>No. ticket</dt><dd>{{ factura?.noTicket || '—' }}</dd></div>
-        </dl>
-      </section>
+      <!-- From / To Sections -->
+      <div class="invoice-parties">
+        <div class="party-box">
+          <span class="party-label">EMISOR</span>
+          <h4 class="party-name">Portal de Facturación</h4>
+          <p class="party-detail">Régimen Fiscal General</p>
+        </div>
+        <div class="party-box">
+          <span class="party-label">CLIENTE / RECEPTOR</span>
+          <h4 class="party-name">{{ cliente(factura) }}</h4>
+          <p class="party-detail">RFC: <strong>{{ factura?.rfc || '—' }}</strong></p>
+        </div>
+      </div>
 
-      <section class="ui-detail-section" aria-labelledby="sec-importes">
-        <h3 class="ui-section-title" id="sec-importes">Importes</h3>
-        <dl class="ui-dl">
-          <div><dt>Subtotal</dt><dd>{{ importe($safeNavigationMigration(factura?.subtotal)) }}</dd></div>
-          <div><dt>Impuesto</dt><dd>{{ importe($safeNavigationMigration(factura?.impuesto)) }}</dd></div>
-          <div class="is-total"><dt>Total</dt><dd>{{ importe($safeNavigationMigration(factura?.total)) }}</dd></div>
-        </dl>
-      </section>
-
-      <section class="ui-detail-section" aria-labelledby="sec-registro">
-        <h3 class="ui-section-title" id="sec-registro">Registro</h3>
-        <dl class="ui-dl">
-          <div><dt>Creado</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.createdAt)) }}</dd></div>
-          <div><dt>Actualizado</dt><dd>{{ formatearFecha($safeNavigationMigration(factura?.updatedAt)) }}</dd></div>
-        </dl>
-      </section>
-
-      <section class="ui-detail-section" aria-labelledby="sec-comprobante">
-        <h3 class="ui-section-title" id="sec-comprobante">Comprobante fiscal</h3>
-        <p class="ui-help descargas-help">
-          Descarga el XML o el PDF timbrado (CFDI) de esta factura.
-        </p>
-
-        <div class="ui-cluster descargas">
-          <button
-            type="button"
-            class="ui-btn ui-btn--outline"
-            (click)="descargar('xml')"
-            [disabled]="descargando || !tieneComprobante()">
-            @if (descargando && tipoDescarga === 'xml') {
-              <span class="ui-spinner" aria-hidden="true"></span>
-            } @else {
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="m10 12-2 2 2 2M14 12l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+      <!-- Tickets table as is -->
+      <section class="ui-detail-section" aria-labelledby="sec-tickets">
+        <h3 class="ui-section-title" id="sec-tickets">Tickets Asociados</h3>
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th>Ticket</th>
+              <th class="ui-cell-num">Subtotal</th>
+              <th class="ui-cell-num">IVA</th>
+              <th class="ui-cell-num">ISR</th>
+              <th class="ui-cell-num">Cedular</th>
+              <th class="ui-cell-num">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of factura?.tickets ?? []; track t.numeroTicket) {
+              <tr>
+                <td>{{ t.numeroTicket }}</td>
+                <td class="ui-cell-num">{{ importe(t.subtotal) }}</td>
+                <td class="ui-cell-num">{{ importe(t.iva) }}</td>
+                <td class="ui-cell-num">{{ importe(t.isr) }}</td>
+                <td class="ui-cell-num">{{ importe(t.cedular) }}</td>
+                <td class="ui-cell-num">{{ importe(t.total) }}</td>
+              </tr>
             }
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Totals summary at the end -->
+      <div class="invoice-totals-wrapper">
+        <div class="invoice-totals">
+          <div class="total-row">
+            <span>Subtotal</span>
+            <span>{{ importe(factura?.subtotal) }}</span>
+          </div>
+          <div class="total-row">
+            <span>IVA</span>
+            <span>{{ importe(factura?.iva ?? factura?.impuesto) }}</span>
+          </div>
+          @if (factura?.isr !== null && factura?.isr !== undefined && factura?.isr !== 0) {
+            <div class="total-row">
+              <span>ISR</span>
+              <span>— {{ importe(factura?.isr) }}</span>
+            </div>
+          }
+          @if (factura?.cedular !== null && factura?.cedular !== undefined && factura?.cedular !== 0) {
+            <div class="total-row">
+              <span>Impuesto Cedular</span>
+              <span>{{ importe(factura?.cedular) }}</span>
+            </div>
+          }
+          <div class="total-row grand-total">
+            <span>Total</span>
+            <span>{{ importe(factura?.total) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reenviar factura -->
+      <section class="ui-detail-section" aria-labelledby="sec-reenvio">
+        <h3 class="ui-section-title" id="sec-reenvio">Reenviar factura por correo</h3>
+        <div class="ui-cluster">
+          <input class="ui-input" [(ngModel)]="correoReenvio" placeholder="correo@ejemplo.com" />
+          <button type="button" class="ui-btn ui-btn--primary" (click)="reenviar()" [disabled]="reenviando">{{ reenviando ? 'Enviando…' : 'Reenviar' }}</button>
+        </div>
+        @if (mensajeReenvio) { <p class="ui-help">{{ mensajeReenvio }}</p> }
+      </section>
+
+      <!-- Comprobante / descargas -->
+      <section class="ui-detail-section" aria-labelledby="sec-comprobante">
+        <h3 class="ui-section-title" id="sec-comprobante">Comprobante Fiscal</h3>
+        <div class="ui-cluster descargas">
+          <button type="button" class="ui-btn ui-btn--outline" (click)="descargar('xml')" [disabled]="descargando || !tieneComprobante()">
             {{ descargando && tipoDescarga === 'xml' ? 'Descargando…' : 'Descargar XML' }}
           </button>
-
-          <button
-            type="button"
-            class="ui-btn ui-btn--primary"
-            (click)="descargar('pdf')"
-            [disabled]="descargando || !tieneComprobante()">
-            @if (descargando && tipoDescarga === 'pdf') {
-              <span class="ui-spinner" aria-hidden="true"></span>
-            } @else {
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 11v6M9.5 14.5 12 17l2.5-2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            }
+          <button type="button" class="ui-btn ui-btn--primary" (click)="descargar('pdf')" [disabled]="descargando || !tieneComprobante()">
             {{ descargando && tipoDescarga === 'pdf' ? 'Descargando…' : 'Descargar PDF' }}
           </button>
         </div>
-
-        @if (!tieneComprobante()) {
-          <p class="ui-help descargas-help">
-            Esta factura no tiene UUID timbrado, por lo que no hay comprobante para descargar.
-          </p>
-        }
-
         @if (errorDescarga) {
           <div class="ui-alert ui-alert--danger descargas-error" role="alert">
-            <span class="ui-alert-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M12 7.5v5.5M12 16.5h.01"/>
-              </svg>
-            </span>
-            <div>
-              <strong>No se pudo descargar</strong>
-              <p>{{ errorDescarga }}</p>
-            </div>
+            <div><strong>Error</strong><p>{{ errorDescarga }}</p></div>
           </div>
         }
       </section>

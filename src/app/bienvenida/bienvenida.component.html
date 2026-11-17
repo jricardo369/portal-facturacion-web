@@ -1,10 +1,13 @@
-<app-header></app-header>
-
-<main id="contenido" class="pagina">
-  <section class="heroe" aria-labelledby="titulo-bienvenida">
+<section class="heroe" aria-labelledby="titulo-bienvenida">
+  <div class="heroe-inner">
     <div class="heroe-copia">
-      <p class="sobretitulo">oso despierto · Facturación en línea</p>
-      <h1 id="titulo-bienvenida">Factura tus compras de oso despierto</h1>
+      <div class="heroe-titulo-container">
+        <img src="assets/logoSinFondo.png" alt="Oso Despierto" class="heroe-logo" width="52" height="52" />
+        <div class="heroe-text-group">
+          <span class="ui-eyebrow">Facturación en línea</span>
+          <h1 id="titulo-bienvenida">Factura tus compras de Oso Despierto</h1>
+        </div>
+      </div>
       <p class="subtitulo">
         Solicita tu factura con los datos de tu ticket. El proceso es sencillo y puedes hacerlo en cualquier momento.
       </p>
@@ -23,8 +26,10 @@
         <img src="assets/img1.jpg" width="1448" height="2048" alt="Figura de oso con lentes frente a letrero de neón coffee" fetchpriority="high" />
       </figure>
     </div>
-  </section>
+  </div>
+</section>
 
+<main id="contenido" class="pagina">
   <section class="pasos" aria-labelledby="titulo-pasos">
     <div class="seccion-head">
       <p class="ui-eyebrow">Así de fácil</p>
@@ -33,21 +38,37 @@
     </div>
     <ol class="ui-steps pasos-lista">
       <li class="ui-step">
-        <span class="ui-step-num" aria-hidden="true">1</span>
+        <span class="ui-step-num" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V7z"/>
+            <path d="M9 12h6"/>
+          </svg>
+        </span>
         <div>
           <p class="ui-step-title">Ten tu ticket a la mano</p>
           <p class="ui-step-text">Localiza el número de ticket que aparece en tu compra.</p>
         </div>
       </li>
       <li class="ui-step">
-        <span class="ui-step-num" aria-hidden="true">2</span>
+        <span class="ui-step-num" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </span>
         <div>
           <p class="ui-step-title">Captura tus datos</p>
           <p class="ui-step-text">Ingresa tu RFC y régimen fiscal tal como están registrados en el SAT.</p>
         </div>
       </li>
       <li class="ui-step">
-        <span class="ui-step-num" aria-hidden="true">3</span>
+        <span class="ui-step-num" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </span>
         <div>
           <p class="ui-step-title">Descarga tu factura</p>
           <p class="ui-step-text">Recibe tu PDF y XML en pantalla y por correo electrónico.</p>
@@ -123,18 +144,21 @@
         </a>
       </li>
       <li>
-        <a class="red-social" href="https://wa.me/5215500000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de oso despierto">
+        <button type="button" class="red-social" (click)="contactoAbierto = true" aria-label="Contacto para duda o aclaración">
           <span class="red-icono" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
-              <path d="M20 11.6a8 8 0 0 1-11.7 7.1L4 20l1.3-4.2A8 8 0 1 1 20 11.6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-              <path d="M9.1 8.5c.3-.2.7-.1.9.2l.5.8c.1.2.1.4 0 .6l-.3.4c.5.9 1.2 1.6 2.1 2.1l.4-.3c.2-.1.4-.1.6 0l.8.5c.3.2.4.6.2.9-.3.5-.9.8-1.5.7-2.2-.4-3.9-2-4.3-4.2-.1-.6.2-1.2.7-1.5z" fill="currentColor"/>
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
             </svg>
           </span>
-          <span class="red-texto"><strong>WhatsApp</strong><small>Escríbenos</small></span>
-        </a>
+          <span class="red-texto"><strong>Contacto</strong><small>Duda o aclaración</small></span>
+        </button>
       </li>
     </ul>
   </section>
 </main>
+
+@if (contactoAbierto) {
+  <app-contacto-dialog (cerrar)="contactoAbierto = false"></app-contacto-dialog>
+}
 
 <app-footer></app-footer>

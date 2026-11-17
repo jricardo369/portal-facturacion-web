@@ -13,8 +13,12 @@ export interface FacturaItem {
   rfc?: string | null;
   razonSocial?: string | null;
   noTicket?: string | null;
+  tickets?: { numeroTicket?: string | null; subtotal?: number | null; iva?: number | null; isr?: number | null; cedular?: number | null; total?: number | null }[] | null;
   subtotal?: number | null;
   impuesto?: number | null;
+  iva?: number | null;
+  isr?: number | null;
+  cedular?: number | null;
   total?: number | null;
   estatus?: string | null;
   uuid?: string | null;

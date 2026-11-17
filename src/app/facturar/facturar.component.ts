@@ -36,6 +36,7 @@ export class FacturarComponent implements OnInit {
   dialogoEnvioAbierto = false;
   ayudaTicketVisible = false;
   intento = false;
+  desdeAdmin = false;
 
   @ViewChild('formFacturar') formFacturar?: ElementRef<HTMLFormElement>;
   @ViewChild('formConsulta') formConsulta?: ElementRef<HTMLFormElement>;
@@ -51,6 +52,7 @@ export class FacturarComponent implements OnInit {
   ngOnInit(): void {
     const tab = this.route.snapshot.data['tab'] as Pestana | undefined;
     if (tab) this.pestana = tab;
+    this.desdeAdmin = this.route.snapshot.queryParamMap.get('admin') === '1';
   }
 
   get hoy(): string {
@@ -123,7 +125,10 @@ export class FacturarComponent implements OnInit {
         this.cargando = false;
         const rfcCapturado = this.rfc.trim();
         this.store.guardar(datos, rfcCapturado);
-        void this.router.navigate(['/datos-factura'], { state: { datos, rfcCapturado } });
+        void this.router.navigate(['/datos-factura'], {
+          state: { datos, rfcCapturado },
+          queryParams: this.desdeAdmin ? { admin: 1 } : {},
+        });
       },
       error: (e: HttpErrorResponse) => {
         this.cargando = false;

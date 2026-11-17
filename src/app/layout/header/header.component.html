@@ -24,6 +24,13 @@
           </svg>
           <span>Clientes</span>
         </a>
+        <a routerLink="/facturar" [queryParams]="{ admin: 1 }" routerLinkActive="activa" aria-label="Facturar">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 3h9l4 4v14l-2-1.4L15 21l-3-1.4L9 21l-3-1.4V3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>Facturar</span>
+        </a>
         <a routerLink="/refacturar" routerLinkActive="activa" aria-label="Refacturar">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M4 12a8 8 0 0 1 14.5-4.6M20 12a8 8 0 0 1-14.5 4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>

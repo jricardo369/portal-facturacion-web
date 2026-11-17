@@ -39,6 +39,9 @@ export interface DatosFacturaResponse {
   total?: number | null;
   subtotal?: number | null;
   impuestos?: number | null;
+  iva?: number | null;
+  isr?: number | null;
+  cedular?: number | null;
   tipoVenta?: string | null;
   fechaEmision?: string | null;
   fechaCierre?: string | null;
@@ -48,6 +51,7 @@ export interface DatosFacturaResponse {
   pagos?: TicketPago[] | null;
   tipoPago?: string | null;
   cliente?: ClienteDatos | null;
+  tickets?: DatosFacturaResponse[] | null;
 }
 
 export type DatosFacturaPayload = DatosFacturaResponse;
@@ -63,6 +67,9 @@ export interface FacturaResponse {
   noTicket?: string | null;
   subtotal?: number | null;
   impuesto?: number | null;
+  iva?: number | null;
+  isr?: number | null;
+  cedular?: number | null;
   total?: number | null;
   estatus?: string | null;
   uuid?: string | null;
@@ -70,6 +77,7 @@ export interface FacturaResponse {
   cancellationStatus?: string | null;
   createdAt?: string | null;
   updatedAt?: string | null;
+  tickets?: { numeroTicket?: string | null; subtotal?: number | null; iva?: number | null; isr?: number | null; cedular?: number | null; total?: number | null }[] | null;
 }
 
 @Injectable({ providedIn: 'root' })

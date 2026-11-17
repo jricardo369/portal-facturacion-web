@@ -1,14 +1,23 @@
-<app-header></app-header>
+@if (desdeAdmin) {
+  <app-header></app-header>
+}
 
-<main id="contenido" class="ui-page">
-  <div class="ui-page-head">
-    <div class="ui-heading">
-      <span class="ui-eyebrow">Facturación en línea</span>
-      <h1 class="ui-title">Factura tu compra</h1>
-      <p class="ui-subtitle">
-        Genera tu factura o reenvíala a tu correo en unos segundos. Ten a la mano
-        tu ticket de compra para capturar los datos.
-      </p>
+<section class="heroe" aria-labelledby="titulo-facturar">
+  <div class="heroe-inner">
+    <div class="heroe-copia">
+      <div class="heroe-titulo-container">
+        <a routerLink="/" aria-label="Ir a inicio">
+          <img src="assets/logoSinFondo.png" alt="Oso Despierto" class="heroe-logo" width="100" height="100" />
+        </a>
+        <div class="heroe-text-group">
+          <span class="ui-eyebrow">Paso 1 de 3 · Busca tu factura</span>
+          <h1 id="titulo-datos" class="ui-title">Ubica tu ticket para facturar</h1>
+          <p class="subtitulo">
+            Genera tu factura o reenvía a tu correo en unos segundos. Ten a la mano
+            tu ticket de compra para capturar los datos.
+          </p>
+        </div>
+      </div>
     </div>
     <div class="ui-head-actions">
       <a class="ui-btn ui-btn--ghost ui-btn--sm" routerLink="/aviso-privacidad">
@@ -20,6 +29,9 @@
       </a>
     </div>
   </div>
+</section>
+
+<main id="contenido" class="ui-page">
 
   <section class="ui-alert ui-alert--warning aviso" aria-labelledby="titulo-importante">
     <span class="ui-alert-icon" aria-hidden="true">
@@ -33,10 +45,7 @@
       <p>
         Estimado Cliente/Socio: conforme a las disposiciones fiscales mexicanas
         respecto a la emisión de Comprobantes Fiscales (Facturas), no es posible
-        emitir Comprobantes Fiscales (Facturas) por la compra de Tarjetas de Regalo;
-        dicho comprobante se generará y se podrá solicitar al momento de hacer
-        efectiva la Tarjeta de Regalo (cuando se realice la compra de la mercancía
-        con dicha tarjeta).
+        emitir Comprobantes Fiscales (Facturas) por la compra de Tarjetas de Regalo. Solo se facturará compras realizadas en el mismo mes de su compra.
       </p>
     </div>
   </section>
@@ -62,7 +71,7 @@
         <path d="M3.5 6.5 12 12l8.5-5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         <rect x="3.5" y="5" width="17" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
       </svg>
-      Reenvía tu factura
+      Consulta o reenvía tu factura
     </button>
   </div>
 

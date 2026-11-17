@@ -1,14 +1,21 @@
-<app-header></app-header>
+@if (desdeAdmin) {
+  <app-header></app-header>
+}
 
-<main id="contenido" class="ui-page">
-  <div class="ui-page-head">
-    <div class="ui-heading">
-      <span class="ui-eyebrow">Paso 2 de 3 · Datos fiscales</span>
-      <h1 class="ui-title">Completa tus datos de facturación</h1>
-      <p class="ui-subtitle">
-        Captura los datos de tu constancia de situación fiscal. Los revisaremos
-        contigo antes de generar tu CFDI.
-      </p>
+<section class="heroe" aria-labelledby="titulo-datos">
+  <div class="heroe-inner">
+    <div class="heroe-titulo-container">
+      <a routerLink="/" aria-label="Ir a inicio">
+        <img src="assets/logoSinFondo.png" alt="Oso Despierto" class="heroe-logo" width="100" height="100" />
+      </a>
+      <div class="ui-heading">
+        <span class="ui-eyebrow">Paso 2 de 3 · Datos fiscales</span>
+        <h1 id="titulo-datos" class="ui-title">Completa tus datos de facturación</h1>
+        <p class="ui-subtitle">
+          Captura los datos de tu constancia de situación fiscal. Los revisaremos
+          contigo antes de generar tu CFDI.
+        </p>
+      </div>
     </div>
     <div class="ui-head-actions">
       <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" (click)="volver()">
@@ -19,7 +26,9 @@
       </button>
     </div>
   </div>
+</section>
 
+<main id="contenido" class="ui-page">
   <section class="ui-steps" aria-label="Progreso de facturación">
     <article class="ui-step is-done">
       <span class="ui-step-num" aria-hidden="true">1</span>
@@ -203,9 +212,45 @@
           </svg>
         </button>
       </div>
+
+      @if (desdeAdmin) {
+        <fieldset class="grupo tickets-adicionales">
+          <legend>Tickets adicionales <span class="opcional">solo administrador</span></legend>
+          <p class="grupo-sub">Agrega más tickets a la misma factura. Solo los administradores pueden facturar múltiples tickets.</p>
+          @if (tickets.length) {
+            <ul class="tickets-lista">
+              @for (t of tickets; track t.numeroTicket) {
+                <li class="tickets-lista-item">
+                  <span>Ticket {{ t.numeroTicket }}</span>
+                  <span>Total {{ formatoMoneda(t.total) }} · IVA {{ formatoMoneda(ivaDeTicket(t)) }} · ISR {{ formatoMoneda(isrDeTicket(t)) }}</span>
+                </li>
+              }
+            </ul>
+          }
+          <div class="campos">
+            <div class="ui-field">
+              <label for="ticket-numero">Número de ticket</label>
+              <input id="ticket-numero" name="ticket-numero" class="ui-input" [(ngModel)]="ticketParaAgregar.numeroTicket" [disabled]="cargando" />
+            </div>
+            <div class="ui-field">
+              <label for="ticket-fecha">Fecha</label>
+              <input id="ticket-fecha" name="ticket-fecha" class="ui-input" type="date" [(ngModel)]="ticketParaAgregar.fecha" [disabled]="cargando" />
+            </div>
+            <div class="ui-field">
+              <label for="ticket-total">Total</label>
+              <input id="ticket-total" name="ticket-total" class="ui-input" type="number" step="0.01" [(ngModel)]="ticketParaAgregar.total" [disabled]="cargando" />
+            </div>
+            <div class="ui-field ui-field--full">
+              <button type="button" class="ui-btn ui-btn--soft" (click)="buscarYAgregarTicket()" [disabled]="cargando">
+                Buscar y agregar ticket
+              </button>
+            </div>
+          </div>
+        </fieldset>
+      }
     </form>
 
-    <aside class="resumen-aside" aria-label="Resumen de compra">
+    <aside class="resumen-aside" aria-label="Resumen de factura">
       <div class="ui-card resumen">
         <div class="resumen-head">
           <span class="resumen-icon" aria-hidden="true">
@@ -215,18 +260,54 @@
             </svg>
           </span>
           <div>
-            <p class="ui-panel-title">Resumen de compra</p>
+            <p class="ui-panel-title">Resumen de factura</p>
             <p class="resumen-ticket">Ticket {{ numeroTicket || '—' }}</p>
           </div>
         </div>
-        <hr class="ui-divider resumen-div" />
-        <dl class="ui-dl resumen-dl">
-          <div><dt>Tipo de pago</dt><dd>{{ tipoPago?.trim() ? tipoPago : 'N/A' }}</dd></div>
-          <div><dt>Subtotal</dt><dd>{{ formatoMoneda(subtotal) }}</dd></div>
-          <div><dt>Impuestos</dt><dd>{{ formatoImpuestos(impuestos) }}</dd></div>
-          <div class="is-total is-wide"><dt>Total</dt><dd>{{ formatoMoneda(total) }}</dd></div>
+
+        <dl class="resumen-meta">
+          <div>
+            <dt>RFC</dt>
+            <dd>{{ rfc.trim() || 'Pendiente' }}</dd>
+          </div>
+          <div>
+            <dt>Fecha de ticket</dt>
+            <dd>{{ fechaTicket || '—' }}</dd>
+          </div>
         </dl>
-        <p class="resumen-nota">Con los datos correctos, el CFDI se timbra y se envía a tu correo.</p>
+
+        <hr class="ui-divider resumen-div" />
+
+        <dl class="resumen-importes" aria-label="Desglose de importes">
+          <div>
+            <dt>Subtotal</dt>
+            <dd>{{ formatoMoneda(subtotalFactura) || '—' }}</dd>
+          </div>
+          @if (tipoPersona) {
+            <div>
+              <dt>
+                IVA <span class="resumen-tasa">16%</span>
+                <small>Impuesto trasladado</small>
+              </dt>
+              <dd>{{ formatoMoneda(ivaFactura) || '—' }}</dd>
+            </div>
+          }
+          @if (tipoPersona === 'moral') {
+            <div class="is-retenido">
+              <dt>
+                ISR <span class="resumen-tasa">1.25%</span>
+                <small>Impuesto retenido</small>
+              </dt>
+                <dd>{{ isrFactura === null ? '—' : '− ' + formatoMoneda(isrFactura) }}</dd>
+            </div>
+          }
+          <div class="resumen-total">
+            <dt>Total</dt>
+            <dd>{{ formatoMoneda(totalFactura) || '—' }}</dd>
+          </div>
+        </dl>
+
+        <p class="resumen-nota">El IVA se traslada y, en persona moral, el ISR se retiene; tu CFDI se timbra con estos importes.</p>
       </div>
     </aside>
   </div>
@@ -245,8 +326,9 @@
     <div class="ui-dialog ui-dialog--lg" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar" (click)="$event.stopPropagation()">
       <div class="ui-dialog-head">
         <div>
-          <h2 id="titulo-confirmar">Confirma tus datos</h2>
-          <p class="confirmar-sub">Revisa la información antes de generar tu factura.</p>
+          <span class="ui-eyebrow">Paso 3 de 3 · Revisión</span>
+          <h2 id="titulo-confirmar">Confirma tu factura</h2>
+          <p class="confirmar-sub">Este es el resumen de lo que se va a timbrar.</p>
         </div>
         <button type="button" class="ui-close" #closeConfirm (click)="cancelarConfirmacion()" aria-label="Cerrar confirmación">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -255,14 +337,122 @@
         </button>
       </div>
       <div class="ui-dialog-body">
-        <dl class="confirmar-lista">
-          @for (d of resumenDatos; track d) {
-            <div class="confirmar-item">
-              <dt>{{ d.label }}</dt>
-              <dd>{{ d.valor || 'N/A' }}</dd>
+        <article class="resumen-cfdi" aria-label="Resumen de la factura">
+          <header class="resumen-cfdi__head">
+            <div class="resumen-cfdi__marca">
+              <span class="resumen-cfdi__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M6 3h9l4 4v14l-2-1.4L15 21l-3-1.4L9 21l-3-1.4V3Z"/>
+                  <path d="M9 8h6M9 12h6M9 16h3"/>
+                </svg>
+              </span>
+              <div>
+                <p class="resumen-cfdi__eyebrow">Comprobante fiscal digital</p>
+                <p class="resumen-cfdi__ticket">Ticket {{ numeroTicket || '—' }}</p>
+              </div>
             </div>
-          }
-        </dl>
+            <div class="resumen-cfdi__fecha">
+              <span>Fecha de emisión</span>
+              <strong>{{ fechaTicket || '—' }}</strong>
+            </div>
+          </header>
+
+          <div class="resumen-cfdi__grid">
+            <div class="resumen-cfdi__principal">
+              <section class="resumen-cfdi__bloque" aria-labelledby="cfdi-cliente">
+                <h3 id="cfdi-cliente" class="resumen-cfdi__label">Facturar a</h3>
+                <p class="resumen-cfdi__nombre">{{ razonSocial.trim() || '—' }}</p>
+                <p class="resumen-cfdi__rfc">{{ rfc.trim() || '—' }}</p>
+                @if (domicilioTexto) {
+                  <p class="resumen-cfdi__detalle">{{ domicilioTexto }}</p>
+                } @else {
+                  <p class="resumen-cfdi__detalle">Domicilio fiscal no capturado.</p>
+                }
+                @if (correo.trim()) {
+                  <p class="resumen-cfdi__detalle">{{ correo.trim() }}</p>
+                }
+              </section>
+
+              <section class="resumen-cfdi__bloque" aria-labelledby="cfdi-datos">
+                <h3 id="cfdi-datos" class="resumen-cfdi__label">Datos fiscales</h3>
+                <dl class="resumen-cfdi__datos">
+                  <div class="resumen-cfdi__dato">
+                    <dt>Régimen fiscal</dt>
+                    <dd>{{ regimenFiscalTexto || '—' }}</dd>
+                  </div>
+                  <div class="resumen-cfdi__dato">
+                    <dt>Uso del CFDI</dt>
+                    <dd>{{ usoFacturaTexto || '—' }}</dd>
+                  </div>
+                  <div class="resumen-cfdi__dato">
+                    <dt>Tipo de pago</dt>
+                    <dd>{{ tipoPago || 'No especificado' }}</dd>
+                  </div>
+                  <div class="resumen-cfdi__dato">
+                    <dt>Persona</dt>
+                    <dd>{{ tipoPersona === 'moral' ? 'Moral' : tipoPersona === 'fisica' ? 'Física' : '—' }}</dd>
+                  </div>
+                </dl>
+              </section>
+
+              <section class="resumen-cfdi__bloque" aria-labelledby="cfdi-concepto">
+                <h3 id="cfdi-concepto" class="resumen-cfdi__label">Concepto</h3>
+                <div class="resumen-cfdi__concepto">
+                  <div class="resumen-cfdi__tabla-head" aria-hidden="true">
+                    <span>Descripción</span>
+                    <span>Importe</span>
+                  </div>
+                  @for (c of conceptosTickets; track c.ticket.numeroTicket) {
+                    <div class="resumen-cfdi__tabla-row">
+                      <div>
+                        <strong>Consumo · Ticket {{ c.ticket.numeroTicket || '—' }}</strong>
+                        <span>{{ c.concepto }}</span>
+                      </div>
+                      <strong>{{ formatoMoneda(c.importe) || '—' }}</strong>
+                    </div>
+                  }
+                </div>
+              </section>
+            </div>
+
+            <aside class="resumen-cfdi__importes" aria-label="Importes de la factura">
+              <p class="resumen-cfdi__label">Importes</p>
+              <dl class="resumen-cfdi__totales">
+                <div>
+                  <dt>Subtotal</dt>
+                  <dd>{{ formatoMoneda(subtotalFactura) || '—' }}</dd>
+                </div>
+                @if (tipoPersona) {
+                  <div>
+                    <dt>
+                      IVA <span class="resumen-cfdi__tasa">16%</span>
+                      <small>Trasladado</small>
+                    </dt>
+                    <dd>{{ formatoMoneda(ivaFactura) || '—' }}</dd>
+                  </div>
+                }
+                @if (tipoPersona === 'moral') {
+                  <div class="is-retenido">
+                    <dt>
+                      ISR <span class="resumen-cfdi__tasa">1.25%</span>
+                      <small>Retenido</small>
+                    </dt>
+                    <dd>{{ isrFactura === null ? '—' : '− ' + formatoMoneda(isrFactura) }}</dd>
+                  </div>
+                }
+                <div class="resumen-cfdi__total">
+                  <dt>Total</dt>
+                  <dd>{{ formatoMoneda(totalFactura) || '—' }}</dd>
+                </div>
+              </dl>
+            </aside>
+          </div>
+
+          <p class="resumen-cfdi__nota">
+            Al confirmar, se generará y timbrará tu CFDI con estos importes. El IVA se traslada
+            y, en persona moral, el ISR se retiene.
+          </p>
+        </article>
       </div>
       <div class="ui-dialog-foot">
         <button type="button" class="ui-btn ui-btn--ghost" (click)="cancelarConfirmacion()">Cancelar</button>
