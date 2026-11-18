@@ -140,3 +140,5 @@
   flex: 1;
   min-width: 0;
 }
+
+.cancel-confirm-backdrop { z-index: 9999; }

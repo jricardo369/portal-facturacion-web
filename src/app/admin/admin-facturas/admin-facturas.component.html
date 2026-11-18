@@ -64,6 +64,9 @@
       <label for="f-hasta">Hasta</label>
       <input id="f-hasta" class="ui-input" type="date" [(ngModel)]="hasta" />
     </div>
+    <button type="button" class="ui-btn ui-btn--soft" (click)="busquedaAvanzada = !busquedaAvanzada">
+      {{ busquedaAvanzada ? 'Ocultar avanzada' : 'Busqueda avanzada' }}
+    </button>
     <button type="button" class="ui-btn ui-btn--dark" (click)="buscar()">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/>
@@ -73,6 +76,41 @@
     </button>
     <button type="button" class="ui-btn ui-btn--soft" (click)="limpiar()">Limpiar</button>
   </section>
+
+  @if (busquedaAvanzada) {
+    <section class="ui-filters" aria-label="Filtros avanzados">
+      <div class="ui-field">
+        <label for="f-cliente">Cliente</label>
+        <input id="f-cliente" class="ui-input" [(ngModel)]="clienteFiltro" placeholder="Nombre" />
+      </div>
+      <div class="ui-field">
+        <label for="f-rfc">RFC</label>
+        <input id="f-rfc" class="ui-input" [(ngModel)]="rfc" placeholder="RFC" />
+      </div>
+      <div class="ui-field">
+        <label for="f-estatus">Estatus</label>
+        <select id="f-estatus" class="ui-input" [(ngModel)]="estatus">
+          <option value="">Todos</option>
+          <option value="CARGADA">CARGADA</option>
+          <option value="CANCELADA">CANCELADA</option>
+        </select>
+      </div>
+      <div class="fila-avanzada">
+        <div class="ui-field">
+          <label for="f-uuid">UUID</label>
+          <input id="f-uuid" class="ui-input" [(ngModel)]="uuid" placeholder="UUID" />
+        </div>
+        <div class="ui-field">
+          <label for="f-created">FECHA CARGA</label>
+          <input id="f-created" class="ui-input" type="date" [(ngModel)]="createdAt" />
+        </div>
+        <div class="ui-field">
+          <label for="f-total">Total</label>
+          <input id="f-total" class="ui-input" type="number" [(ngModel)]="totalFiltro" placeholder="1500.00" />
+        </div>
+      </div>
+    </section>
+  }
 
   <section class="ui-panel" aria-label="Listado de facturas">
     <div class="ui-panel-head">
@@ -162,7 +200,8 @@
 </main>
 
 @if (facturaSeleccionada) {
-  <app-factura-dialog [factura]="facturaSeleccionada" (cerrar)="facturaSeleccionada = undefined"></app-factura-dialog>
+  <app-factura-dialog [factura]="facturaSeleccionada" 
+(cerrar)="facturaSeleccionada = undefined" (cancelada)="cargar()"></app-factura-dialog>
 }
 
 <app-footer></app-footer>

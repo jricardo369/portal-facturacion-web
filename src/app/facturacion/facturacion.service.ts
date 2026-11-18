@@ -114,6 +114,11 @@ export class FacturacionService {
     return this.http.post<DatosFacturaResponse>(`${this.BASE}/refacturar`, datos, { headers: this.headers() });
   }
 
+  cancelarFactura(uuid: string, motivo: string = '02'): Observable<any> {
+    const params = new HttpParams().set('uuid', uuid.trim()).set('motivo', motivo);
+    return this.http.post<any>(`${this.BASE}/factura/cancelar`, null, { params, headers: this.headers() });
+  }
+
   facturar(datos: DatosFacturaResponse): Observable<DatosFacturaResponse> {
     return this.http.post<DatosFacturaResponse>(`${this.BASE}/facturar`, datos, { headers: this.headers() });
   }

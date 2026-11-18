@@ -4,3 +4,5 @@
 @media (max-width: 640px) {
   .ui-stat-num { font-size: 22px; }
 }
+
+.fila-avanzada { display: flex; gap: 1rem; align-items: end; flex-wrap: wrap; width: 100%; }

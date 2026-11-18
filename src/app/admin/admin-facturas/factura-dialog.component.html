@@ -127,11 +127,22 @@
             {{ descargando && tipoDescarga === 'pdf' ? 'Descargando…' : 'Descargar PDF' }}
           </button>
         </div>
-        @if (errorDescarga) {
-          <div class="ui-alert ui-alert--danger descargas-error" role="alert">
-            <div><strong>Error</strong><p>{{ errorDescarga }}</p></div>
-          </div>
-        }
+      @if (errorDescarga) {
+        <div class="ui-alert ui-alert--danger descargas-error" role="alert">
+          <div><strong>Error</strong><p>{{ errorDescarga }}</p></div>
+        </div>
+      }
+      </section>
+
+      <!-- Cancelar factura -->
+      <section class="ui-detail-section" aria-labelledby="sec-cancelar">
+        <h3 class="ui-section-title" id="sec-cancelar" style="text-align: right;">Cancelar factura</h3>
+        <div style="text-align: left;">
+          <button type="button" class="ui-btn" (click)="abrirCancelacion()" [disabled]="cancelando || esCancelada(factura)" style="background: #bd3d3d; color: #fff;">
+            {{ cancelando ? 'Cancelando...' : 'Cancelar factura' }}
+          </button>
+        </div>
+        @if (mensajeCancelacion) { <p class="ui-help">{{ mensajeCancelacion }}</p> }
       </section>
     </div>
 
@@ -139,4 +150,26 @@
       <button type="button" class="ui-btn ui-btn--ghost" (click)="cerrar.emit()">Cerrar</button>
     </div>
   </div>
+
+  @if (confirmacionCancelacion) {
+    <div class="ui-backdrop cancel-confirm-backdrop" (click)="$event.stopPropagation()">
+      <div class="ui-dialog" role="dialog" aria-modal="true" style="max-width: 420px; width: 100%;" (click)="$event.stopPropagation()">
+        <div class="ui-dialog-head">
+          <div>
+            <h2>Confirmar cancelacion</h2>
+            <p class="dialog-sub">Realmente deseas cancelar la factura?</p>
+          </div>
+        </div>
+        <div class="ui-dialog-body">
+          <p class="ui-help">Se cancelara la factura con motivo 02.</p>
+        </div>
+        <div class="ui-dialog-foot">
+          <button type="button" class="ui-btn ui-btn--ghost" (click)="cancelarConfirmacionCancelacion()" [disabled]="cancelando">Volver</button>
+          <button type="button" class="ui-btn" (click)="confirmarCancelacion()" [disabled]="cancelando" style="background: #bd3d3d; color: #fff;">
+            {{ cancelando ? 'Cancelando...' : 'Aceptar y cancelar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

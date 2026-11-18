@@ -40,11 +40,22 @@ export class FacturasService {
 
   constructor(private http: HttpClient, private auth: AdminAuthService) {}
 
-  obtenerFacturas(desde: string, hasta: string, noTicket: string, page: number, size: number): Observable<PaginaFactura> {
+  obtenerFacturas(
+    desde: string, hasta: string, noTicket: string, page: number, size: number,
+    cliente?: string, rfc?: string, estatus?: string, uuid?: string,
+    createdAt?: string, total?: number, sort?: string
+  ): Observable<PaginaFactura> {
     let params = new HttpParams().set('page', String(page)).set('size', String(size));
     if (desde?.trim()) params = params.set('desde', `${desde}T00:00:00Z`);
     if (hasta?.trim()) params = params.set('hasta', `${hasta}T23:59:59.999Z`);
     if (noTicket?.trim()) params = params.set('noTicket', noTicket.trim());
+    if (cliente?.trim()) params = params.set('cliente', cliente.trim());
+    if (rfc?.trim()) params = params.set('rfc', rfc.trim());
+    if (estatus?.trim()) params = params.set('estatus', estatus.trim());
+    if (uuid?.trim()) params = params.set('uuid', uuid.trim());
+    if (createdAt?.trim()) params = params.set('createdAt', createdAt.trim());
+    if (total !== undefined && total !== null && Number.isFinite(Number(total))) params = params.set('total', String(total));
+    if (sort?.trim()) params = params.set('sort', sort.trim());
     return this.http.get<PaginaFactura>(this.BASE, { params, headers: this.headers() });
   }
 

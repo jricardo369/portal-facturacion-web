@@ -31,6 +31,7 @@ type TipoComprobante = 'xml' | 'pdf';
 export class FacturaDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() factura?: FacturaItem;
   @Output() cerrar = new EventEmitter<void>();
+  @Output() cancelada = new EventEmitter<void>();
   @ViewChild('closeBtn') private closeBtn?: ElementRef<HTMLButtonElement>;
   private previousOverflow = '';
 
@@ -43,6 +44,10 @@ export class FacturaDialogComponent implements OnInit, AfterViewInit, OnDestroy 
   descargando = false;
   tipoDescarga: TipoComprobante | null = null;
   errorDescarga = '';
+
+  cancelando = false;
+  confirmacionCancelacion = false;
+  mensajeCancelacion = '';
 
   ngOnInit(): void {
     this.previousOverflow = document.body.style.overflow;
@@ -140,6 +145,40 @@ export class FacturaDialogComponent implements OnInit, AfterViewInit, OnDestroy 
         this.descargando = false;
         this.tipoDescarga = null;
         this.errorDescarga = this.mensajeError(e);
+      },
+    });
+  }
+
+  abrirCancelacion(): void {
+    this.confirmacionCancelacion = true;
+    this.mensajeCancelacion = '';
+  }
+
+  cancelarConfirmacionCancelacion(): void {
+    this.confirmacionCancelacion = false;
+  }
+
+  confirmarCancelacion(): void {
+    const uuid = (this.factura?.uuid ?? '').trim();
+    if (!uuid) {
+      this.mensajeCancelacion = 'Esta factura no tiene UUID para cancelar.';
+      this.confirmacionCancelacion = false;
+      return;
+    }
+    this.cancelando = true;
+    this.mensajeCancelacion = '';
+    this.facturacion.cancelarFactura(uuid, '02').subscribe({
+      next: () => {
+        this.cancelando = false;
+        this.confirmacionCancelacion = false;
+        this.mensajeCancelacion = 'Factura cancelada correctamente.';
+        if (this.factura) this.factura.estatus = 'Cancelada';
+        this.cancelada.emit();
+      },
+      error: (e: HttpErrorResponse) => {
+        this.cancelando = false;
+        this.confirmacionCancelacion = false;
+        this.mensajeCancelacion = this.mensajeError(e);
       },
     });
   }

@@ -22,6 +22,14 @@ export class AdminFacturasComponent implements OnInit {
   ticket = '';
   desde = '';
   hasta = '';
+  clienteFiltro = '';
+  rfc = '';
+  estatus = '';
+  uuid = '';
+  createdAt = '';
+  totalFiltro: number | null = null;
+  sort = '';
+  busquedaAvanzada = false;
   pagina = 1;
   porPagina = 10;
   totalElementos = 0;
@@ -93,6 +101,13 @@ export class AdminFacturasComponent implements OnInit {
     this.ticket = '';
     this.desde = '';
     this.hasta = '';
+    this.clienteFiltro = '';
+    this.rfc = '';
+    this.estatus = '';
+    this.uuid = '';
+    this.createdAt = '';
+    this.totalFiltro = null;
+    this.sort = '';
     this.pagina = 1;
     this.cargar();
   }
@@ -102,7 +117,7 @@ export class AdminFacturasComponent implements OnInit {
     this.cargando = true;
     this.error = '';
     this.svc
-      .obtenerFacturas(this.desde, this.hasta, this.ticket, this.pagina - 1, this.porPagina)
+      .obtenerFacturas(this.desde, this.hasta, this.ticket, this.pagina - 1, this.porPagina, this.clienteFiltro, this.rfc, this.estatus, this.uuid, this.createdAt, this.totalFiltro ?? undefined, this.sort)
       .subscribe({
         next: (res) => {
           if (id !== this.cargaId) return;
