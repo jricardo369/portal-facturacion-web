@@ -92,55 +92,78 @@
           </div>
         </div>
 
-        <dl class="resumen-meta">
-          <div>
-            <dt>RFC</dt>
-            <dd>{{ rfc || '—' }}</dd>
+        <div class="invoice-top-header">
+          <div class="brand-badge">
+            <img src="assets/logo.png" alt="Oso Despierto" class="brand-logo-img" />
           </div>
-          <div>
-            <dt>Fecha de emisión</dt>
-            <dd>{{ fechaEmision || '—' }}</dd>
+          <div class="invoice-meta">
+            <div class="meta-row"><span>Ticket:</span> <strong>{{ numeroTicket || '—' }}</strong></div>
+            <div class="meta-row"><span>Fecha:</span> <strong>{{ fechaEmision || '—' }}</strong></div>
+            <div class="meta-row"><span>Tipo de pago:</span> <strong>{{ tipoPago || 'N/A' }}</strong></div>
           </div>
-          <div>
-            <dt>Razón social</dt>
-            <dd>{{ razonSocial || '—' }}</dd>
-          </div>
-          <div>
-            <dt>Tipo de pago</dt>
-            <dd>{{ tipoPago || 'N/A' }}</dd>
-          </div>
-        </dl>
+        </div>
 
-        <hr class="ui-divider resumen-div" />
+        <div class="invoice-parties">
+          <div class="party-box">
+            <span class="party-label">EMISOR</span>
+            <h4 class="party-name">Portal de Facturacion</h4>
+            <p class="party-detail">Regimen Fiscal General</p>
+          </div>
+          <div class="party-box">
+            <span class="party-label">CLIENTE / RECEPTOR</span>
+            <h4 class="party-name">{{ razonSocial || '—' }}</h4>
+            <p class="party-detail">RFC: <strong>{{ rfc || '—' }}</strong></p>
+          </div>
+        </div>
 
-        <dl class="resumen-importes" aria-label="Desglose de importes">
-          <div>
-            <dt>Subtotal</dt>
-            <dd>{{ formatoMoneda(subtotalCalculado) }}</dd>
-          </div>
-          @if (tipoPersona) {
-            <div>
-              <dt>
-                IVA <span class="resumen-tasa">16%</span>
-                <small>Impuesto trasladado</small>
-              </dt>
-              <dd>{{ formatoMoneda(ivaCalculado) }}</dd>
+        @if (datos?.tickets?.length) {
+          <section class="ui-detail-section" aria-label="Tickets asociados">
+            <h3 class="ui-section-title">Tickets Asociados</h3>
+            <table class="ui-table">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th class="ui-cell-num">Subtotal</th>
+                  <th class="ui-cell-num">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (t of datos?.tickets ?? []; track t.numeroTicket) {
+                  <tr>
+                    <td>{{ t.numeroTicket }}</td>
+                    <td class="ui-cell-num">{{ formatoMoneda(t.subtotal ?? null) }}</td>
+                    <td class="ui-cell-num">{{ formatoMoneda(t.total ?? null) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </section>
+        }
+
+        <div class="invoice-totals-wrapper">
+          <div class="invoice-totals">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span>{{ formatoMoneda(subtotalCalculado) }}</span>
             </div>
-          }
-          @if (isrCalculado !== null) {
-            <div class="is-retenido">
-              <dt>
-                ISR <span class="resumen-tasa">1.25%</span>
-                <small>Impuesto retenido</small>
-              </dt>
-              <dd>− {{ formatoMoneda(isrCalculado) }}</dd>
+            @if (tipoPersona) {
+              <div class="total-row">
+                <span>IVA</span>
+                <span>{{ formatoMoneda(ivaCalculado) }}</span>
+              </div>
+            }
+            @if (isrCalculado !== null) {
+              <div class="total-row">
+                <span>ISR</span>
+                <span>- {{ formatoMoneda(isrCalculado) }}</span>
+              </div>
+            }
+            <div class="total-row grand-total">
+              <span>Total</span>
+              <span>{{ formatoMoneda(total) }}</span>
             </div>
-          }
-          <div class="resumen-total">
-            <dt>Total</dt>
-            <dd>{{ formatoMoneda(total) }}</dd>
           </div>
-        </dl>
+        </div>
 
         <p class="resumen-nota">El IVA se traslada y, en persona moral, el ISR se retiene; tu CFDI se timbra con estos importes.</p>
       </section>
