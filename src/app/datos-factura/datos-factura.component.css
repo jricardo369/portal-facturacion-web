@@ -2,6 +2,7 @@
 
 .heroe {
   padding: 24px var(--ui-space-7, 28px);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%), url('/assets/imgFondoHL.png') right 65% / cover no-repeat;
 }
 
 .heroe-inner {
@@ -496,3 +497,6 @@
   .acciones .ui-btn { width: 100%; }
   .resumen-cfdi__datos { grid-template-columns: minmax(0, 1fr); }
 }
+
+.checkbox-cedular { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; font-weight: 600; color: var(--text-primary, #302A2B); cursor: pointer; }
+.checkbox-cedular input { width: 16px; height: 16px; accent-color: var(--ui-teal, #0f766e); cursor: pointer; }

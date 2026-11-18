@@ -44,7 +44,46 @@ export class AdminAuthService {
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem(this.KEY) !== null || localStorage.getItem(this.LEGACY_KEY) !== null;
+    return this.isTokenValido();
+  }
+
+  isTokenValido(): boolean {
+    const session = this.getSession<Record<string, unknown>>();
+    if (!session) return false;
+    const token = this.extraerToken(session);
+    if (!token) return false;
+    const exp = this.obtenerExpiracion(token);
+    if (exp === null) return true;
+    return exp > Math.floor(Date.now() / 1000);
+  }
+
+  private extraerToken(session: Record<string, unknown>): string | null {
+    const candidatos: unknown[] = [];
+    const agregar = (valor: unknown): void => {
+      if (valor && !candidatos.includes(valor)) candidatos.push(valor);
+    };
+    for (const key of ['token', 'accessToken', 'access_token', 'jwt', 'idToken']) agregar(session[key]);
+    for (const key of Object.keys(session)) {
+      const valor = session[key];
+      if (valor && typeof valor === 'object') agregar((valor as Record<string, unknown>)['token']);
+    }
+    for (const valor of candidatos) {
+      if (typeof valor === 'string' && valor.trim()) return valor.trim();
+    }
+    return null;
+  }
+
+  private obtenerExpiracion(token: string): number | null {
+    const partes = token.split('.');
+    if (partes.length < 2) return null;
+    try {
+      const normalizado = partes[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(normalizado)) as { exp?: unknown };
+      const exp = Number(payload.exp);
+      return Number.isFinite(exp) ? exp : null;
+    } catch {
+      return null;
+    }
   }
 
   getSession<T = LoginResponse>(): T | null {

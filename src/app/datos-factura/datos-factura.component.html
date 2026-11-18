@@ -6,7 +6,7 @@
   <div class="heroe-inner">
     <div class="heroe-titulo-container">
       <a routerLink="/" aria-label="Ir a inicio">
-        <img src="assets/logoLetrasBlancasSinFondo.png" alt="Oso Despierto" class="heroe-logo" width="100" height="100" />
+        <img src="assets/logosinFondoContornoBlanco.png" alt="Oso Despierto" class="heroe-logo" width="100" height="100" />
       </a>
       <div class="ui-heading">
         <span class="ui-eyebrow-header">Paso 2 de 3 · Datos fiscales</span>
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="ui-head-actions">
-      <button type="button" class="ui-btn ui-btn--ghost2 ui-btn--sm" (click)="volver()">
+      <button type="button" class="ui-btn ui-btn--ghost3 ui-btn--sm" (click)="volver()">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M19 12H6M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -64,17 +64,9 @@
             <input
               id="rfc" name="rfc" type="text" class="ui-input" placeholder="Ej. GOOD990102UH3"
               required minlength="12" maxlength="13" autocomplete="off" autocapitalize="characters" spellcheck="false"
-              aria-describedby="ayuda-rfc"
               [attr.aria-invalid]="rfcField.invalid && (rfcField.touched || intento)"
               [class.is-invalid]="rfcField.invalid && (rfcField.touched || intento)"
               [(ngModel)]="rfc" #rfcField="ngModel" (ngModelChange)="actualizarRegimen()" [disabled]="cargando" />
-            <p class="ui-help" id="ayuda-rfc">
-              @if (tipoPersona) {
-                <span class="ui-badge ui-badge--info">{{ tipoPersona === 'moral' ? 'Persona moral · 12' : 'Persona física · 13' }}</span>
-              } @else {
-                12 caracteres para persona moral o 13 para persona física.
-              }
-            </p>
             @if (rfcField.invalid && (rfcField.touched || intento)) {
               <p class="ui-error">Captura un RFC de 12 o 13 caracteres.</p>
             }
@@ -222,7 +214,7 @@
               @for (t of tickets; track t.numeroTicket) {
                 <li class="tickets-lista-item">
                   <span>Ticket {{ t.numeroTicket }}</span>
-                  <span>Total {{ formatoMoneda(t.total) }} · IVA {{ formatoMoneda(ivaDeTicket(t)) }} · ISR {{ formatoMoneda(isrDeTicket(t)) }}</span>
+                  <span>Total {{ formatoMoneda(t.total) }} · IVA {{ formatoMoneda(ivaDeTicket(t)) }} · ISR {{ formatoMoneda(isrDeTicket(t)) }}@if (desdeAdmin && aplicarCedular) { · Imp. local {{ formatoMoneda(cedularDeTicket(t)) }} }</span>
                 </li>
               }
             </ul>
@@ -276,6 +268,13 @@
           </div>
         </dl>
 
+        @if (desdeAdmin) {
+          <label class="checkbox-cedular" for="aplicar-cedular">
+            <input id="aplicar-cedular" name="aplicarCedular" type="checkbox" [(ngModel)]="aplicarCedular" (ngModelChange)="onCedularChange()" />
+            Impuesto local cedular
+          </label>
+        }
+
         <hr class="ui-divider resumen-div" />
 
         <dl class="resumen-importes" aria-label="Desglose de importes">
@@ -299,6 +298,15 @@
                 <small>Impuesto retenido</small>
               </dt>
                 <dd>{{ isrFactura === null ? '—' : '− ' + formatoMoneda(isrFactura) }}</dd>
+            </div>
+          }
+          @if (desdeAdmin && aplicarCedular) {
+            <div class="is-retenido">
+              <dt>
+                Impuesto local <span class="resumen-tasa">2%</span>
+                <small>Cedular · calculado por ticket</small>
+              </dt>
+              <dd>{{ formatoMoneda(cedularFactura) || '—' }}</dd>
             </div>
           }
           <div class="resumen-total">
@@ -438,6 +446,15 @@
                       <small>Retenido</small>
                     </dt>
                     <dd>{{ isrFactura === null ? '—' : '− ' + formatoMoneda(isrFactura) }}</dd>
+                  </div>
+                }
+                @if (desdeAdmin && aplicarCedular) {
+                  <div class="is-retenido">
+                    <dt>
+                      Impuesto local <span class="resumen-cfdi__tasa">2%</span>
+                      <small>Cedular · por ticket</small>
+                    </dt>
+                    <dd>{{ formatoMoneda(cedularFactura) || '—' }}</dd>
                   </div>
                 }
                 <div class="resumen-cfdi__total">

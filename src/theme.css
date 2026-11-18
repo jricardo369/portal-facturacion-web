@@ -310,6 +310,15 @@
 }
 .ui-btn--ghost2:hover:not(:disabled) { background: var(--ui-red-hover);   color:white }
 
+.ui-btn--ghost3 {
+  background: var(--ui-amber-soft);
+  color: black;
+}
+.ui-btn--ghost3:hover:not(:disabled) { background: var(--ui-amber-medium);   color:black }
+
+
+
+
 .ui-btn--soft { background: var(--ui-red-soft); color: var(--ui-red-ink); }
 .ui-btn--soft:hover:not(:disabled) { background: #F9DAD5; }
 

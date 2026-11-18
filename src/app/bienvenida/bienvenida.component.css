@@ -9,6 +9,7 @@
 /* ---------- Hero (Full Width) ---------- */
 .heroe {
   padding: 56px 32px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%), url('/assets/imgFondo3.jpg') right 65% / cover no-repeat;
 }
 .heroe-inner {
   max-width: 1230px;

@@ -46,6 +46,7 @@ export class DatosFacturaComponent implements OnInit {
   confirmacionAbierta = false;
   intento = false;
   desdeAdmin = false;
+  aplicarCedular = false;
   private datosBase: DatosFacturaResponse | null = null;
   tickets: DatosFacturaResponse[] = [];
   ticketParaAgregar = { rfc: '', numeroTicket: '', fecha: '', total: '' };
@@ -68,9 +69,11 @@ export class DatosFacturaComponent implements OnInit {
 
   private readonly tasaIva = 0.16;
   private readonly tasaIsr = 0.0125;
+  private readonly tasaCedular = 0.02;
 
   private get factorTotal(): number {
-    return this.tipoPersona === 'fisica' ? 1.16 : 1.1475;
+    const base = this.tipoPersona === 'fisica' ? 1.16 : 1.1475;
+    return base + (this.aplicarCedular ? this.tasaCedular : 0);
   }
 
   private redondear(valor: number): number {
@@ -97,7 +100,13 @@ export class DatosFacturaComponent implements OnInit {
   get impuestosCalculado(): number | null {
     const iva = this.ivaCalculado;
     if (iva === null) return null;
-    return this.redondear(iva - (this.isrCalculado ?? 0));
+    return this.redondear(iva - (this.isrCalculado ?? 0) + (this.cedularCalculado ?? 0));
+  }
+
+  get cedularCalculado(): number | null {
+    const subtotal = this.subtotalCalculado;
+    if (subtotal === null || !this.aplicarCedular) return null;
+    return this.redondear(subtotal * this.tasaCedular);
   }
 
   get numeroTicket(): string {
@@ -148,6 +157,12 @@ export class DatosFacturaComponent implements OnInit {
     return this.redondear(tickets.reduce((acc, t) => acc + (t?.isr ?? 0), 0));
   }
 
+  get cedularTickets(): number | null {
+    const tickets = this.ticketsParaFacturar;
+    if (!tickets.length) return null;
+    return this.redondear(tickets.reduce((acc, t) => acc + (this.cedularDeTicket(t) ?? 0), 0));
+  }
+
   get totalCombinado(): number | null {
     const tickets = this.ticketsParaFacturar;
     if (!tickets.length) return null;
@@ -172,6 +187,12 @@ export class DatosFacturaComponent implements OnInit {
     const subtotal = this.subtotalFactura;
     if (subtotal === null || this.tipoPersona !== 'moral') return null;
     return this.redondear(subtotal * this.tasaIsr);
+  }
+
+  get cedularFactura(): number | null {
+    const subtotal = this.subtotalFactura;
+    if (subtotal === null || !this.aplicarCedular) return null;
+    return this.redondear(subtotal * this.tasaCedular);
   }
 
   get totalFactura(): number | null {
@@ -281,6 +302,7 @@ export class DatosFacturaComponent implements OnInit {
       this.impuestos = datos.impuestos ?? null;
       this.total = datos.total ?? this.calcularTotal(this.subtotal, this.impuestos);
       this.tipoPago = datos.tipoPago ?? null;
+      this.sincronizarImpuestosTickets();
     }
     const c = datos?.cliente;
     if (c && (c.rfc || c.razonSocial)) {
@@ -305,6 +327,7 @@ export class DatosFacturaComponent implements OnInit {
       this.rfc = rfcCapturado;
     }
     this.actualizarRegimen();
+    this.sincronizarImpuestosTickets();
   }
 
   actualizarRegimen(): void {
@@ -374,14 +397,8 @@ export class DatosFacturaComponent implements OnInit {
       next: (datos) => {
         this.cargando = false;
         if (datos?.numeroTicket) {
-          const rfcTicket = (datos?.cliente?.rfc ?? rfc).trim();
-          const totalTicket = datos?.total ?? total;
-          const factor = rfcTicket.length === 13 ? 1.16 : 1.1475;
-          const subtotalCalc = Math.round((totalTicket / factor) * 100) / 100;
-          datos.subtotal = subtotalCalc;
-          datos.iva = Math.round(subtotalCalc * 0.16 * 100) / 100;
-          datos.isr = rfcTicket.length === 12 ? Math.round(subtotalCalc * 0.0125 * 100) / 100 : 0;
-          datos.total = totalTicket;
+          datos.total = datos?.total ?? total;
+          this.calcularImpuestosTicket(datos);
           this.tickets.push(datos);
         }
         this.ticketParaAgregar = { rfc: '', numeroTicket: '', fecha: '', total: '' };
@@ -506,6 +523,39 @@ export class DatosFacturaComponent implements OnInit {
       },
       tickets: lista.map((t) => ({ ...t })),
     };
+  }
+
+  sincronizarImpuestosTickets(): void {
+    this.ticketsParaFacturar.forEach((t) => this.calcularImpuestosTicket(t));
+  }
+
+  onCedularChange(): void {
+    this.sincronizarImpuestosTickets();
+  }
+
+  private calcularImpuestosTicket(t: DatosFacturaResponse): void {
+    const total = Number(t?.total);
+    if (!Number.isFinite(total) || total <= 0) return;
+    const rfcTicket = (t?.cliente?.rfc ?? this.rfc ?? '').trim();
+    const esFisica = rfcTicket.length === 13;
+    const base = esFisica ? 1.16 : 1.1475;
+    const cedularActual = this.redondear(t?.cedular ?? 0);
+    const totalBase = this.redondear(total - cedularActual);
+    const subtotal = this.redondear(totalBase / base);
+    const iva = this.redondear(subtotal * this.tasaIva);
+    const isr = esFisica ? 0 : this.redondear(subtotal * this.tasaIsr);
+    const cedular = this.aplicarCedular ? this.redondear(subtotal * this.tasaCedular) : 0;
+    t.subtotal = subtotal;
+    t.iva = iva;
+    t.isr = isr;
+    t.cedular = cedular;
+    t.impuestos = this.redondear(iva - isr + cedular);
+    t.total = this.redondear(totalBase + cedular);
+  }
+
+  cedularDeTicket(t: DatosFacturaResponse): number | null {
+    if (t?.cedular !== null && t?.cedular !== undefined) return t.cedular ?? null;
+    return this.aplicarCedular ? this.cedularCalculado : 0;
   }
 
   ivaDeTicket(t: DatosFacturaResponse): number | null {
