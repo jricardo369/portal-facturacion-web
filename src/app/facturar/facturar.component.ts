@@ -27,6 +27,8 @@ export class FacturarComponent implements OnInit {
   fecha = '';
   total = '';
   numeroTicketConsulta = '';
+  fechaConsulta = '';
+  totalConsulta = '';
   correoConsulta = '';
   cargando = false;
   errorAbierto = false;
@@ -94,6 +96,8 @@ export class FacturarComponent implements OnInit {
   cancelarConsulta(): void {
     this.formConsulta?.nativeElement.reset();
     this.numeroTicketConsulta = '';
+    this.fechaConsulta = '';
+    this.totalConsulta = '';
     this.correoConsulta = '';
     this.correoConsultaEnviado = '';
     this.ticketConsultaEnviado = '';
@@ -143,12 +147,18 @@ export class FacturarComponent implements OnInit {
     if (form && !form.reportValidity()) return;
     const ticket = this.numeroTicketConsulta.trim();
     const correo = this.correoConsulta.trim();
+    const fecha = String(this.fechaConsulta ?? '').trim();
+    const totalNumero = this.totalConsulta === '' ? undefined : Number(this.totalConsulta);
     if (!ticket || !correo) {
       this.mostrarError('Capture el número de ticket y el correo electrónico.');
       return;
     }
+    if (this.totalConsulta !== '' && (!Number.isFinite(totalNumero as number) || (totalNumero as number) <= 0)) {
+      this.mostrarError('Capture un total válido mayor a cero.');
+      return;
+    }
     this.cargando = true;
-    this.facturacion.reenviarFactura(correo, ticket).subscribe({
+    this.facturacion.reenviarFactura(correo, ticket, fecha || undefined, totalNumero).subscribe({
       next: () => {
         this.cargando = false;
         this.correoConsultaEnviado = correo;

@@ -1,9 +1,6 @@
 :host { display: block; }
 
 .heroe {
-  width: 100%;
-  background: #FAF6EF;
-  color: var(--ui-ink);
   padding: 24px var(--ui-space-7, 28px);
 }
 

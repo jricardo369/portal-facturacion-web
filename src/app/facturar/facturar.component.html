@@ -7,11 +7,11 @@
     <div class="heroe-copia">
       <div class="heroe-titulo-container">
         <a routerLink="/" aria-label="Ir a inicio">
-          <img src="assets/logoSinFondo.png" alt="Oso Despierto" class="heroe-logo" width="100" height="100" />
+          <img src="assets/logoLetrasBlancasSinFondo.png" alt="Oso Despierto" class="heroe-logo" width="100" height="100" />
         </a>
         <div class="heroe-text-group">
-          <span class="ui-eyebrow">Paso 1 de 3 · Busca tu factura</span>
-          <h1 id="titulo-datos" class="ui-title">Ubica tu ticket para facturar</h1>
+          <span class="ui-eyebrow-header">Paso 1 de 3 · Busca tu factura</span>
+          <h1 id="titulo-datos" class="ui-title-header">Ubica tu ticket para facturar</h1>
           <p class="subtitulo">
             Genera tu factura o reenvía a tu correo en unos segundos. Ten a la mano
             tu ticket de compra para capturar los datos.
@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="ui-head-actions">
-      <a class="ui-btn ui-btn--ghost ui-btn--sm" routerLink="/aviso-privacidad">
+      <a class="ui-btn ui-btn--ghost2 ui-btn--sm" routerLink="/aviso-privacidad">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M12 3 5 6v5c0 4.2 2.9 8 7 10 4.1-2 7-5.8 7-10V6l-7-3Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
           <path d="M9.5 12.2l1.8 1.8 3.4-3.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -113,7 +113,7 @@
 
     <div class="facturar-grid">
       <form #formFacturar class="formulario" action="#" method="get" (ngSubmit)="continuar()" novalidate>
-        <div class="ui-field ui-field--full">
+        <div class="ui-field">
           <label for="rfc">RFC <span class="req" aria-hidden="true">*</span></label>
           <input
             id="rfc" name="rfc" type="text" class="ui-input" placeholder="Ej. GOOD990102UH3"
@@ -122,13 +122,12 @@
             [attr.aria-invalid]="rfcField.invalid && (rfcField.touched || intento)"
             [class.is-invalid]="rfcField.invalid && (rfcField.touched || intento)"
             [(ngModel)]="rfc" #rfcField="ngModel" [disabled]="cargando" />
-          <p class="ui-help" id="ayuda-rfc">13 caracteres para persona física o 12 para persona moral.</p>
           @if (rfcField.invalid && (rfcField.touched || intento)) {
             <p class="ui-error">Captura un RFC válido (12 o 13 caracteres).</p>
           }
         </div>
 
-        <div class="ui-field ui-field--full">
+        <div class="ui-field">
           <label for="ticket">Número de ticket <span class="req" aria-hidden="true">*</span></label>
           <input
             id="ticket" name="ticket" type="text" class="ui-input" placeholder="Ej. 00001234"
@@ -136,10 +135,6 @@
             [attr.aria-invalid]="ticketField.invalid && (ticketField.touched || intento)"
             [class.is-invalid]="ticketField.invalid && (ticketField.touched || intento)"
             [(ngModel)]="numeroTicket" #ticketField="ngModel" [disabled]="cargando" />
-          <p class="ui-help" id="ayuda-ticket">
-            Solo números, va impreso en tu comprobante.
-            <button type="button" class="ui-btn ui-btn--link btn-inline" (click)="mostrarAyudaTicket()">Ver ejemplo de ticket</button>
-          </p>
           @if (ticketField.invalid && (ticketField.touched || intento)) {
             <p class="ui-error">Captura el número de ticket (solo números).</p>
           }
@@ -153,10 +148,10 @@
             [attr.aria-invalid]="fechaField.invalid && (fechaField.touched || intento)"
             [class.is-invalid]="fechaField.invalid && (fechaField.touched || intento)"
             [(ngModel)]="fecha" #fechaField="ngModel" [disabled]="cargando" />
-          <p class="ui-help" id="ayuda-fecha">La fecha impresa en tu ticket (no puede ser futura).</p>
           @if (fechaField.invalid && (fechaField.touched || intento)) {
             <p class="ui-error">Selecciona la fecha de tu compra.</p>
           }
+          <p class="ui-help" id="ayuda-fecha">La fecha impresa en tu ticket (no puede ser futura).</p>
         </div>
 
         <div class="ui-field">
@@ -167,10 +162,10 @@
             [attr.aria-invalid]="totalField.invalid && (totalField.touched || intento)"
             [class.is-invalid]="totalField.invalid && (totalField.touched || intento)"
             [(ngModel)]="total" #totalField="ngModel" [disabled]="cargando" />
-          <p class="ui-help" id="ayuda-total">Importe total con IVA que aparece en tu ticket.</p>
           @if (totalField.invalid && (totalField.touched || intento)) {
             <p class="ui-error">Captura un total mayor a cero.</p>
           }
+          <p class="ui-help" id="ayuda-total">Importe total en tu ticket.</p>
         </div>
 
         <p class="nota">Los campos marcados con <span class="req" aria-hidden="true">*</span> son obligatorios.</p>
@@ -220,7 +215,7 @@
   <section class="ui-panel tab-panel" id="panel-consulta" role="tabpanel" aria-labelledby="tab-consulta" [hidden]="pestana !== 'consulta'">
     <div class="facturar-grid">
       <form #formConsulta class="formulario" action="#" method="get" (ngSubmit)="continuarConsulta()" novalidate>
-        <div class="ui-field ui-field--full">
+        <div class="ui-field">
           <label for="ticket-consulta">Número de ticket <span class="req" aria-hidden="true">*</span></label>
           <input
             id="ticket-consulta" name="ticket-consulta" type="text" class="ui-input" placeholder="Ej. 00001234"
@@ -234,7 +229,25 @@
           }
         </div>
 
-        <div class="ui-field ui-field--full">
+        <div class="ui-field">
+          <label for="fecha-consulta">Fecha de compra <span class="req" aria-hidden="true">*</span></label>
+          <input
+            id="fecha-consulta" name="fecha-consulta" type="date" class="ui-input" required [max]="hoy"
+            autocomplete="off" aria-describedby="ayuda-fecha-consulta"
+            [(ngModel)]="fechaConsulta" #fechaConsultaField="ngModel" [disabled]="cargando" />
+          <p class="ui-help" id="ayuda-fecha-consulta">La fecha impresa en tu ticket.</p>
+        </div>
+
+        <div class="ui-field">
+          <label for="total-consulta">Total <span class="req" aria-hidden="true">*</span></label>
+          <input
+            id="total-consulta" name="total-consulta" type="number" class="ui-input" placeholder="Ej. 158.00"
+            required min="0.01" step="0.01" inputmode="decimal" autocomplete="off" aria-describedby="ayuda-total-consulta"
+            [(ngModel)]="totalConsulta" #totalConsultaField="ngModel" [disabled]="cargando" />
+          <p class="ui-help" id="ayuda-total-consulta">Importe total en tu ticket.</p>
+        </div>
+
+        <div class="ui-field">
           <label for="correo-consulta">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
           <input
             id="correo-consulta" name="correo-consulta" type="email" class="ui-input" placeholder="nombre@ejemplo.com"

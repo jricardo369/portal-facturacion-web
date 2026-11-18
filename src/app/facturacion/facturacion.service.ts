@@ -96,8 +96,12 @@ export class FacturacionService {
     return this.http.get<DatosFacturaResponse>(`${this.BASE}/datos-factura`, { params, headers: this.headers() });
   }
 
-  obtenerFacturaPorTicket(numeroTicket: string): Observable<FacturaResponse> {
-    const params = new HttpParams().set('numeroTicket', numeroTicket.trim());
+  obtenerFacturaPorTicket(numeroTicket: string, fecha?: string, total?: number): Observable<FacturaResponse> {
+    let params = new HttpParams().set('numeroTicket', numeroTicket.trim());
+    if (fecha?.trim()) params = params.set('fecha', fecha.trim());
+    if (total !== undefined && total !== null && Number.isFinite(Number(total))) {
+      params = params.set('total', String(total));
+    }
     return this.http.get<FacturaResponse>(`${this.BASE}/factura`, { params, headers: this.headers() });
   }
 
@@ -119,9 +123,14 @@ export class FacturacionService {
       { correoElectronico, numeroTicket }, { headers: this.headers() });
   }
 
-  reenviarFactura(correoElectronico: string, numeroTicket: string): Observable<any> {
+  reenviarFactura(correoElectronico: string, numeroTicket: string, fecha?: string, total?: number): Observable<any> {
+    const body: Record<string, unknown> = { correoElectronico, numeroTicket };
+    if (fecha?.trim()) body['fecha'] = fecha.trim();
+    if (total !== undefined && total !== null && Number.isFinite(Number(total))) {
+      body['total'] = total;
+    }
     return this.http.post<any>(`${this.BASE}/reenviar-factura`,
-      { correoElectronico, numeroTicket }, { headers: this.headers() });
+      body, { headers: this.headers() });
   }
 
   descargarXml(uuid: string): Observable<Blob> {

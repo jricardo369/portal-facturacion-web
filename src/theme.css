@@ -17,6 +17,7 @@
   --ui-green: #276246;
   --ui-green-soft: #E4F2EA;
   --ui-amber: #8A5A12;
+  --ui-amber-medium: #d8ae6e;
   --ui-amber-soft: #FBF1DE;
   --ui-blue: #24506E;
   --ui-blue-soft: #E7F0F6;
@@ -27,6 +28,7 @@
   --ui-bg: #F6F6F6;
   --ui-surface: #FFFFFF;
   --ui-surface-muted: #FAF9F9;
+  --ui-yellow-soft: #ede9c8;
 
   /* ----- Tipografía ----- */
   --ui-font-display: "Comfortaa", "Nunito", sans-serif;
@@ -125,7 +127,7 @@
   font-weight: 800;
   letter-spacing: var(--ui-tracking-wide);
   text-transform: uppercase;
-  color: var(--ui-teal);
+  color: var(--ui-teal-dark);
 }
 
 .ui-eyebrow::before {
@@ -136,13 +138,42 @@
   background: var(--ui-red);
 }
 
+.ui-eyebrow-header {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  margin-bottom: 7px;
+  font-size: var(--ui-text-xs);
+  font-weight: 800;
+  letter-spacing: var(--ui-tracking-wide);
+  text-transform: uppercase;
+  color: var(--ui-yellow-soft);
+}
+
+.ui-eyebrow-header::before {
+  content: "";
+  width: 18px;
+  height: 3px;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-yellow-soft);
+}
+
+.ui-title-header {
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-title);
+  line-height: var(--ui-leading-tight);
+  letter-spacing: -.01em;
+  color: white;
+}
+
 .ui-title {
   margin: 0;
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-title);
   line-height: var(--ui-leading-tight);
   letter-spacing: -.01em;
-  color: var(--ui-red);
+  color: var(--ui-red-ink);
 }
 
 .ui-subtitle {
@@ -154,6 +185,32 @@
 }
 
 .ui-head-actions { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); }
+
+/* ---------- Hero (compartido) ---------- */
+.heroe {
+  width: 100%;
+  background: #E8412A;
+  color: var(--ui-ink);
+}
+
+.heroe-copia { display: flex; flex-direction: column; }
+.heroe-copia-bienvenida { display: flex; flex-direction: column; }
+.heroe-titulo-container { display: flex; align-items: center; gap: 16px; }
+.heroe-text-group { display: flex; flex-direction: column; gap: 4px; }
+.heroe-copia h1 {
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: clamp(26px, 3.2vw, 36px);
+  line-height: 1.2;
+  font-weight: 700;
+}
+.heroe-copia-bienvenida h1 {
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: clamp(26px, 3.2vw, 36px);
+  line-height: 1.2;
+  font-weight: 700;
+}
 
 .ui-panel-title {
   margin: 0;
@@ -223,6 +280,13 @@
 }
 .ui-btn--primary:hover:not(:disabled) { background: var(--ui-red-hover); }
 
+.ui-btn--primary2 {
+  background: var(--ui-amber-soft);
+  color: black;
+  box-shadow: var(--ui-shadow-primary);
+}
+.ui-btn--primary2:hover:not(:disabled) { background: var(--ui-amber-medium); }
+
 .ui-btn--dark { background: var(--ui-teal); color: #fff; }
 .ui-btn--dark:hover:not(:disabled) { background: var(--ui-teal-dark); }
 
@@ -232,6 +296,19 @@
   color: var(--ui-ink);
 }
 .ui-btn--ghost:hover:not(:disabled) { background: #fff; border-color: #BDB6B7; }
+
+.subtitulo {
+  margin: 0 0 24px; max-width: 44ch;
+  font-size: var(--ui-text-lg); line-height: 1.6; 
+ color: white;
+}
+
+.ui-btn--ghost2 {
+  background: transparent;
+  border-color: var(--ui-border);
+  color: white;
+}
+.ui-btn--ghost2:hover:not(:disabled) { background: var(--ui-red-hover);   color:white }
 
 .ui-btn--soft { background: var(--ui-red-soft); color: var(--ui-red-ink); }
 .ui-btn--soft:hover:not(:disabled) { background: #F9DAD5; }
