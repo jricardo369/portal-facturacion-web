@@ -40,6 +40,7 @@ export class FacturaDialogComponent implements OnInit, AfterViewInit, OnDestroy 
   correoReenvio = '';
   reenviando = false;
   mensajeReenvio = '';
+  reenvioError = false;
 
   descargando = false;
   tipoDescarga: TipoComprobante | null = null;
@@ -112,9 +113,18 @@ export class FacturaDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     if (!ticket) return;
     this.reenviando = true;
     this.mensajeReenvio = '';
+    this.reenvioError = false;
     this.facturacion.reenviarFactura(correo, ticket).subscribe({
-      next: () => { this.reenviando = false; this.mensajeReenvio = 'Factura reenviada.'; },
-      error: () => { this.reenviando = false; this.mensajeReenvio = 'No se pudo reenviar.'; },
+      next: () => {
+        this.reenviando = false;
+        this.reenvioError = false;
+        this.mensajeReenvio = `Enviamos el comprobante a ${correo}.`;
+      },
+      error: () => {
+        this.reenviando = false;
+        this.reenvioError = true;
+        this.mensajeReenvio = 'No se pudo reenviar la factura. Intente de nuevo.';
+      },
     });
   }
 

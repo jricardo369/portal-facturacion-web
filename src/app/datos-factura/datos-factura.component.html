@@ -6,7 +6,7 @@
   <div class="heroe-inner">
     <div class="heroe-titulo-container">
       <a routerLink="/" aria-label="Ir a inicio">
-        <img src="assets/logosinFondoContornoBlanco.png" alt="Oso Despierto" class="heroe-logo" width="100" height="100" />
+        <img src="assets/logosinFondoContornoBlanco.png" alt="Oso Despierto" class="heroe-logo"/>
       </a>
       <div class="ui-heading">
         <span class="ui-eyebrow-header">Paso 2 de 3 · Datos fiscales</span>
@@ -88,7 +88,7 @@
       </fieldset>
 
       <fieldset class="grupo">
-        <legend>Domicilio fiscal <span class="opcional">opcional</span></legend>
+        <legend>Domicilio fiscal </legend>
         <p class="grupo-sub">Usa el domicilio registrado ante el SAT. Solo el código postal es obligatorio.</p>
         <div class="campos">
           <div class="ui-field ui-field--full">
@@ -315,7 +315,7 @@
           </div>
         </dl>
 
-        <p class="resumen-nota">El IVA se traslada y, en persona moral, el ISR se retiene; tu CFDI se timbra con estos importes.</p>
+        <!--<p class="resumen-nota">El IVA se traslada y, en persona moral, el ISR se retiene; tu CFDI se timbra con estos importes.</p>-->
       </div>
     </aside>
   </div>
@@ -336,7 +336,7 @@
         <div>
           <span class="ui-eyebrow">Paso 3 de 3 · Revisión</span>
           <h2 id="titulo-confirmar">Confirma tu factura</h2>
-          <p class="confirmar-sub">Este es el resumen de lo que se va a timbrar.</p>
+          <p class="confirmar-sub">Este es el resumen de lo que se va a facturar.</p>
         </div>
         <button type="button" class="ui-close" #closeConfirm (click)="cancelarConfirmacion()" aria-label="Cerrar confirmación">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -465,10 +465,10 @@
             </aside>
           </div>
 
-          <p class="resumen-cfdi__nota">
+          <!--<p class="resumen-cfdi__nota">
             Al confirmar, se generará y timbrará tu CFDI con estos importes. El IVA se traslada
             y, en persona moral, el ISR se retiene.
-          </p>
+          </p>-->
         </article>
       </div>
       <div class="ui-dialog-foot">

@@ -113,7 +113,21 @@
           <input class="ui-input" [(ngModel)]="correoReenvio" placeholder="correo@ejemplo.com" />
           <button type="button" class="ui-btn ui-btn--primary" (click)="reenviar()" [disabled]="reenviando">{{ reenviando ? 'Enviando…' : 'Reenviar' }}</button>
         </div>
-        @if (mensajeReenvio) { <p class="ui-help">{{ mensajeReenvio }}</p> }
+        @if (mensajeReenvio) {
+          <div class="ui-alert reenvio-alert" [class.ui-alert--success]="!reenvioError" [class.ui-alert--danger]="reenvioError" role="status" aria-live="polite">
+            <span class="ui-alert-icon" aria-hidden="true">
+              @if (reenvioError) {
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M12 8v5m0 3.5v.5"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              } @else {
+                <svg viewBox="0 0 24 24" focusable="false"><path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              }
+            </span>
+            <div>
+              <strong>{{ reenvioError ? 'No se pudo reenviar' : 'Factura reenviada' }}</strong>
+              <p>{{ mensajeReenvio }}</p>
+            </div>
+          </div>
+        }
       </section>
 
       <!-- Comprobante / descargas -->

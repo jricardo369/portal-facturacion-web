@@ -142,3 +142,5 @@
 }
 
 .cancel-confirm-backdrop { z-index: 9999; }
+
+.reenvio-alert { margin-top: var(--ui-space-2); }
