@@ -45,11 +45,8 @@
 }
 
 .login-brand img {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #fff;
+  width: 75px;
+  height: 75px;
 }
 
 .login-brand:hover { color: var(--brand-accent); }
