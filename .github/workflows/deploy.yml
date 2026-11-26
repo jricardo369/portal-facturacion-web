@@ -126,10 +126,13 @@ jobs:
             # Actualizar el contenedor web existente sin borrarlo: copiamos el dist de la imagen nueva
             WEB_IMAGE="${{ needs.build-test-push.outputs.image }}:${{ needs.build-test-push.outputs.tag }}"
             docker pull "$WEB_IMAGE"
-            docker rm -f portal-facturacion-web-update || true
-            docker create --name portal-facturacion-web-update "$WEB_IMAGE"
-            docker cp portal-facturacion-web-update:/usr/share/nginx/html/. portal-facturacion-web:/usr/share/nginx/html/
-            docker rm -f portal-facturacion-web-update
+            docker rm -f portal-facturacion-web-update >/dev/null 2>&1 || true
+            docker create --name portal-facturacion-web-update "$WEB_IMAGE" >/dev/null
+            rm -rf /tmp/portal-web-dist && mkdir -p /tmp/portal-web-dist
+            docker cp portal-facturacion-web-update:/usr/share/nginx/html/. /tmp/portal-web-dist/
+            docker cp /tmp/portal-web-dist/. portal-facturacion-web:/usr/share/nginx/html/
+            rm -rf /tmp/portal-web-dist
+            docker rm -f portal-facturacion-web-update >/dev/null 2>&1 || true
             docker exec portal-facturacion-web nginx -s reload || true
             # Reiniciar caddy sin borrarlo (evita conflicto de puerto 80)
             docker restart caddy || true
