@@ -361,7 +361,7 @@
             </div>
             <div class="resumen-cfdi__fecha">
               <span>Fecha de emisión</span>
-              <strong>{{ fechaTicket || '—' }}</strong>
+              <strong>{{ fechaEmision || '—' }}</strong>
             </div>
           </header>
 
@@ -393,12 +393,8 @@
                     <dd>{{ usoFacturaTexto || '—' }}</dd>
                   </div>
                   <div class="resumen-cfdi__dato">
-                    <dt>Tipo de pago</dt>
+                    <dt>Forma de pago</dt>
                     <dd>{{ tipoPago || 'No especificado' }}</dd>
-                  </div>
-                  <div class="resumen-cfdi__dato">
-                    <dt>Persona</dt>
-                    <dd>{{ tipoPersona === 'moral' ? 'Moral' : tipoPersona === 'fisica' ? 'Física' : '—' }}</dd>
                   </div>
                 </dl>
               </section>

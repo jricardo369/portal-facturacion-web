@@ -76,7 +76,7 @@
           </span>
           <div>
             <h2 class="ui-panel-title" id="titulo-resumen">Resumen de factura</h2>
-            <p class="resumen-ticket">Ticket {{ numeroTicket || '—' }}</p>
+            <p class="resumen-ticket">No. de Ticket {{ numeroTicket || '—' }}</p>
           </div>
         </div>
 
@@ -97,8 +97,8 @@
             <img src="assets/logo.png" alt="Oso Despierto" class="brand-logo-img" />
           </div>
           <div class="invoice-meta">
-            <div class="meta-row"><span>Ticket:</span> <strong>{{ numeroTicket || '—' }}</strong></div>
-            <div class="meta-row"><span>Fecha:</span> <strong>{{ fechaEmision || '—' }}</strong></div>
+            <div class="meta-row"><span>No. de Ticket:</span> <strong>{{ numeroTicket || '—' }}</strong></div>
+            <div class="meta-row"><span>Fecha de Ticket:</span> <strong>{{ fechaEmision || '—' }}</strong></div>
             <div class="meta-row"><span>Tipo de pago:</span> <strong>{{ tipoPago || 'N/A' }}</strong></div>
           </div>
         </div>
@@ -106,8 +106,8 @@
         <div class="invoice-parties">
           <div class="party-box">
             <span class="party-label">EMISOR</span>
-            <h4 class="party-name">Portal de Facturacion</h4>
-            <p class="party-detail">Regimen Fiscal General</p>
+            <h4 class="party-name">Oso Despierto</h4>
+            <p class="party-detail">RFC: <strong>NAPM860713AF2</strong></p>
           </div>
           <div class="party-box">
             <span class="party-label">CLIENTE / RECEPTOR</span>

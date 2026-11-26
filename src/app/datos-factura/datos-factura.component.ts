@@ -44,6 +44,7 @@ export class DatosFacturaComponent implements OnInit {
   errorAbierto = false;
   errorMensaje = '';
   confirmacionAbierta = false;
+  fechaEmision = '';
   intento = false;
   desdeAdmin = false;
   aplicarCedular = false;
@@ -433,6 +434,7 @@ export class DatosFacturaComponent implements OnInit {
       return;
     }
     this.confirmacionAbierta = true;
+    this.fechaEmision = new Date().toLocaleDateString('es-MX', { dateStyle: 'medium' });
     this.intento = false;
     document.body.style.overflow = 'hidden';
     setTimeout(() => this.closeConfirm?.nativeElement.focus());
