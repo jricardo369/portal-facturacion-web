@@ -2,7 +2,7 @@
 
 .heroe {
   padding: 24px var(--ui-space-7, 28px);
-  background: linear-gradient(90deg, rgba(223, 223, 223, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%), url('/assets/imgFondoHL.png') right 65% / cover no-repeat;
+  background: linear-gradient(90deg, rgba(223, 223, 223, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%), url('/assets/imgFondoHLv2.png') right 65% / cover no-repeat;
 }
 
 .heroe-inner {
